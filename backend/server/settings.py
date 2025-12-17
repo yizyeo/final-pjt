@@ -77,7 +77,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
@@ -153,4 +152,10 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 AUTH_USER_MODEL = 'accounts.User'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+REST_AUTH = {
+    # '앱이름.serializers.클래스명‘ 형식
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+}
