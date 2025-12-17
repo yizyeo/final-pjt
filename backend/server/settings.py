@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-tf$$hbn7@mv1$+egps3(s%h7lv(@oklis+0hvv$%(m^)pu=htm"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+DEBUG = os.getenv('DJANGO_DEBUG_MODE', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+hosts = os.getenv('DJANGO_ALLOWED_HOSTS')
+ALLOWED_HOSTS = hosts.split(',') if hosts else []
 
 
 # Application definition
@@ -78,11 +82,9 @@ REST_FRAMEWORK = {
 }
 
 
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:5173',
-    'http://localhost:5173',
-]
+origins = os.getenv('DJANGO_ALLOWED_ORIGINS')
+CORS_ALLOWED_ORIGINS = origins.split(',') if origins else []
+
 
 ROOT_URLCONF = "server.urls"
 
