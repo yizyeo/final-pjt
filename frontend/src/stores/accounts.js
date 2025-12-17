@@ -32,7 +32,7 @@ export const useAccountStore = defineStore('account', () => {
       .catch(err => {
         // 400 에러 시 서버가 보내준 상세 메시지 출력
         if (err.response && err.response.status === 400) {
-          console.table(err.response.data) // 에러 원인을 표 형태로 깔끔하게 보여줍니다.
+          console.table(err.response.data)
           alert('회원가입 실패: ' + JSON.stringify(err.response.data))
         }
       })
