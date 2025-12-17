@@ -10,25 +10,22 @@
       <div class="search-bar">
         <input type="text" placeholder="Search movies..." />
       </div>
-      
-      <!-- Logged In State -->
-      <div v-if="isLoggedIn" class="user-info">
-        <span>환영합니다, {{ username }}님!</span>
-        <div class="dropdown">
-          <button @click="toggleDropdown" class="dropdown-toggle">▼</button>
-          <ul v-show="dropdownOpen" class="dropdown-menu">
-            <li><a href="#">마이페이지</a></li>
-            <li><a href="#">개인정보수정</a></li>
-            <li><a href="#" @click.prevent="logout">로그아웃</a></li>
-          </ul>
-        </div>
+      <div v-if="accountStore.isLogin" class="user-info">
+        <span>환영합니다, {{ accountStore.username }}님!</span>
+          <div class="dropdown">
+            <button @click="toggleDropdown" class="dropdown-toggle">▼</button>
+            <ul v-show="dropdownOpen" class="dropdown-menu">
+              <!-- 연결 링크 바꿔야 함, 일단 홈으로 연결-->
+              <li><RouterLink :to="{ name: 'HomeView' }">마이페이지</RouterLink></li> 
+              <li><a href="#" @click.prevent="logOut">로그아웃</a></li>
+            </ul>
+          </div>
+      </div>
+      <div v-else class="auth-links">
+        <RouterLink :to="{ name: 'LogInView' }">로그인</RouterLink>
+        <RouterLink :to="{ name: 'SignUpView' }">회원가입</RouterLink>
       </div>
 
-      <!-- Logged Out State -->
-      <div v-else class="auth-links">
-        <a href="#">Login</a>
-        <a href="#">Signup</a>
-      </div>
     </div>
   </nav>
 </template>
@@ -36,28 +33,23 @@
 <script setup>
 import { ref } from 'vue';
 
-// 실제 인증 상태를 대신하는 임시 데이터입니다.
-// 실제 앱에서는 Pinia와 같은 상태 관리 라이브러리에서 가져와야 합니다.
-const isLoggedIn = ref(true); // 기본적으로 로그인된 상태로 설정
-const username = ref('Gemini'); // 임시 사용자 이름
+import { RouterView, RouterLink } from 'vue-router'
+import { useAccountStore } from '@/stores/accounts'
+
+const accountStore = useAccountStore()
+const logOut = function () {
+  accountStore.logOut()
+}
 
 const dropdownOpen = ref(false);
-
-const goToHome = () => {
-  // 추후 router.push('/') 등을 사용하여 메인 페이지로 이동합니다.
-  console.log('Navigate to home');
-};
-
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
-};
+}
 
-const logout = () => {
-  isLoggedIn.value = false;
-  dropdownOpen.value = false; // 로그아웃 시 드롭다운 닫기
-  // 실제 앱에서는 토큰 삭제 및 로그아웃 API를 호출해야 합니다.
-  console.log('User logged out');
-};
+const goToHome = () => {
+  router.push({ name: 'HomeView' })
+}
+
 </script>
 
 <style scoped>
