@@ -30,6 +30,7 @@ class Command(BaseCommand):
                 'release_date': data.get('release_date') or None, 
                 'vote_average': data.get('vote_average'),
                 'overview': data.get('overview'), 
+                'genres': data.get('genre_ids'),
                 'list_type': current_list_type,
             }
         )
@@ -41,7 +42,7 @@ class Command(BaseCommand):
             
         self.stdout.write(f"API key load okey, seeding start...")
 
-        API_LISTS = ['popular', 'top_rated'] 
+        API_LISTS = ['now_playing', 'popular'] 
         MAX_PAGES = 100
 
         for list_type in API_LISTS:
