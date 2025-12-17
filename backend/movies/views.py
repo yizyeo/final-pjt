@@ -9,7 +9,8 @@ def genre_list(request):
     data = [
         {
             'id': genre.genre_id,
-            'name': genre.name
+            'name': genre.name,
+            'name_kr': genre.name_kr,
         }
         for genre in genres
     ]

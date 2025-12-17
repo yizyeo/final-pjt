@@ -19,12 +19,13 @@ class Movie(models.Model):
 
 class Genre(models.Model):
   genre_id = models.IntegerField(primary_key=True)
-  name = models.CharField()
-  # movie_id = models.ForeignKey()
+  name = models.CharField(max_length=50)
+  name_kr = models.CharField(max_length=50)
+
   def __str__(self):
         return self.name
 
 
-class MovieImage(models.Model):
-  # movie_id = models.ForeignKey()
-  pass
+# class MovieImage(models.Model):
+#   # movie_id = models.ForeignKey()
+#   pass
