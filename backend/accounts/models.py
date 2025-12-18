@@ -4,9 +4,17 @@ from movies.models import Genre
 # Create your models here.
 
 class User(AbstractUser):
-  age = models.PositiveIntegerField(null=True, blank=True)
+  GENDER_CHOICES = (
+        ('M', '남성'),
+        ('F', '여성'),
+    )
+  
+  age = models.PositiveIntegerField()
+  gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES
+    )
   favorite_genres = models.ManyToManyField(
     'movies.Genre',
-    blank=True,
     related_name='users'
   )
