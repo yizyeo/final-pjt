@@ -23,3 +23,15 @@
 #   comment = models.TextField()
 #   created_at = models.DateTimeField(auto_now_add=True)
 #   # comment_like = models.BooleanField() 시간 남으면 구현
+
+
+from django.db import models
+from django.conf import settings
+from movies.models import Movie
+
+class Review(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
+    content = models.TextField()
+    rating = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)

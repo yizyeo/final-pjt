@@ -18,3 +18,5 @@ class User(AbstractUser):
     'movies.Genre',
     related_name='users'
   )
+
+  bio = models.TextField(blank=True, null=True) # OpenAI가 작성할 한줄평

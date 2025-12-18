@@ -3,6 +3,7 @@ import { useAccountStore } from '@/stores/accounts'
 import HomeView from '@/views/HomeView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
+import ProfileView from '@/views/ProfileView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,11 @@ const router = createRouter({
       path: '/login',
       name: 'LogInView',
       component: LogInView
+    },
+    {
+      path: '/profile/:username',
+      name: 'ProfileView',
+      component: ProfileView
     }
   ]
 })
@@ -37,7 +43,7 @@ router.beforeEach((to, from) => {
 
   if ((to.name === 'SignUpView' || to.name === 'LogInView') && (accountStore.isLogin) ) {
     window.alert('이미 로그인 되어 있습니다.')
-    return { name: 'ArticleView' }
+    return { name: 'HomeView' }
   }
 })
 
