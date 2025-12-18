@@ -10,18 +10,13 @@ export const useAccountStore = defineStore('account', () => {
   const router = useRouter()
 
   const signUp = function (payload) {
-    const username = payload.username
-    const password1 = payload.password1
-    const password2 = payload.password2
-    const age = payload.age
-    const favorite_genres = payload.favorite_genres
-    // const { username, password1, password2, age } = payload
+    const { username, email, password1, password2, age, gender, favorite_genres } = payload
 
     axios({
       method: 'post',
       url: `${API_URL}/accounts/signup/`,
       data: {
-        username, password1, password2, age, favorite_genres
+        username, email, password1, password2, age, gender, favorite_genres
       }
     })
       .then(res => {
@@ -40,9 +35,7 @@ export const useAccountStore = defineStore('account', () => {
 
 
   const logIn = function (payload) {
-    const username = payload.username
-    const password = payload.password
-    // const { username, password } = payload
+    const { username, password } = payload
     axios({
       method: 'post',
       url: `${API_URL}/accounts/login/`,
@@ -56,7 +49,19 @@ export const useAccountStore = defineStore('account', () => {
         token.value = res.data.key
         router.push({ name: 'HomeView' })
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        if (err.response && err.response.status === 400) {
+          const errorData = err.response.data
+          
+          if (errorData.username) {
+            alert(`아이디 오류: ${errorData.username[0]}`) 
+          } else if (errorData.password) {
+            alert(`비밀번호 오류: ${errorData.password[0]}`)
+          } else {
+            alert('입력 정보를 확인해주세요.')
+          }
+        }
+      })
   }
 
 
@@ -75,7 +80,7 @@ export const useAccountStore = defineStore('account', () => {
     })
       .then(res => {
         token.value = null
-        router.push({ name: 'LogInView' })
+        router.push({ name: 'HomeView' })
       })
       .catch(err => console.log(err))
   }

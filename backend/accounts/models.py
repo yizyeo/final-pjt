@@ -16,6 +16,5 @@ class User(AbstractUser):
     )
   favorite_genres = models.ManyToManyField(
     'movies.Genre',
-    # blank=True,
     related_name='users'
   )

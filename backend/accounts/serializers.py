@@ -16,14 +16,18 @@ class CustomRegisterSerializer(RegisterSerializer):
     )
 
     def save(self, request):
-        user = super().save(request)
-
-        user.age = self.validated_data['age']
-        user.gender = self.validated_data['gender']
+        user = User(
+            username=self.validated_data.get('username'),
+            email=self.validated_data.get('email'),
+            age=self.validated_data.get('age'),
+            gender=self.validated_data.get('gender'),
+        )
+        user.set_password(self.validated_data.get('password1'))
         user.save()
 
-        genre_ids = self.validated_data['favorite_genres']
-        genres = Genre.objects.filter(genre_id__in=genre_ids)
+        genres = Genre.objects.filter(
+            genre_id__in=self.validated_data['favorite_genres']
+        )
         user.favorite_genres.set(genres)
 
         return user
