@@ -1,7 +1,12 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
-from .models import Genre, User
+from django.contrib.auth import get_user_model
+from .models import User
+from movies.models import Genre, Movie
+from reviews.models import Review
 
+
+# 회원가입
 class CustomRegisterSerializer(RegisterSerializer):
     email = serializers.EmailField(required=True)
     age = serializers.IntegerField(required=True)
@@ -31,3 +36,32 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.favorite_genres.set(genres)
 
         return user
+    
+
+User = get_user_model()
+
+# 영화 간략 정보용
+class MovieSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ('tmdb_id', 'title', 'poster_path')
+
+
+# 리뷰 간략 정보용
+class ReviewSimpleSerializer(serializers.ModelSerializer):
+    movie_title = serializers.CharField(source='movie.title', read_only=True)
+    class Meta:
+        model = Review
+        fields = ('id', 'movie_title', 'content', 'rating')
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    like_movies = MovieSimpleSerializer(many=True, read_only=True)
+    wish_movies = MovieSimpleSerializer(many=True, read_only=True)
+    watched_movies = MovieSimpleSerializer(many=True, read_only=True)
+    reviews = ReviewSimpleSerializer(many=True, read_only=True)
+    review_count = serializers.IntegerField(source='reviews.count', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'bio', 'review_count', 'reviews', 'like_movies', 'wish_movies', 'watched_movies')

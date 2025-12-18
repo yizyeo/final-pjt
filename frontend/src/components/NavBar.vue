@@ -16,7 +16,7 @@
             <button @click="toggleDropdown" class="dropdown-toggle">▼</button>
             <ul v-show="dropdownOpen" class="dropdown-menu">
               <!-- 연결 링크 바꿔야 함, 일단 홈으로 연결-->
-              <li><RouterLink :to="{ name: 'HomeView' }">마이페이지</RouterLink></li> 
+              <li><RouterLink :to="{ name: 'ProfileView', params: { username: accountStore.username } }">마이페이지</RouterLink></li> 
               <li><a href="#" @click.prevent="logOut">로그아웃</a></li>
             </ul>
           </div>
@@ -33,17 +33,20 @@
 <script setup>
 import { ref } from 'vue';
 
-import { RouterView, RouterLink } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 
+const router = useRouter()
 const accountStore = useAccountStore()
+const dropdownOpen = ref(false)
+
 const logOut = function () {
+  dropdownOpen.value = false
   accountStore.logOut()
 }
 
-const dropdownOpen = ref(false);
 const toggleDropdown = () => {
-  dropdownOpen.value = !dropdownOpen.value;
+  dropdownOpen.value = !dropdownOpen.value
 }
 
 const goToHome = () => {
