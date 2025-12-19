@@ -39,7 +39,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     
 
 User = get_user_model()
-
+# 프로필(마이페이지)
 # 영화 간략 정보용
 class MovieSimpleSerializer(serializers.ModelSerializer):
     class Meta:

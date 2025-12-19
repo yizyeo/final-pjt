@@ -15,7 +15,14 @@ for item in data:
     
     # backdrop_paths도 문자열이라면 함께 변환
     if isinstance(fields.get('backdrop_paths'), str):
-        fields['backdrop_paths'] = json.loads(fields['backdrop_paths'])
+        try:
+            fields['backdrop_paths'] = json.loads(fields['backdrop_paths'])
+        except json.JSONDecodeError:
+            import ast
+            try:
+                fields['backdrop_paths'] = ast.literal_eval(fields['backdrop_paths'])
+            except:
+                pass
 
 with open(file_path, 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False, indent=4)
