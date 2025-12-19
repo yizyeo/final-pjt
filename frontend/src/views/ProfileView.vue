@@ -128,7 +128,6 @@ const startEdit = () => {
     gender: profile.value.gender,
     // DB의 장르 객체 리스트에서 genre_id만 추출하여 배열 생성
     favorite_genres: currentGenres.map(g => {
-      // 서버 응답 필드명에 따라 g.genre_id 혹은 g.id 중 맞는 것을 선택하세요.
       return typeof g === 'object' ? (g.genre_id || g.id) : g
     })
   }
