@@ -5,6 +5,7 @@
       :genres="genres" 
       :isOwnProfile="accountStore.username === route.params.username"
       @update-profile="updateInfo"
+      @update-bio="updateBio"
     />
     <hr>
     <ProfileReviewList 
@@ -32,6 +33,12 @@ const API_URL = import.meta.env.VITE_API_URL
 const profile = ref(null)
 const genres = ref([])
 
+const updateBio = (newBio) => {
+  if (profile.value) {
+    profile.value.bio = newBio
+  }
+}
+
 const fetchData = async () => {
   try {
     const [profRes, genreRes] = await Promise.all([
@@ -43,7 +50,7 @@ const fetchData = async () => {
     profile.value = profRes.data
     genres.value = genreRes.data
   } catch (err) {
-    console.error(err)
+    console.error('데이터 로딩 실패:', err)
   }
 }
 
@@ -58,9 +65,10 @@ const updateInfo = async (editData, callback) => {
       headers: { Authorization: `Token ${accountStore.token}` }
     })
     profile.value = { ...profile.value, ...res.data }
-    callback() // 수정 모드 종료
-    alert('정보가 수정되었습니다.')
+    callback()
+    alert('정보가 성공적으로 수정되었습니다.')
   } catch (err) {
+    console.error('수정 실패:', err)
     alert('수정에 실패했습니다.')
   }
 }

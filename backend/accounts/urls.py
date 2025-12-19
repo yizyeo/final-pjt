@@ -6,4 +6,5 @@ urlpatterns = [
     path('signup/', include('dj_rest_auth.registration.urls')),
     path('profile/<str:username>/', views.profile_detail),
     path('update/', views.user_update),
+    path('generate-bio/', views.generate_ai_bio),
 ]
