@@ -79,7 +79,6 @@
     })
   }
 
-  
 
   // hot movie poster 불러오기
   const movie_poster = function() {
