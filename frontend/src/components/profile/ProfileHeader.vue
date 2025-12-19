@@ -94,7 +94,6 @@ const startEdit = () => {
   isEditing.value = true
 }
 
-// AI 생성 및 부모 알림
 const onGenerateAI = async () => {
   if (!confirm('AI 취향 분석을 시작하시겠습니까?')) return
   
@@ -108,7 +107,7 @@ const onGenerateAI = async () => {
     
     const newBio = res.data.bio
     editData.value.bio = newBio // 입력창 반영
-    emit('update-bio', newBio)  // 부모(ProfileView)의 원본 데이터 갱신
+    emit('update-bio', newBio)  // 부모(ProfileView)의 원본 데이터도 갱신해야 함
     alert('AI 한 줄 소개가 생성되었습니다!')
   } catch (err) {
     console.error('AI 생성 에러:', err)
