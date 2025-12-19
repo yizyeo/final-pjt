@@ -6,29 +6,28 @@
     </div>
     
     <div v-if="!isEditing" class="user-info">
-      <h1>{{ profile.username }}님의 프로필</h1>
+      <div class="user-title-row">
+        <h1>{{ profile.username }}님의 프로필</h1>
+        <button 
+          v-if="isOwnProfile" 
+          @click="onGenerateAI" 
+          :disabled="isGenerating"
+          class="btn-ai-gen"
+        >
+          {{ isGenerating ? 'AI 분석 중...' : '✨ AI 한 줄 소개 갱신' }}
+        </button>
+      </div>
+
       <p class="ai-bio">✨ {{ profile.bio || "AI 생성 한 줄 소개가 없습니다." }} ✨</p>
+      
       <button v-if="isOwnProfile" @click="startEdit" class="btn-edit-trigger">
         내 정보 수정하기
       </button>
     </div>
 
     <div v-else class="user-info-edit">
-      <div class="edit-header">
-        <h1>정보 수정</h1>
-        <button 
-          @click="onGenerateAI" 
-          :disabled="isGenerating"
-          class="btn-ai-gen"
-        >
-          {{ isGenerating ? 'AI 분석 중...' : '✨ AI 한 줄 소개 생성' }}
-        </button>
-      </div>
-
+      <h1>정보 수정</h1>
       <div class="edit-form">
-        <label>한 줄 소개: </label>
-        <input v-model.trim="editData.bio" type="text" placeholder="AI로 생성하거나 직접 입력">
-
         <label>이메일: </label>
         <input v-model.trim="editData.email" type="email">
 
@@ -71,7 +70,7 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const isEditing = ref(false)
 const isGenerating = ref(false)
-const editData = ref({ bio: '', email: '', age: null, gender: '', favorite_genres: [] })
+const editData = ref({ email: '', age: null, gender: '', favorite_genres: [] })
 
 const userTier = computed(() => {
   const count = props.profile?.review_count || 0
@@ -85,7 +84,6 @@ const userTier = computed(() => {
 const startEdit = () => {
   const currentGenres = props.profile.favorite_genres || []
   editData.value = {
-    bio: props.profile.bio || '',
     email: props.profile.email,
     age: props.profile.age,
     gender: props.profile.gender,
@@ -95,7 +93,7 @@ const startEdit = () => {
 }
 
 const onGenerateAI = async () => {
-  if (!confirm('AI 취향 분석을 시작하시겠습니까?')) return
+  if (!confirm('최근 수정된 취향을 반영하여 AI 소개를 갱신하시겠습니까?')) return
   
   isGenerating.value = true
   try {
@@ -106,12 +104,12 @@ const onGenerateAI = async () => {
     })
     
     const newBio = res.data.bio
-    editData.value.bio = newBio // 입력창 반영
-    emit('update-bio', newBio)  // 부모(ProfileView)의 원본 데이터도 갱신해야 함
-    alert('AI 한 줄 소개가 생성되었습니다!')
+
+    emit('update-bio', newBio) 
+    alert('새로운 AI 한 줄 소개가 적용되었습니다!')
   } catch (err) {
     console.error('AI 생성 에러:', err)
-    alert('생성에 실패했습니다. 서버 로그를 확인해주세요.')
+    alert('생성에 실패했습니다.')
   } finally {
     isGenerating.value = false
   }
