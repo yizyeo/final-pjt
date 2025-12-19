@@ -31,6 +31,7 @@ DEBUG = os.getenv('DJANGO_DEBUG_MODE', 'False') == 'True'
 hosts = os.getenv('DJANGO_ALLOWED_HOSTS')
 ALLOWED_HOSTS = hosts.split(',') if hosts else []
 
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
 # Application definition
 

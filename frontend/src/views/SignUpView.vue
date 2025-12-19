@@ -52,7 +52,7 @@ import { useAccountStore } from '@/stores/accounts'
 
 const API_URL = import.meta.env.VITE_API_URL
 
-const store = useAccountStore()
+const accountStore = useAccountStore()
 
 const username = ref('')
 const password1 = ref('')
@@ -102,7 +102,7 @@ const signUp = () => {
     return
   }
 
-  store.signUp({
+  accountStore.signUp({
     username: username.value,
     email: email.value,
     password1: password1.value,

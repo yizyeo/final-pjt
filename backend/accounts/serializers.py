@@ -39,15 +39,15 @@ class CustomRegisterSerializer(RegisterSerializer):
     
 
 User = get_user_model()
-# 프로필(마이페이지)
-# 영화 간략 정보용
+
+# 영화 간략 정보
 class MovieSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = ('tmdb_id', 'title', 'poster_path')
 
 
-# 리뷰 간략 정보용
+# 리뷰 간략 정보
 class ReviewSimpleSerializer(serializers.ModelSerializer):
     movie_title = serializers.CharField(source='movie.title', read_only=True)
     class Meta:
@@ -64,4 +64,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'bio', 'review_count', 'reviews', 'like_movies', 'wish_movies', 'watched_movies')
+        fields = ('id', 'bio', 'email', 'age', 'gender', 'favorite_genres', 'username', 'review_count', 'reviews', 'like_movies', 'wish_movies', 'watched_movies')
+
+
+# 회원정보 수정
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'age', 'gender', 'favorite_genres')
