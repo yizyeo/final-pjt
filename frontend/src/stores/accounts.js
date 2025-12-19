@@ -90,7 +90,19 @@ export const useAccountStore = defineStore('account', () => {
         username.value = null
       })
   }
-
+  
+  // const getCarouselbackdrop = function() {
+  //   axios({
+  //     method: 'get',
+  //     url: `${API_URL}`,
+  //   })
+  //     .then(res => {
+  //       console.log(res)
+  //       console.log(res.data)
+  //     })
+  //     .catch(err => console.log(err))
+  // }
+  
   return {
     signUp,
     logIn,
@@ -98,5 +110,6 @@ export const useAccountStore = defineStore('account', () => {
     username,
     isLogin,
     logOut,
+    // getCarouselbackdrop,
   }
 }, { persist: true })
