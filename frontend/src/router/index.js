@@ -4,6 +4,8 @@ import HomeView from '@/views/HomeView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LoginView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import MovieDetailView from '@/views/MovieDetailView.vue'
+import MovieListView from '@/views/MovieListView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +30,16 @@ const router = createRouter({
       path: '/profile/:username',
       name: 'ProfileView',
       component: ProfileView
+    },
+    {
+      path: '/movies/:movieId',
+      name: 'MovieDetailView',
+      component: MovieDetailView
+    },
+    {
+      path: '/movies/movielist',
+      name: 'MovieListView',
+      component: MovieListView
     }
   ]
 })
