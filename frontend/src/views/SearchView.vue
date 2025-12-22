@@ -12,27 +12,17 @@
         검색 결과가 없습니다.
     </div>
 
-    <div v-else class="movie-grid">
-      <div v-for="movie in movies" :key="movie.tmdb_id" class="movie-card" @click="goToDetail(movie.tmdb_id)">
-        <div class="poster-wrapper">
-            <img :src="getPosterUrl(movie.poster_path)" :alt="movie.title" class="poster-image" />
-        </div>
-        <div class="movie-info">
-            <h3>{{ movie.title }}</h3>
-            <p>{{ movie.release_date }}</p>
-        </div>
-      </div>
-    </div>
+    <SearchResults v-else :movies="movies" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import axios from 'axios';
+import SearchResults from '@/components/search/SearchResults.vue';
 
 const route = useRoute();
-const router = useRouter();
 const query = ref('');
 const movies = ref([]);
 const loading = ref(false);
@@ -60,16 +50,6 @@ const fetchMovies = async () => {
     }
 };
 
-const getPosterUrl = (path) => {
-    if (!path) return '/placeholder.png'; // Fallback
-    if (path.startsWith('http')) return path;
-    return `https://image.tmdb.org/t/p/w500${path}`;
-};
-
-const goToDetail = (id) => {
-    router.push({ name: 'MovieDetailView', params: { movieId: id } });
-};
-
 onMounted(() => {
     fetchMovies();
 });
@@ -81,5 +61,20 @@ watch(() => route.query.q, () => {
 </script>
 
 <style scoped>
+.search-view {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
+.header {
+    margin-bottom: 2rem;
+}
+
+.loading, .no-results {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    color: #888;
+}
 </style>
