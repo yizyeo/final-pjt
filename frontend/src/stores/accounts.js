@@ -6,8 +6,7 @@ import axios from 'axios'
 export const useAccountStore = defineStore('account', () => {
   const API_URL = import.meta.env.VITE_API_URL
   const token = ref(null)
-  const username = ref(null) // 유저 이름을 저장할 상태 추가
-
+  const username = ref(null)
   const router = useRouter()
 
   const signUp = function (payload) {
@@ -90,7 +89,6 @@ export const useAccountStore = defineStore('account', () => {
         username.value = null
       })
   }
-  
   
   return {
     signUp,

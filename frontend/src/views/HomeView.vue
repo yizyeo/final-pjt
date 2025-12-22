@@ -16,7 +16,7 @@
 
     <div class="btn-group">
       <div>
-        <a href="#" class="btn">Review</a> <!-- /reviews -->
+        <a href="/reviews" class="btn">Review</a> <!-- /reviews -->
         <!-- <button type="button" class="btn">Reviews</button>  -->
       </div>
       <div>

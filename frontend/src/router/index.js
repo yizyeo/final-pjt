@@ -51,13 +51,13 @@ const router = createRouter({
     // 전체 리뷰 페이지
     {
       path: '/reviews',
-      name: 'ReviewList',
+      name: 'ReviewListView',
       component: ReviewListView
     },
     // 리뷰 상세 페이지
     {
       path: '/reviews/:reviewId',
-      name: 'ReviewDetail',
+      name: 'ReviewDetailView',
       component: ReviewDetailView
     },
     {

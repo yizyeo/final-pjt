@@ -42,7 +42,13 @@
                   </div>
                 </div>
 
-                <p class="card-text flex-grow-1 review-content">{{ review.content }}</p>
+                <p 
+                  @click="goDetail(review.id)" 
+                  class="card-text flex-grow-1 review-content" 
+                  style="cursor: pointer;"
+                >
+                  {{ review.content }}
+                </p>
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
                   <span class="text-secondary small">by {{ review.username }}</span>
@@ -80,8 +86,8 @@ const changeSort = (sort) => {
 }
 
 const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : '/no-image.png'
-const goMovieDetail = (moviePk) => router.push({ name: 'MovieDetail', params: { id: moviePk } })
-const goDetail = (reviewPk) => router.push({ name: 'ReviewDetail', params: { reviewId: reviewPk } })
+const goMovieDetail = (moviePk) => router.push({ name: 'MovieDetailView', params: { movieId: moviePk } })
+const goDetail = (reviewPk) => router.push({ name: 'ReviewDetailView', params: { reviewId: reviewPk } })
 
 onMounted(() => {
   reviewStore.fetchTotalReviews()
