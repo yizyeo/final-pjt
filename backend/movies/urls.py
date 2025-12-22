@@ -6,7 +6,9 @@ urlpatterns = [
     path('backdrops/', views.carousel_backdrop),
     path('homelist/', views.home_list), # 
     path('movie/<int:movie_pk>/detail/', views.movie_detail),
+    path('movie/<int:movie_pk>/wish/', views.movie_wish),
     path('movielist/', views.movie_list),
     path('search/', views.search),
-    path('worldcup/', views.worldcup), 
+    path('worldcup/random/', views.random_worldcup),
+    path('worldcup/user/', views.user_based_worldcup),
 ]

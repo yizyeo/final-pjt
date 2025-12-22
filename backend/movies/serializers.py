@@ -47,4 +47,4 @@ class MovieListSerializer(serializers.ModelSerializer):
 class WorldcupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ('tmdb_id', 'poster_path', 'title', 'release_data', 'genre',) # 예고편 추가?
+        fields = ('tmdb_id', 'poster_path', 'title', 'release_date', 'genres',) # 예고편 추가?

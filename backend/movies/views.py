@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Genre, Movie
-from .serializers import GenreSerializer, HomeBackdropSerializer, HomeListSerializer, MovieDetailSerializer, SearchSerializer
+from .serializers import GenreSerializer, HomeBackdropSerializer, HomeListSerializer, MovieDetailSerializer, SearchSerializer, WorldcupSerializer
+import random
+from datetime import date
 
 @api_view(['GET'])
 def genre_list(request):
@@ -33,6 +36,18 @@ def movie_detail(request, movie_pk):
 def movie_like(request):
     pass
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def movie_wish(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if movie.wish_users.filter(pk=request.user.pk).exists():
+        movie.wish_users.remove(request.user)
+        is_wished = False
+    else:
+        movie.wish_users.add(request.user)
+        is_wished = True
+    return Response({'is_wished': is_wished})
+
 @api_view(['GET'])
 def movie_list(request):
     pass
@@ -46,6 +61,50 @@ def search(request):
         serializer = SearchSerializer(movies, many=True)
         return Response(serializer.data)
     return Response([])
+
+@api_view(['GET'])
+def random_worldcup(request):
+    count = int(request.GET.get('count', 16))
+    # 개봉 중이거나 개봉했던 영화 필터링 (release_date가 오늘보다 작거나 같은 경우)
+    # release_date가 string이므로 비교를 위해 주의 필요. 포맷이 YYYY-MM-DD라고 가정.
+    today = date.today().isoformat()
+    movies = Movie.objects.filter(release_date__lte=today, poster_path__isnull=False).exclude(poster_path='')
+    
+    # 전체 영화 수보다 요청 개수가 많으면 전체 반환
+    if movies.count() < count:
+        selected_movies = movies
+    else:
+        # 랜덤 샘플링을 위해 id 리스트를 가져옴 (효율성)
+        movie_ids = list(movies.values_list('tmdb_id', flat=True))
+        selected_ids = random.sample(movie_ids, count)
+        selected_movies = movies.filter(tmdb_id__in=selected_ids)
+        
+    serializer = WorldcupSerializer(selected_movies, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_based_worldcup(request):
+    # 사용자 선호도 기반 추천 로직 구현 예정 (현재는 틀만 존재)
+    # 1. 사용자가 좋아요한 영화, 본 영화, 찜한 영화 가져오기
+    # 2. 선호 장르 분석
+    # 3. 해당 장르의 영화 중 안 본 영화 추천 등
+    
+    count = int(request.GET.get('count', 16))
+    
+    # 임시: 랜덤과 동일하게 동작
+    today = date.today().isoformat()
+    movies = Movie.objects.filter(release_date__lte=today, poster_path__isnull=False).exclude(poster_path='')
+    
+    if movies.count() < count:
+        selected_movies = movies
+    else:
+        movie_ids = list(movies.values_list('tmdb_id', flat=True))
+        selected_ids = random.sample(movie_ids, count)
+        selected_movies = movies.filter(tmdb_id__in=selected_ids)
+        
+    serializer = WorldcupSerializer(selected_movies, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
