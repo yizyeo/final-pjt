@@ -54,19 +54,17 @@ def review_detail_update_delete(request, review_pk):
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
     
-    elif request.method == 'PUT':
-        if request.user != review.user:
-            return Response({'error': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
-        
+    # 본인 확인 로직 (수정/삭제 공통)
+    if request.user != review.user:
+        return Response({'error': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'PUT':
         serializer = ReviewSerializer(review, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
 
     elif request.method == 'DELETE':
-        if request.user != review.user:
-            return Response({'error': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)
-        
         review.delete()
         return Response({'message': '리뷰가 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
 
