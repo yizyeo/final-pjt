@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Genre, Movie
-from .serializers import GenreSerializer, HomeBackdropSerializer, HomeListSerializer, MovieDetailSerializer
+from .serializers import GenreSerializer, HomeBackdropSerializer, HomeListSerializer, MovieDetailSerializer, SearchSerializer
 
 @api_view(['GET'])
 def genre_list(request):
@@ -30,9 +30,24 @@ def movie_detail(request, movie_pk):
     return Response(serializer.data)
 
 @api_view(['POST'])
-def movie_like():
+def movie_like(request):
     pass
 
 @api_view(['GET'])
-def movie_list():
+def movie_list(request):
+    pass
+
+
+@api_view(['GET'])
+def search(request):
+    query = request.GET.get('q')
+    if query:
+        movies = Movie.objects.filter(title__icontains=query)
+        serializer = SearchSerializer(movies, many=True)
+        return Response(serializer.data)
+    return Response([])
+
+
+@api_view(['GET'])
+def worldcup(request):
     pass

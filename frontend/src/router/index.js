@@ -2,10 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 import HomeView from '@/views/HomeView.vue'
 import SignUpView from '@/views/SignUpView.vue'
-import LogInView from '@/views/LoginView.vue'
+import LogInView from '@/views/LogInView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import MovieDetailView from '@/views/MovieDetailView.vue'
 import MovieListView from '@/views/MovieListView.vue'
+import SearchView from '@/views/SearchView.vue'
+import WorldcupView from '@/views/WorldcupView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +42,16 @@ const router = createRouter({
       path: '/movies/movielist',
       name: 'MovieListView',
       component: MovieListView
+    },
+    {
+      path: '/search',
+      name: 'SearchView',
+      component: SearchView
+    },
+    {
+      path: '/worldcup',
+      name: 'WorldcupView',
+      component: WorldcupView
     }
   ]
 })
