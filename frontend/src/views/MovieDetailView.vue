@@ -1,82 +1,80 @@
 <template>
-  <div>
-    <h1>Movie Detail</h1>
-    <hr>
+  <div class="container py-5">
     <div v-if="movie">
-      <div class="info">
-        <div class="title">{{ movie.title }}</div>
-        <div class="posterpath">
-          <img :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" alt="poster">
+      <MovieInfo :movie="movie" />
+
+      <hr class="text-secondary my-5">
+      
+      <section class="review-section">
+        <h3 class="text-white mb-4">리뷰 ({{ reviewStore.movieReviews.length }})</h3>
+        
+        <ReviewForm v-if="accountStore.isLogin" :moviePk="movieId" />
+        <div v-else class="alert alert-secondary text-center">
+          리뷰를 작성하려면 <router-link :to="{ name: 'LogInView' }">로그인</router-link>이 필요합니다.
         </div>
-        <div class="releasedate">{{ movie.release_date }}</div>
-        <div class="vote_average">{{ movie.vote_average }}</div>
-        <div class="genres">
-          <span v-for="genre in movie.genres" :key="genre.id">{{ genre.name }}</span>
+
+        <div class="review-list mt-4">
+          <ReviewItem 
+            v-for="review in reviewStore.movieReviews" 
+            :key="review.id" 
+            :review="review"
+            @like="reviewStore.likeReview"
+          />
+          <p v-if="!reviewStore.movieReviews.length" class="text-secondary">첫 리뷰를 기다리고 있어요!</p>
         </div>
-        <div class="runtime">{{ movie.runtime }} minutes</div>
-      </div>
-      <div class="detail">
-        <div class="overview">{{ movie.overview }}</div>
-        <div class="backdrop-container">
-          <h3>Backdrops</h3>
-          <div v-if="movie.backdrop_paths && movie.backdrop_paths.length > 0">
-            <div v-for="(path, index) in movie.backdrop_paths" :key="index" class="backdrop-item">
-              <img 
-                :src="`https://image.tmdb.org/t/p/original${path}`" 
-                alt="backdrop" 
-                style="width: 100%; margin-bottom: 10px;"
-              >
-            </div>
+      </section>
+
+      <div class="mt-5 text-white">
+        <h3>Backdrops</h3>
+        <div class="row">
+          <div v-for="(path, index) in movie.backdrop_paths" :key="index" class="col-md-6 mb-3">
+            <img :src="`https://image.tmdb.org/t/p/original${path}`" class="img-fluid rounded">
           </div>
-          <p v-else>등록된 배경 이미지가 없습니다.</p>
         </div>
-        <div></div>
       </div>
+    </div>
+    
+    <div v-else class="text-center py-5">
+      <div class="spinner-border text-light"></div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { onMounted, ref, computed } from 'vue'
-  import { useAccountStore } from '@/stores/accounts'
-  import { useRoute } from 'vue-router'
-  import axios from 'axios'
-  
-  const route = useRoute()
-  const store = useAccountStore()
-  const API_URL = import.meta.env.VITE_API_URL
-  const movieId = route.params.movieId
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useAccountStore } from '@/stores/accounts'
+import { useReviewStore } from '@/stores/review'
+import axios from 'axios'
 
-  const movie = ref(null)
-  
-  const get_movie_detail = function() {
+import MovieInfo from '@/components/movies/MovieInfo.vue'
+import ReviewForm from '@/components/review/ReviewForm.vue'
+import ReviewItem from '@/components/review/ReviewItem.vue'
 
-    axios.get(`${API_URL}/movies/movie/${movieId}/detail/`)
-    .then((res) => {
-      movie.value = res.data
-      // const data = res.data
+const route = useRoute()
+const accountStore = useAccountStore()
+const reviewStore = useReviewStore()
 
-      // if (typeof data.backdrop_paths === 'string') {
-      //   try {
-      //     data.backdrop_paths = JSON.parse(data.backdrop_paths.replace(/'/g, '"'))
-      //   } catch (e) {
-      //     console.error("Backdrop parsing error", e)
-      //     data.backdrop_paths = []
-      //   }
-      // }
-      // movie.value = data
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+const API_URL = import.meta.env.VITE_API_URL
+const movieId = route.params.movieId
+const movie = ref(null)
+
+const getMovieDetail = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/movies/movie/${movieId}/detail/`)
+    movie.value = res.data
+  } catch (err) {
+    console.error("영화 정보 로드 실패:", err)
   }
+}
 
-  onMounted(() => {
-    get_movie_detail()
-  })
-
+onMounted(() => {
+  getMovieDetail()
+  reviewStore.fetchMovieReviews(movieId)
+})
 </script>
 
 <style scoped>
-
+.star { color: #444; }
+.star.filled { color: #ffc107; }
 </style>

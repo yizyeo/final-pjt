@@ -15,7 +15,7 @@ export const useReviewStore = defineStore('review', {
     async fetchTotalReviews(orderBy = 'latest') {
       this.loading = true
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/review/`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/reviews/`, {
           params: { sort: orderBy }
         })
         this.totalReviews = res.data
@@ -29,7 +29,7 @@ export const useReviewStore = defineStore('review', {
     // 특정 영화의 리뷰 목록
     async fetchMovieReviews(moviePk) {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/review/movies/${moviePk}/`)
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/reviews/movies/${moviePk}/`)
         this.movieReviews = res.data
       } catch (err) {
         console.error('영화 리뷰 로드 실패:', err)
@@ -42,7 +42,7 @@ export const useReviewStore = defineStore('review', {
       try {
         const res = await axios({
           method: 'post',
-          url: `${import.meta.env.VITE_API_URL}/review/movies/${moviePk}/`,
+          url: `${import.meta.env.VITE_API_URL}/reviews/movies/${moviePk}/`,
           data: payload,
           headers: { Authorization: `Token ${accountStore.token}` }
         })
@@ -62,7 +62,7 @@ export const useReviewStore = defineStore('review', {
       try {
         const res = await axios({
           method: 'post',
-          url: `${import.meta.env.VITE_API_URL}/review/${reviewPk}/like/`,
+          url: `${import.meta.env.VITE_API_URL}/reviews/${reviewPk}/like/`,
           headers: { Authorization: `Token ${accountStore.token}` }
         })
         
