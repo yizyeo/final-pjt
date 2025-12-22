@@ -41,4 +41,20 @@ class MovieSearchSerializer(serializers.ModelSerializer):
 class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fiels = ('tmdb_id', 'poster_path', 'title', 'vote_agerage',)
+        fields = ('tmdb_id', 'poster_path', 'title', 'vote_average',)
+
+# MovieListSerializer 로컬 버전(?) - 데이터 없어서 검증은 안됨
+# class MovieListSerializer(serializers.ModelSerializer):
+#     # 외부 URL 대신 로컬 서버의 이미지 주소를 생성
+#     local_poster_url = serializers.SerializerMethodField()
+
+#     class Meta:
+#         model = Movie
+#         fields = ('tmdb_id', 'local_poster_url', 'title', 'vote_average')
+
+#     def get_local_poster_url(self, obj):
+#         # 만약 media/posters/ 폴더에 '영화ID.jpg'로 저장되어 있다면
+#         if obj.poster_path:
+#             # 예: /media/posters/278.jpg
+#             return f"/media/posters/{obj.tmdb_id}.jpg"
+#         return None
