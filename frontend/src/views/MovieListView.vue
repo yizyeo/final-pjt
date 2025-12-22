@@ -1,28 +1,16 @@
 <template>
-  <div>
+  <div class="movie-list-view">
     <h1>영화 목록</h1>
     <hr>
-    <div class="dropdown">장르</div>
-    <div>연도</div>
-    <hr>
+    <MovieListFilter />
 
-    <div style="display: flex; flex-wrap: wrap;">
+    <div class="movie-grid">
       <div 
         v-for="movie in movies" 
         :key="movie.tmdb_id" 
-        style="width: 25%; box-sizing: border-box; padding: 10px;"
+        class="movie-item"
       >
-        <a href="#">
-          <img 
-            :src="'https://image.tmdb.org/t/p/w300' + movie.poster_path" 
-            :alt="movie.title"
-            style="width: 100%;"
-          >
-        </a>
-        <div>
-          <strong>{{ movie.title }}</strong>
-          <p>평점: {{ movie.vote_average }}</p>
-        </div>
+        <MovieListItem :movie="movie" />
       </div>
     </div>
   </div>
@@ -31,8 +19,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import MovieListFilter from '@/components/movies/MovieListFilter.vue'
+import MovieListItem from '@/components/movies/MovieListItem.vue'
 
-// API URL 설정 (상황에 맞게 조정)
 const API_URL = import.meta.env.VITE_API_URL
 const movies = ref([])
 
@@ -53,3 +42,39 @@ onMounted(() => {
   getMovies()
 })
 </script>
+
+<style scoped>
+.movie-list-view {
+  padding: 20px;
+}
+
+.movie-grid {
+  display: flex; 
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.movie-item {
+  width: 25%; 
+  box-sizing: border-box;
+}
+
+/* 반응형 처리 */
+@media (max-width: 1024px) {
+  .movie-item {
+    width: 33.3%;
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-item {
+    width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-item {
+    width: 100%;
+  }
+}
+</style>
