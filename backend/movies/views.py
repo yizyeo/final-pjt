@@ -36,11 +36,27 @@ def movie_detail(request, movie_pk):
     return Response(serializer.data)
 
 @api_view(['POST'])
-def movie_like():
+def movie_like(request):
     pass
 
 @api_view(['GET'])
 def movie_list(request):
+    pass
+
+
+@api_view(['GET'])
+def search(request):
+    query = request.GET.get('q')
+    if query:
+        movies = Movie.objects.filter(title__icontains=query)
+        serializer = SearchSerializer(movies, many=True)
+        return Response(serializer.data)
+    return Response([])
+
+
+@api_view(['GET'])
+def worldcup(request):
+    pass
     now = timezone.now()
     # 개봉일만 오늘 이전인 영화
     # movies = Movie.objects.filter(release_date__lte=now).order_by('-release_date')[:20]

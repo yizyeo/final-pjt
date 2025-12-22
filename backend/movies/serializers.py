@@ -32,7 +32,7 @@ class HomeListSerializer(serializers.ModelSerializer):
         model = Movie
         fields = ('tmdb_id', 'poster_path', 'title', 'vote_average', 'genres',)
         
-class MovieSearchSerializer(serializers.ModelSerializer):
+class SearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = ('tmdb_id', 'poster_path', 'title', 'release_date', 'genres', )
@@ -42,6 +42,12 @@ class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = ('tmdb_id', 'poster_path', 'title', 'vote_average',)
+        
+        
+class WorldcupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = ('tmdb_id', 'poster_path', 'title', 'release_data', 'genre',) # 예고편 추가?
 
 # MovieListSerializer 로컬 버전(?) - 데이터 없어서 검증은 안됨
 # class MovieListSerializer(serializers.ModelSerializer):
