@@ -7,4 +7,6 @@ urlpatterns = [
     path('homelist/', views.home_list), # 
     path('movie/<int:movie_pk>/detail/', views.movie_detail),
     path('movielist/', views.movie_list),
+    path('search/', views.search),
+    path('worldcup/', views.worldcup), 
 ]

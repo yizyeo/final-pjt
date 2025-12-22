@@ -8,7 +8,22 @@
     </div>
     <div class="navbar-right">
       <div class="search-bar">
-        <input type="text" placeholder="Search movies..." />
+        <input 
+          type="text" 
+          placeholder="Search movies..." 
+          v-model="searchQuery"
+          @keyup.enter="handleSearch"
+          @focus="showHistory = true"
+          @blur="hideHistory"
+        />
+        <div v-if="showHistory && recentSearches.length > 0" class="search-history">
+          <ul>
+            <li v-for="(item, index) in recentSearches" :key="index" @mousedown="selectHistory(item)">
+              <span>{{ item }}</span>
+              <button @mousedown.stop="removeHistory(index)" class="remove-btn">x</button>
+            </li>
+          </ul>
+        </div>
       </div>
       <div v-if="accountStore.isLogin" class="user-info">
         <span>환영합니다, {{ accountStore.username }}님!</span>
@@ -31,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import { useRouter, RouterLink } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
@@ -39,6 +54,58 @@ import { useAccountStore } from '@/stores/accounts'
 const router = useRouter()
 const accountStore = useAccountStore()
 const dropdownOpen = ref(false)
+
+// Search logic
+const searchQuery = ref('')
+const recentSearches = ref([])
+const showHistory = ref(false)
+
+const loadHistory = () => {
+  const history = localStorage.getItem('searchHistory')
+  if (history) {
+    recentSearches.value = JSON.parse(history)
+  }
+}
+
+const saveHistory = () => {
+  localStorage.setItem('searchHistory', JSON.stringify(recentSearches.value))
+}
+
+const handleSearch = () => {
+  const query = searchQuery.value.trim()
+  if (!query) return
+
+  // Update history
+  const index = recentSearches.value.indexOf(query)
+  if (index > -1) {
+    recentSearches.value.splice(index, 1)
+  }
+  recentSearches.value.unshift(query)
+  if (recentSearches.value.length > 10) {
+    recentSearches.value.pop()
+  }
+  saveHistory()
+  
+  showHistory.value = false
+  router.push({ name: 'SearchView', query: { q: query } })
+}
+
+const selectHistory = (item) => {
+  searchQuery.value = item
+  handleSearch()
+}
+
+const removeHistory = (index) => {
+  recentSearches.value.splice(index, 1)
+  saveHistory()
+}
+
+const hideHistory = () => {
+  // Delay slightly to allow click event on history item
+  setTimeout(() => {
+    showHistory.value = false
+  }, 200)
+}
 
 const logOut = function () {
   dropdownOpen.value = false
@@ -52,6 +119,10 @@ const toggleDropdown = () => {
 const goToHome = () => {
   router.push({ name: 'HomeView' })
 }
+
+onMounted(() => {
+  loadHistory()
+})
 
 </script>
 
@@ -86,6 +157,10 @@ const goToHome = () => {
   gap: 1.5rem;
 }
 
+.search-bar {
+  position: relative;
+}
+
 .search-bar input {
   padding: 0.5rem;
   border-radius: 4px;
@@ -97,6 +172,56 @@ const goToHome = () => {
 
 .search-bar input::placeholder {
   color: #aaa;
+}
+
+.search-history {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: rgba(30, 30, 30, 0.95);
+  border: 1px solid #555;
+  border-radius: 0 0 4px 4px;
+  z-index: 1001;
+  margin-top: 2px;
+}
+
+.search-history ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-history li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #444;
+  font-size: 0.9rem;
+  color: #e5e5e5;
+}
+
+.search-history li:last-child {
+  border-bottom: none;
+}
+
+.search-history li:hover {
+  background-color: #444;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.remove-btn:hover {
+  color: white;
 }
 
 .auth-links a, .user-info span {

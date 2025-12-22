@@ -8,6 +8,8 @@ import MovieDetailView from '@/views/MovieDetailView.vue'
 import MovieListView from '@/views/MovieListView.vue'
 import ReviewListView from '@/views/ReviewListView.vue'
 import ReviewDetailView from '@/views/ReviewDetailView.vue'
+import SearchView from '@/views/SearchView.vue'
+import WorldcupView from '@/views/WorldcupView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +60,16 @@ const router = createRouter({
       name: 'ReviewDetail',
       component: ReviewDetailView
     },
+    {
+      path: '/search',
+      name: 'SearchView',
+      component: SearchView
+    },
+    {
+      path: '/worldcup',
+      name: 'WorldcupView',
+      component: WorldcupView
+    }
   ]
 })
 
