@@ -23,7 +23,7 @@
         <a href="#" class="btn">Recommend</a> <!-- /reviewrecommend -->
       </div>
       <div>
-        <a href="#" class="btn">Worldcup</a> <!-- /worldcup -->
+        <a href="/worldcup" class="btn">Worldcup</a> <!-- /worldcup -->
       </div>
     </div>
     <hr>
