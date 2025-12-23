@@ -5,6 +5,11 @@
         <span class="icon">🎬</span>
         <span class="text">Home</span>
       </a>
+      <div class="nav-links">
+        <a href="" @click.prevent="goToMovieList">영화</a>
+        <span class="divider">|</span> 
+        <a href="" @click.prevent="goToReviewList">리뷰</a>
+      </div>
     </div>
     <div class="navbar-right">
       <div class="search-bar">
@@ -46,12 +51,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
-import { useRouter, RouterLink } from 'vue-router'
+import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 
 const router = useRouter()
+const route = useRoute()
 const accountStore = useAccountStore()
 const dropdownOpen = ref(false)
 
@@ -59,6 +65,13 @@ const dropdownOpen = ref(false)
 const searchQuery = ref('')
 const recentSearches = ref([])
 const showHistory = ref(false)
+
+// Watch route to clear search query when leaving SearchView
+watch(() => route.name, (newName) => {
+  if (newName !== 'SearchView') {
+    searchQuery.value = ''
+  }
+})
 
 const loadHistory = () => {
   const history = localStorage.getItem('searchHistory')
@@ -120,6 +133,14 @@ const goToHome = () => {
   router.push({ name: 'HomeView' })
 }
 
+const goToMovieList = () => {
+  router.push({ name: 'MovieListView' })
+}
+
+const goToReviewList = () => {
+  router.push({ name: 'ReviewListView' })
+}
+
 onMounted(() => {
   loadHistory()
 })
@@ -151,10 +172,37 @@ onMounted(() => {
   margin-right: 0.5rem;
 }
 
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-links a {
+  color: #e5e5e5;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+.divider {
+  color: #555;
+  font-size: 0.8rem;
 }
 
 .search-bar {

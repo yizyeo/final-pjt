@@ -12,6 +12,11 @@
           {{ genre.name }}
         </span>
       </div>
+      
+      <button @click="$emit('show-trailer')" class="btn btn-danger mb-4">
+        🎬 예고편 보기
+      </button>
+
       <h4>줄거리</h4>
       <p class="overview">{{ movie.overview }}</p>
     </div>
@@ -20,4 +25,5 @@
 
 <script setup>
 defineProps(['movie'])
+defineEmits(['show-trailer'])
 </script>

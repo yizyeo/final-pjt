@@ -1,7 +1,7 @@
 <template>
   <div class="container py-5">
     <div v-if="movie">
-      <MovieInfo :movie="movie" />
+      <MovieInfo :movie="movie" @show-trailer="openTrailer" />
 
       <hr class="text-secondary my-5">
       
@@ -37,6 +37,14 @@
     <div v-else class="text-center py-5">
       <div class="spinner-border text-light"></div>
     </div>
+
+    <!-- Trailer Modal -->
+    <YoutubeTrailer 
+      v-if="trailerVideoId"
+      :show="showTrailerModal" 
+      :video-id="trailerVideoId" 
+      @close="closeTrailer" 
+    />
   </div>
 </template>
 
@@ -50,6 +58,7 @@ import axios from 'axios'
 import MovieInfo from '@/components/movies/MovieInfo.vue'
 import ReviewForm from '@/components/review/ReviewForm.vue'
 import ReviewItem from '@/components/review/ReviewItem.vue'
+import YoutubeTrailer from '@/components/movies/YoutubeTrailer.vue'
 
 const route = useRoute()
 const accountStore = useAccountStore()
@@ -59,6 +68,9 @@ const API_URL = import.meta.env.VITE_API_URL
 const movieId = route.params.movieId
 const movie = ref(null)
 
+const showTrailerModal = ref(false)
+const trailerVideoId = ref(null)
+
 const getMovieDetail = async () => {
   try {
     const res = await axios.get(`${API_URL}/movies/movie/${movieId}/detail/`)
@@ -66,6 +78,30 @@ const getMovieDetail = async () => {
   } catch (err) {
     console.error("영화 정보 로드 실패:", err)
   }
+}
+
+const openTrailer = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/movies/movie/${movieId}/trailer/`)
+    if (res.data.videoId) {
+      trailerVideoId.value = res.data.videoId
+      showTrailerModal.value = true
+    } else {
+      alert('예고편을 찾을 수 없습니다.')
+    }
+  } catch (err) {
+    console.error('예고편 로드 실패:', err)
+    alert('예고편을 불러오는데 실패했습니다.')
+  }
+}
+
+const closeTrailer = () => {
+  showTrailerModal.value = false
+  // trailerVideoId.value = null // keep id to prevent flicker or just clear it. Component handles v-if on show.
+  // But removing v-if="trailerVideoId" in template and relying on show is better, 
+  // OR keep v-if="trailerVideoId" and clear it here.
+  // Current implementation in template has v-if="trailerVideoId"
+  trailerVideoId.value = null 
 }
 
 onMounted(() => {
