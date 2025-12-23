@@ -1,7 +1,34 @@
 <template>
   <div class="container py-5">
-    <div v-if="movie">
-      <MovieInfo :movie="movie" @show-trailer="openTrailer" />
+    <div v-if="movieStore.movieDetail">
+      
+      <MovieInfo :movie="movieStore.movieDetail" @show-trailer="openTrailer" />
+
+      <div class="action-buttons mt-4">
+        <button 
+          @click="movieStore.toggleLike(movieId)" 
+          class="action-btn"
+          :class="{ 'active': movieStore.movieDetail.is_liked }"
+        >
+          {{ movieStore.movieDetail.is_liked ? '❤️ 좋아요 취소' : '🤍 좋아요' }}
+        </button>
+
+        <button 
+          @click="movieStore.toggleWish(movieId)" 
+          class="action-btn"
+          :class="{ 'active': movieStore.movieDetail.is_wished }"
+        >
+          {{ movieStore.movieDetail.is_wished ? '🔷 찜 취소' : '🔖 볼거에요' }}
+        </button>
+
+        <button 
+          @click="movieStore.toggleWatched(movieId)" 
+          class="action-btn"
+          :class="{ 'active': movieStore.movieDetail.is_watched }"
+        >
+          {{ movieStore.movieDetail.is_watched ? '✅ 봤어요' : '☑️ 안 봤어요' }}
+        </button>
+      </div>
 
       <hr class="text-secondary my-5">
       
@@ -27,7 +54,7 @@
       <div class="mt-5 text-white">
         <h3>Backdrops</h3>
         <div class="row">
-          <div v-for="(path, index) in movie.backdrop_paths" :key="index" class="col-md-6 mb-3">
+          <div v-for="(path, index) in movieStore.movieDetail.backdrop_paths" :key="index" class="col-md-6 mb-3">
             <img :src="`https://image.tmdb.org/t/p/original${path}`" class="img-fluid rounded">
           </div>
         </div>
@@ -38,11 +65,10 @@
       <div class="spinner-border text-light"></div>
     </div>
 
-    <!-- Trailer Modal -->
     <YoutubeTrailer 
-      v-if="trailerVideoId"
+      v-if="showTrailerModal"
       :show="showTrailerModal" 
-      :video-id="trailerVideoId" 
+      :video-id="movieStore.trailerKey" 
       @close="closeTrailer" 
     />
   </div>
@@ -53,7 +79,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 import { useReviewStore } from '@/stores/review'
-import axios from 'axios'
+import { useMovieStore } from '@/stores/movie'
 
 import MovieInfo from '@/components/movies/MovieInfo.vue'
 import ReviewForm from '@/components/review/ReviewForm.vue'
@@ -63,54 +89,61 @@ import YoutubeTrailer from '@/components/movies/YoutubeTrailer.vue'
 const route = useRoute()
 const accountStore = useAccountStore()
 const reviewStore = useReviewStore()
+const movieStore = useMovieStore()
 
-const API_URL = import.meta.env.VITE_API_URL
 const movieId = route.params.movieId
-const movie = ref(null)
 
+// 예고편 모달 UI 상태 (UI 로직은 컴포넌트에 남김)
 const showTrailerModal = ref(false)
-const trailerVideoId = ref(null)
-
-const getMovieDetail = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/movies/movie/${movieId}/detail/`)
-    movie.value = res.data
-  } catch (err) {
-    console.error("영화 정보 로드 실패:", err)
-  }
-}
 
 const openTrailer = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/movies/movie/${movieId}/trailer/`)
-    if (res.data.videoId) {
-      trailerVideoId.value = res.data.videoId
-      showTrailerModal.value = true
-    } else {
-      alert('예고편을 찾을 수 없습니다.')
-    }
-  } catch (err) {
-    console.error('예고편 로드 실패:', err)
-    alert('예고편을 불러오는데 실패했습니다.')
+  // 1. Store를 통해 키 가져오기
+  await movieStore.fetchTrailer(movieId)
+  
+  // 2. 키가 있으면 모달 열기
+  if (movieStore.trailerKey) {
+    showTrailerModal.value = true
   }
 }
 
 const closeTrailer = () => {
   showTrailerModal.value = false
-  // trailerVideoId.value = null // keep id to prevent flicker or just clear it. Component handles v-if on show.
-  // But removing v-if="trailerVideoId" in template and relying on show is better, 
-  // OR keep v-if="trailerVideoId" and clear it here.
-  // Current implementation in template has v-if="trailerVideoId"
-  trailerVideoId.value = null 
 }
 
 onMounted(() => {
-  getMovieDetail()
+  // Store 액션 호출로 데이터 로드
+  movieStore.fetchMovieDetail(movieId)
   reviewStore.fetchMovieReviews(movieId)
 })
 </script>
 
 <style scoped>
-.star { color: #444; }
-.star.filled { color: #ffc107; }
+/* 버튼 레이아웃 */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+/* 버튼 디자인 */
+.action-btn {
+  padding: 8px 16px;
+  border: 1px solid #666;
+  border-radius: 20px;
+  background-color: transparent;
+  color: #ddd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* 활성화 상태 (눌렀을 때) */
+.action-btn.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  color: #ffc107; /* 포인트 컬러 */
+  font-weight: bold;
+}
+
+.action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 </style>

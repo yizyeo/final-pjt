@@ -16,12 +16,16 @@ from django.conf import settings
 from datetime import date
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
+import openai
+import re
+
 
 @api_view(['GET'])
 def genre_list(request):
     genres = Genre.objects.all().order_by('genre_id')
     serializer = GenreSerializer(genres, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def carousel_backdrop(request):
@@ -36,15 +40,26 @@ def home_list(request):
     serializer = HomeListSerializer(movies, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    serializer = MovieDetailSerializer(movie)
+    serializer = MovieDetailSerializer(movie, context={'request': request})
     return Response(serializer.data)
 
+
 @api_view(['POST'])
-def movie_like(request):
-    pass
+@permission_classes([IsAuthenticated])
+def movie_like(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if movie.like_users.filter(pk=request.user.pk).exists():
+        movie.like_users.remove(request.user)
+        is_liked = False
+    else:
+        movie.like_users.add(request.user)
+        is_liked = True
+    return Response({'is_liked': is_liked})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -57,6 +72,20 @@ def movie_wish(request, movie_pk):
         movie.wish_users.add(request.user)
         is_wished = True
     return Response({'is_wished': is_wished})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def movie_watched(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if movie.watched_users.filter(pk=request.user.pk).exists():
+        movie.watched_users.remove(request.user)
+        is_watched = False
+    else:
+        movie.watched_users.add(request.user)
+        is_watched = True
+    return Response({'is_watched': is_watched})
+
 
 @api_view(['GET'])
 def movie_list(request):
@@ -96,7 +125,6 @@ def movie_list(request):
     # 확인 결과 큰 차이 없음 popularity를 가져와서 조건 추가하는게...
     
 
-
 @api_view(['GET'])
 def search(request):
     query = request.GET.get('q')
@@ -105,6 +133,7 @@ def search(request):
         serializer = SearchSerializer(movies, many=True)
         return Response(serializer.data)
     return Response([])
+
 
 @api_view(['GET'])
 def random_worldcup(request):
@@ -125,6 +154,7 @@ def random_worldcup(request):
         
     serializer = WorldcupSerializer(selected_movies, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -149,6 +179,7 @@ def user_based_worldcup(request):
         
     serializer = WorldcupSerializer(selected_movies, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -200,3 +231,81 @@ def movie_trailer(request, movie_pk):
     except Exception as e:
         print(f"Trailer Fetch Error: {e}")
         return Response({'error': '서버 에러가 발생했습니다.'}, status=500)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def recommend_by_keyword(request):
+    user_input = request.data.get('content')
+    
+    if not user_input:
+        return Response({'message': '추천받고 싶은 상황이나 기분을 입력해주세요.'}, status=400)
+
+    # 1. GMS 전용 클라이언트 설정 (제공해주신 코드 방식 유지)
+    client = openai.OpenAI(
+        api_key=settings.OPENAI_API_KEY, 
+        base_url="https://gms.ssafy.io/gmsapi/api.openai.com/v1"
+    )
+
+    # 2. 프롬프트 설계
+    system_message = "당신은 사용자의 상황과 기분에 딱 맞는 영화를 선정해주는 전문 영화 소믈리에입니다."
+    user_prompt = f"""
+    사용자 요청: "{user_input}"
+    
+    미션:
+    1. 이 요청의 분위기나 키워드에 어울리는 유명한 대중 영화 20개를 선정하세요.
+    2. 결과는 반드시 영화의 '한국어 제목'만 쉼표(,)로 구분해서 한 줄로 나열하세요.
+    3. 다른 설명, 번호, 따옴표는 절대 포함하지 마세요.
+    
+    예시: 쇼생크 탈출, 인셉션, 어바웃 타임, 범죄도시
+    """
+
+    try:
+        # 3. GMS API 호출
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.5,
+            max_tokens=200
+        )
+        
+        ai_response = response.choices[0].message.content.strip()
+        recommended_titles = [t.strip() for t in ai_response.split(',')]
+        
+        valid_movies = []
+        for title in recommended_titles:
+            # [검색 전략] 1. 정확히 일치 시도
+            movie = Movie.objects.filter(title=title).first()
+            
+            # 2. 정확히 일치하는 게 없다면 띄어쓰기 제거 후 검색 시도
+            if not movie:
+                # 제목에서 한글/영문/숫자만 남기고 공백 제거 (예: '스파이더맨 노 웨이 홈' -> '스파이더맨노웨이홈')
+                clean_title = re.sub(r'[^가-힣a-zA-Z0-9]', '', title)
+                if clean_title:
+                    movie = Movie.objects.filter(title__icontains=clean_title).first()
+
+            if movie:
+                # 중복 방지 및 최대 10개 제한
+                if movie.tmdb_id not in [m['tmdb_id'] for m in valid_movies]:
+                    serializer = MovieListSerializer(movie)
+                    valid_movies.append(serializer.data)
+
+            if len(valid_movies) >= 10:
+                break
+
+        # 4. 결과가 부족할 경우 Fallback (인기 영화 5개 채우기)
+        if len(valid_movies) < 5:
+            popular_movies = Movie.objects.order_by('-vote_count')[:10]
+            for m in popular_movies:
+                if len(valid_movies) >= 10: break
+                if m.tmdb_id not in [x['tmdb_id'] for x in valid_movies]:
+                    valid_movies.append(MovieListSerializer(m).data)
+
+        return Response(valid_movies)
+
+    except Exception as e:
+        print(f"GMS OpenAI Error: {e}")
+        return Response({'error': '영화 추천 중 오류가 발생했습니다.'}, status=500)

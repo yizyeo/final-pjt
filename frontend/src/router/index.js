@@ -10,6 +10,7 @@ import ReviewListView from '@/views/ReviewListView.vue'
 import ReviewDetailView from '@/views/ReviewDetailView.vue'
 import SearchView from '@/views/SearchView.vue'
 import WorldcupView from '@/views/WorldcupView.vue'
+import AIRecommendView from '@/views/AIRecommendView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,7 +70,13 @@ const router = createRouter({
       path: '/worldcup',
       name: 'WorldcupView',
       component: WorldcupView
-    }
+    },
+    {
+      path: '/ai-recommend',
+      name: 'AIRecommendView',
+      component: AIRecommendView
+    },
+
   ]
 })
 
