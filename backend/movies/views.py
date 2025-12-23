@@ -17,11 +17,13 @@ from datetime import date
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
 
+
 @api_view(['GET'])
 def genre_list(request):
     genres = Genre.objects.all().order_by('genre_id')
     serializer = GenreSerializer(genres, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def carousel_backdrop(request):
@@ -36,15 +38,26 @@ def home_list(request):
     serializer = HomeListSerializer(movies, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    serializer = MovieDetailSerializer(movie)
+    serializer = MovieDetailSerializer(movie, context={'request': request})
     return Response(serializer.data)
 
+
 @api_view(['POST'])
-def movie_like(request):
-    pass
+@permission_classes([IsAuthenticated])
+def movie_like(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if movie.like_users.filter(pk=request.user.pk).exists():
+        movie.like_users.remove(request.user)
+        is_liked = False
+    else:
+        movie.like_users.add(request.user)
+        is_liked = True
+    return Response({'is_liked': is_liked})
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -57,6 +70,20 @@ def movie_wish(request, movie_pk):
         movie.wish_users.add(request.user)
         is_wished = True
     return Response({'is_wished': is_wished})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def movie_watched(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    if movie.watched_users.filter(pk=request.user.pk).exists():
+        movie.watched_users.remove(request.user)
+        is_watched = False
+    else:
+        movie.watched_users.add(request.user)
+        is_watched = True
+    return Response({'is_watched': is_watched})
+
 
 @api_view(['GET'])
 def movie_list(request):
@@ -96,7 +123,6 @@ def movie_list(request):
     # 확인 결과 큰 차이 없음 popularity를 가져와서 조건 추가하는게...
     
 
-
 @api_view(['GET'])
 def search(request):
     query = request.GET.get('q')
@@ -105,6 +131,7 @@ def search(request):
         serializer = SearchSerializer(movies, many=True)
         return Response(serializer.data)
     return Response([])
+
 
 @api_view(['GET'])
 def random_worldcup(request):
@@ -125,6 +152,7 @@ def random_worldcup(request):
         
     serializer = WorldcupSerializer(selected_movies, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -149,6 +177,7 @@ def user_based_worldcup(request):
         
     serializer = WorldcupSerializer(selected_movies, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def movie_trailer(request, movie_pk):    
