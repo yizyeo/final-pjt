@@ -6,7 +6,8 @@ export const useReviewStore = defineStore('review', {
   state: () => ({
     totalReviews: [],      // 전체 리뷰 목록
     movieReviews: [],      // 특정 영화의 리뷰 목록
-    currentReview: null,   // [핵심] 상세 페이지에서 보여줄 단일 리뷰 데이터
+    currentReview: null,   // 상세 페이지에서 보여줄 단일 리뷰 데이터
+    hotReviews: [],        // 홈 화면용 인기 리뷰 저장소
     loading: false
   }),
 
@@ -178,6 +179,19 @@ export const useReviewStore = defineStore('review', {
       } catch (err) {
         throw err
       }
-    }
+    },
+
+    // 10. 홈 화면용 인기 리뷰 5개
+    async fetchHotReviews() {
+      try {
+        // 백엔드에 'likes' 정렬로 요청
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/reviews/`, {
+          params: { sort: 'popular' } 
+        })
+        this.hotReviews = res.data.slice(0, 5)
+      } catch (err) {
+        console.error('인기 리뷰 로드 실패:', err)
+      }
+    },
   }
 })

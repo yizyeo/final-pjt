@@ -1,7 +1,7 @@
 <template>
-  <div class="container mt-5 pb-5">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-      <h2 class="fw-bold text-white mb-0">커뮤니티 리뷰 피드</h2>
+  <div>
+    <div>
+      <h2>커뮤니티 리뷰 피드</h2>
       
       <ReviewFilter 
         :currentSort="currentSort" 
@@ -9,13 +9,12 @@
       />
     </div>
 
-    <div v-if="reviewStore.loading" class="text-center py-5 mt-5">
-      <div class="spinner-border text-warning" role="status"></div>
-      <p class="text-secondary mt-3">리뷰를 불러오는 중입니다...</p>
+    <div v-if="reviewStore.loading">
+      <p>리뷰를 불러오는 중입니다...</p>
     </div>
 
-    <div v-else class="row g-4">
-      <div v-for="review in reviewStore.totalReviews" :key="review.id" class="col-12 col-xl-6">
+    <div v-else>
+      <div v-for="review in reviewStore.totalReviews" :key="review.id">
         <ReviewCard 
           :review="review"
           @go-movie="goMovieDetail"
@@ -24,8 +23,8 @@
         />
       </div>
       
-      <div v-if="!reviewStore.totalReviews.length" class="text-center py-5">
-        <h4 class="text-secondary">아직 작성된 리뷰가 없습니다.</h4>
+      <div v-if="!reviewStore.totalReviews.length">
+        <h4>아직 작성된 리뷰가 없습니다.</h4>
       </div>
     </div>
   </div>
@@ -41,7 +40,7 @@ import ReviewCard from '@/components/review/ReviewCard.vue'
 
 const reviewStore = useReviewStore()
 const router = useRouter()
-const currentSort = ref('latest')
+const currentSort = ref('popular')
 
 const changeSort = (sort) => {
   currentSort.value = sort
@@ -57,6 +56,6 @@ const goDetail = (reviewPk) => {
 }
 
 onMounted(() => {
-  reviewStore.fetchTotalReviews()
+  reviewStore.fetchTotalReviews(currentSort.value)
 })
 </script>

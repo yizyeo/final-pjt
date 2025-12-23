@@ -1,10 +1,9 @@
 <template>
-  <div class="btn-group">
+  <div>
     <button 
-      v-for="mode in ['latest', 'popular']" 
+      v-for="mode in ['popular', 'latest']" 
       :key="mode"
       @click="$emit('change-sort', mode)" 
-      class="btn btn-outline-light text-capitalize" 
       :class="{ active: currentSort === mode }"
     >
       {{ mode === 'latest' ? '최신순' : '인기순' }}
