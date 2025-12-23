@@ -20,6 +20,7 @@ class Movie(models.Model):
   overview = models.TextField(null=True, blank=True)
   genres = models.ManyToManyField(Genre, related_name='movies')
   runtime = models.IntegerField(null=True, blank=True) # detail api에서 가져와야 함
+  popularity = models.FloatField(null=True, blank=True)
   list_type = models.CharField(max_length=50) # 데이터 저장할 때 now_playing, popular 중 저장
   backdrop_paths = models.JSONField(default=list, null=True, blank=True) # array of backdrop paths
 
