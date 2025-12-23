@@ -7,7 +7,7 @@
         <p>Movie: {{ movie.title }}</p>
         <div>
           <RouterLink :to="{ name: 'MovieDetailView', params: { movieId: movie.tmdb_id } }">
-            <img :src="`https://image.tmdb.org/t/p/original${movie.backdrop_paths[0]}`" alt="Backdrop" style="width: 300px; cursor: pointer;">
+            <img v-if="Array.isArray(movie.backdrop_paths) && movie.backdrop_paths.length > 0" :src="`https://image.tmdb.org/t/p/original${movie.backdrop_paths[0]}`" alt="Backdrop" style="width: 300px; cursor: pointer;">
           </RouterLink>
         </div>
         <hr>
