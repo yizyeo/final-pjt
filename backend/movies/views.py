@@ -95,7 +95,8 @@ def movie_list(request):
     page = int(request.GET.get('page', 1))
 
     # 기본 필터: 개봉일이 오늘 이전인 영화
-    movies = Movie.objects.filter(release_date__lte=now)
+    movies = Movie.objects.filter(release_date__lte=now, poster_path__isnull=False
+                                  ).exclude(poster_path='')
 
     # 장르 및 연도 필터링
     if genre_id or year:
@@ -129,7 +130,20 @@ def movie_list(request):
 def search(request):
     query = request.GET.get('q')
     if query:
-        movies = Movie.objects.filter(title__icontains=query)
+        # 띄어쓰기로 분리해서 각 단어가 모두 포함된 영화 검색
+        words = query.split()
+        
+        movies = Movie.objects.filter(
+            poster_path__isnull=False
+        ).exclude(poster_path='')
+        
+        # 각 단어가 title에 포함되어야 함
+        for word in words:
+            movies = movies.filter(title__icontains=word)
+        
+        # popularity 순으로 정렬
+        movies = movies.order_by('-popularity')[:20]
+        
         serializer = SearchSerializer(movies, many=True)
         return Response(serializer.data)
     return Response([])
@@ -309,3 +323,13 @@ def recommend_by_keyword(request):
     except Exception as e:
         print(f"GMS OpenAI Error: {e}")
         return Response({'error': '영화 추천 중 오류가 발생했습니다.'}, status=500)
+
+@api_view(['GET'])
+def hot_movies(request):
+    """now_playing 중 popularity 상위 10개"""
+    movies = Movie.objects.filter(
+        list_type='popular'
+    ).order_by('-popularity')[:10]
+    
+    serializer = HomeListSerializer(movies, many=True)
+    return Response(serializer.data)

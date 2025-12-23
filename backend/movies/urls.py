@@ -5,6 +5,7 @@ urlpatterns = [
     path('genres/', views.genre_list), # Gnere 테이블에 저장된 전체 장르 리스트를 반환
     path('backdrops/', views.carousel_backdrop),
     path('homelist/', views.home_list),
+    path('hot/', views.hot_movies, name='hot_movies'),
 
     path('movie/<int:movie_pk>/detail/', views.movie_detail),
     path('movie/<int:movie_pk>/like/', views.movie_like),
