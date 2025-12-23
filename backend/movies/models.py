@@ -18,7 +18,6 @@ class Movie(models.Model):
   release_date = models.CharField(null=True, blank=True)
   vote_average =  models.FloatField()
   overview = models.TextField(null=True, blank=True)
-  # genres = models.CharField(max_length=255, default='[]') # array of integers
   genres = models.ManyToManyField(Genre, related_name='movies')
   runtime = models.IntegerField(null=True, blank=True) # detail api에서 가져와야 함
   list_type = models.CharField(max_length=50) # 데이터 저장할 때 now_playing, popular 중 저장
