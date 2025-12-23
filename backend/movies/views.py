@@ -11,6 +11,8 @@ from .serializers import (GenreSerializer,
                           SearchSerializer,
                           WorldcupSerializer)
 import random
+import requests
+from django.conf import settings
 from datetime import date
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
@@ -59,21 +61,34 @@ def movie_wish(request, movie_pk):
 @api_view(['GET'])
 def movie_list(request):
     now = timezone.now()
-    # 개봉일만 오늘 이전인 영화
-    # movies = Movie.objects.filter(release_date__lte=now).order_by('-release_date')[:20]
-    # serializer = MovieListSerializer(movies, many=True)
-    # return Response(serializer.data)
+    genre_id = request.GET.get('genre')
+    year = request.GET.get('year')
+    page = int(request.GET.get('page', 1))
 
-    # 개봉일 + now_playing 우선
+    # 기본 필터: 개봉일이 오늘 이전인 영화
     movies = Movie.objects.filter(release_date__lte=now)
 
-    movies = movies.annotate(
-        priority=Case(
-            When(list_type='now_playing', then=Value(0)),
-            default=Value(1),
-            output_field=IntegerField(),
-        )
-    ).order_by('priority', '-release_date')[:20] # 일단 임시로 20개만
+    # 장르 및 연도 필터링
+    if genre_id or year:
+        if genre_id:
+            movies = movies.filter(genres__genre_id=genre_id)
+        if year:
+            movies = movies.filter(release_date__startswith=str(year))
+        
+        movies = movies.order_by('-release_date')[:50] # 필터 적용 시 50개 제한
+        
+    else:
+        # 필터가 없는 경우 기존 로직 (개봉일 + now_playing 우선) + 페이지네이션
+        page_size = 20
+        offset = (page - 1) * page_size
+        
+        movies = movies.annotate(
+            priority=Case(
+                When(list_type='now_playing', then=Value(0)),
+                default=Value(1),
+                output_field=IntegerField(),
+            )
+        ).order_by('priority', '-release_date')[offset : offset + page_size]
 
     serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)
@@ -135,5 +150,37 @@ def user_based_worldcup(request):
     serializer = WorldcupSerializer(selected_movies, many=True)
     return Response(serializer.data)
 
-
-
+@api_view(['GET'])
+def movie_trailer(request, movie_pk):    
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    query = f"{movie.title} 공식 예고편"
+    
+    url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        'key': settings.YOUTUBE_API_KEY,
+        'q': query,
+        'part': 'snippet',
+        'type': 'video',
+        'maxResults': 1,
+        'regionCode': 'KR'
+    }
+    
+    try:
+        response = requests.get(url, params=params)
+        data = response.json()
+        
+        if 'error' in data:
+            print(f"Youtube API error: {data['error']}")
+            return Response({'videoId': None, 'error':data['error']['message']},status=400)
+        
+        if 'items' in data and len(data['items']) > 0:
+            video_id = data['items'][0]['id']['videoId']
+            print(f"Movie: {movie.title}, YouTube Video ID: {video_id}")
+            return Response({'videoId': video_id})
+        else:
+            print(f"Movie: {movie.title}, No trailer found on YouTube.")
+            return Response({'videoId': None})
+            
+    except Exception as e:
+        print(f"YouTube API Error: {e}")
+        return Response({'videoId': None}, status=500)
