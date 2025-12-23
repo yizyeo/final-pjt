@@ -65,6 +65,7 @@ class MovieListSerializer(serializers.ModelSerializer):
         
         
 class WorldcupSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True, read_only=True)
     class Meta:
         model = Movie
         fields = ('tmdb_id', 'poster_path', 'title', 'release_date', 'genres',) # 예고편 추가?
