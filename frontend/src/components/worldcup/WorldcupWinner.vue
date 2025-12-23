@@ -35,7 +35,8 @@ const getPosterUrl = (path) => {
 };
 
 const getGenreNames = (genres) => {
-    return '장르'; 
+    if (!genres || genres.length === 0) return '장르 없음';
+    return genres.map(g => g.name_kr).join(', ');
 };
 
 const goToDetail = () => {

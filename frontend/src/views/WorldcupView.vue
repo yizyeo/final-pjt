@@ -75,6 +75,14 @@ const currentRoundName = computed(() => {
 });
 
 // Methods
+const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
+
 const handleStartGame = async ({ count, mode }) => {
     loading.value = true;
     try {
@@ -112,7 +120,7 @@ const selectWinner = (index) => {
             gameState.value = 'winner';
         } else {
             // Next Round
-            roundMovies.value = [...nextRoundMovies.value];
+            roundMovies.value = shuffle([...nextRoundMovies.value]);
             nextRoundMovies.value = [];
             currentMatchIndex.value = 0;
         }

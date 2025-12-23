@@ -1,5 +1,5 @@
-
 import os
+import re
 import requests
 import time
 from django.conf import settings
@@ -17,23 +17,35 @@ from movies.models import Movie
 class Command(BaseCommand):
     help = 'TMDB API saved first movie data to DB.'
 
+    def _contains_korean(self, text):
+        """한글이 포함되어 있는지 확인"""
+        if not text:
+            return False
+        return bool(re.search(r'[가-힣]', text))
+
     def _save_basic_movie_info(self, data, current_list_type):
         tmdb_id = data.get('id')
+        title = data.get('title')
+        
         if not tmdb_id:
-            return
+            return False
+
+        # 한국어 제목이 아니면 스킵
+        if not self._contains_korean(title):
+            return False
 
         Movie.objects.update_or_create(
             tmdb_id=tmdb_id,
             defaults={
-                'title': data.get('title'),
+                'title': title,
                 'poster_path': data.get('poster_path'), 
                 'release_date': data.get('release_date') or None, 
                 'vote_average': data.get('vote_average'),
-                'overview': data.get('overview'), 
-                'genres': data.get('genre_ids'),
+                'overview': data.get('overview'),
                 'list_type': current_list_type,
             }
         )
+        return True
 
     def handle(self, *args, **options):
         if not TMDB_API_KEY:
@@ -42,13 +54,15 @@ class Command(BaseCommand):
             
         self.stdout.write(f"API key load okey, seeding start...")
 
-        API_LISTS = ['now_playing', 'popular'] 
-        MAX_PAGES = 100
+        API_LISTS = ['popular'] # now_playing은 100페이지 까지만
+        MAX_PAGES = 300
 
         for list_type in API_LISTS:
             self.stdout.write(f"--- {list_type} list seeding start ---")
+            saved_count = 0
+            skipped_count = 0
             
-            for page in range(1, MAX_PAGES + 1):
+            for page in range(101, MAX_PAGES + 1):
                 url = f"https://api.themoviedb.org/3/movie/{list_type}?api_key={TMDB_API_KEY}&page={page}&language=ko-KR"
                 
                 try:
@@ -61,9 +75,12 @@ class Command(BaseCommand):
                     break
                 
                 for movie_data in response.get('results', []):
-                    self._save_basic_movie_info(movie_data, list_type) 
+                    if self._save_basic_movie_info(movie_data, list_type):
+                        saved_count += 1
+                    else:
+                        skipped_count += 1
                     
                 time.sleep(0.5)
-                self.stdout.write(f"page {page} ok. (total {list_type} {page*20} saved)")
+                self.stdout.write(f"page {page} ok. (saved: {saved_count}, skipped: {skipped_count})")
 
-        self.stdout.write(self.style.SUCCESS("first data seeding complete."))
+        self.stdout.write(self.style.SUCCESS(f"first data seeding complete. total saved: {saved_count}, skipped: {skipped_count}"))

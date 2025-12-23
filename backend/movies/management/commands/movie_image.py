@@ -1,8 +1,6 @@
-
 import os
 import requests
 import time
-import json
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from dotenv import load_dotenv
@@ -42,7 +40,7 @@ class Command(BaseCommand):
             try:
                 # Fetch movie images
                 response = requests.get(url)
-                response.raise_for_status()  # Raise an exception for bad status codes
+                response.raise_for_status()
                 data = response.json()
 
                 # Get backdrop file_paths (up to 5)
@@ -50,8 +48,8 @@ class Command(BaseCommand):
                 backdrop_paths = [backdrop['file_path'] for backdrop in backdrops[:5]]
 
                 if backdrop_paths:
-                    # Save the list of paths as a JSON string
-                    movie.backdrop_paths = json.dumps(backdrop_paths)
+                    # JSONField는 리스트를 직접 저장
+                    movie.backdrop_paths = backdrop_paths
                     movie.save()
                     self.stdout.write(self.style.SUCCESS(f"Successfully saved backdrop paths for '{movie.title}'."))
                 else:
