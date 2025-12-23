@@ -33,7 +33,7 @@ ALLOWED_HOSTS = hosts.split(',') if hosts else []
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
-
+TMDB_API_KEY  = os.environ.get('TMDB_API_KEY')
 # Application definition
 
 INSTALLED_APPS = [
