@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .models import Genre, Movie
 from .serializers import (GenreSerializer, 
@@ -180,36 +180,53 @@ def user_based_worldcup(request):
 
 
 @api_view(['GET'])
-def movie_trailer(request, movie_pk):    
+@permission_classes([AllowAny])
+def movie_trailer(request, movie_pk):
+
     movie = get_object_or_404(Movie, pk=movie_pk)
-    query = f"{movie.title} 공식 예고편"
+    tmdb_id = movie.tmdb_id
+    api_key = settings.TMDB_API_KEY 
     
-    url = "https://www.googleapis.com/youtube/v3/search"
+    # 1. TMDB API로 비디오 정보 요청
+    url = f"https://api.themoviedb.org/3/movie/{tmdb_id}/videos"
     params = {
-        'key': settings.YOUTUBE_API_KEY,
-        'q': query,
-        'part': 'snippet',
-        'type': 'video',
-        'maxResults': 1,
-        'regionCode': 'KR'
+        'api_key': api_key,
+        'language': 'ko-KR' # 한국어 예고편 우선
     }
-    
+
     try:
         response = requests.get(url, params=params)
         data = response.json()
+        results = data.get('results', [])
         
-        if 'error' in data:
-            print(f"Youtube API error: {data['error']}")
-            return Response({'videoId': None, 'error':data['error']['message']},status=400)
+        # 2. 한국어 예고편이 없으면 영어로 재시도 (선택 사항)
+        if not results:
+            params['language'] = 'en-US'
+            response = requests.get(url, params=params)
+            data = response.json()
+            results = data.get('results', [])
+
+        # 3. 결과 중에서 'YouTube'이면서 'Trailer'인 것 찾기
+        video_id = None
         
-        if 'items' in data and len(data['items']) > 0:
-            video_id = data['items'][0]['id']['videoId']
-            print(f"Movie: {movie.title}, YouTube Video ID: {video_id}")
+        # 우선순위: Trailer > Teaser
+        for video in results:
+            if video['site'] == 'YouTube' and video['type'] == 'Trailer':
+                video_id = video['key']
+                break
+        
+        # Trailer가 없으면 Teaser라도 가져오기
+        if not video_id and results:
+             for video in results:
+                if video['site'] == 'YouTube':
+                    video_id = video['key']
+                    break
+
+        if video_id:
             return Response({'videoId': video_id})
         else:
-            print(f"Movie: {movie.title}, No trailer found on YouTube.")
-            return Response({'videoId': None})
-            
+            return Response({'videoId': None, 'message': '예고편을 찾을 수 없습니다.'})
+
     except Exception as e:
-        print(f"YouTube API Error: {e}")
-        return Response({'videoId': None}, status=500)
+        print(f"Trailer Fetch Error: {e}")
+        return Response({'error': '서버 에러가 발생했습니다.'}, status=500)
