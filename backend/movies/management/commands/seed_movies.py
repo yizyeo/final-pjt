@@ -11,7 +11,7 @@ load_dotenv(Path(settings.BASE_DIR) / '.env')
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
-from movies.models import Movie 
+from movies.models import Movie, Genre  # Genre 추가
 
 
 class Command(BaseCommand):
@@ -34,7 +34,9 @@ class Command(BaseCommand):
         if not self._contains_korean(title):
             return False
 
-        Movie.objects.update_or_create(
+        genre_ids = data.get('genre_ids', [])  # 장르 ID 가져오기
+
+        movie, created = Movie.objects.update_or_create(
             tmdb_id=tmdb_id,
             defaults={
                 'title': title,
@@ -42,9 +44,16 @@ class Command(BaseCommand):
                 'release_date': data.get('release_date') or None, 
                 'vote_average': data.get('vote_average'),
                 'overview': data.get('overview'),
+                'popularity': data.get('popularity'),
                 'list_type': current_list_type,
             }
         )
+        
+        # ManyToMany 장르 설정
+        if genre_ids:
+            genres = Genre.objects.filter(genre_id__in=genre_ids)
+            movie.genres.set(genres)
+        
         return True
 
     def handle(self, *args, **options):
@@ -54,7 +63,7 @@ class Command(BaseCommand):
             
         self.stdout.write(f"API key load okey, seeding start...")
 
-        API_LISTS = ['popular'] # now_playing은 100페이지 까지만
+        API_LISTS = ['now_playing', 'popular']
         MAX_PAGES = 300
 
         for list_type in API_LISTS:
@@ -62,7 +71,7 @@ class Command(BaseCommand):
             saved_count = 0
             skipped_count = 0
             
-            for page in range(101, MAX_PAGES + 1):
+            for page in range(2, MAX_PAGES + 1):
                 url = f"https://api.themoviedb.org/3/movie/{list_type}?api_key={TMDB_API_KEY}&page={page}&language=ko-KR"
                 
                 try:
