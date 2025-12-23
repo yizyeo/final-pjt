@@ -51,7 +51,7 @@
         </div>
       </section>
 
-      <div class="mt-5 text-white">
+      <div class="mt-5 text-white" v-if="Array.isArray(movieStore.movieDetail.backdrop_paths) && movieStore.movieDetail.backdrop_paths.length > 0">
         <h3>Backdrops</h3>
         <div class="row">
           <div v-for="(path, index) in movieStore.movieDetail.backdrop_paths" :key="index" class="col-md-6 mb-3">
