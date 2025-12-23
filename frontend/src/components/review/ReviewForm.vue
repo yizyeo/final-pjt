@@ -1,32 +1,30 @@
 <template>
-  <div class="review-form-container bg-dark p-4 rounded-3 border border-secondary mt-5">
-    <h4 class="text-white mb-3">이 영화는 어땠나요?</h4>
+  <div class="review-form-container">
+    <h4>이 영화는 어땠나요?</h4>
     
-    <div class="star-input-container mb-3">
-      <div class="stars">
+    <div class="star-input-container">
+      <div class="stars" @mouseleave="hoverScore = 0">
         <span 
-          v-for="score in 5" 
-          :key="score"
+          v-for="n in 5" 
+          :key="n"
           class="star-btn"
-          :class="{ filled: (hoverScore || rating) >= score }"
-          @mouseenter="hoverScore = score"
-          @mouseleave="hoverScore = 0"
-          @click="setRating(score)"
+          @mousemove="handleMouseMove($event, n)"
+          @click="setRating"
         >
-          ★
+          {{ getStarChar(n) }}
         </span>
       </div>
-      <span class="score-text ms-2 text-secondary">{{ (hoverScore || rating) * 2 }}점</span>
+      <span class="score-text">{{ (hoverScore || rating) * 2 }}점</span>
     </div>
 
-    <div class="input-group">
-      <textarea 
-        v-model.trim="content"
-        class="form-control bg-secondary text-white border-0" 
-        placeholder="스포일러 방지를 위해 매너를 지켜주세요!"
-        rows="3"
-      ></textarea>
-      <button @click="submitReview" class="btn btn-primary px-4">등록</button>
+    <div>
+      <input type="checkbox" id="spoiler-check" v-model="isSpoiler">
+      <label for="spoiler-check">스포일러가 포함된 댓글입니다.</label>
+    </div>
+
+    <div>
+      <textarea v-model.trim="content" placeholder="리뷰 내용을 입력해주세요."></textarea>
+      <button @click="submitReview">등록</button>
     </div>
   </div>
 </template>
@@ -39,11 +37,32 @@ const props = defineProps(['moviePk'])
 const reviewStore = useReviewStore()
 
 const content = ref('')
-const rating = ref(0)      // 클릭한 별점
-const hoverScore = ref(0)  // 마우스 올린 별점
+const rating = ref(0)      // 저장된 별 개수 (0.5 단위)
+const hoverScore = ref(0)  // 호버 중인 별 개수 (0.5 단위)
+const isSpoiler = ref(false)
 
-const setRating = (score) => {
-  rating.value = score
+// 마우스 위치에 따라 0.5점 단위 계산
+const handleMouseMove = (event, n) => {
+  const rect = event.target.getBoundingClientRect()
+  const x = event.clientX - rect.left // 별 내부에서의 마우스 X 좌표
+  
+  if (x < rect.width / 2) {
+    hoverScore.value = n - 0.5 // 왼쪽 절반
+  } else {
+    hoverScore.value = n // 오른쪽 절반
+  }
+}
+
+const setRating = () => {
+  rating.value = hoverScore.value
+}
+
+// 별 모양 결정 로직
+const getStarChar = (n) => {
+  const current = hoverScore.value || rating.value
+  if (current >= n) return '★'       // 꽉 찬 별
+  if (current >= n - 0.5) return '⯪'  // 반 별 (유니코드 하프 스타)
+  return '☆'                         // 빈 별
 }
 
 const submitReview = async () => {
@@ -52,13 +71,15 @@ const submitReview = async () => {
 
   const payload = {
     content: content.value,
-    rating: rating.value * 2  // 백엔드 10점 만점 기준에 맞춤
+    rating: Math.round(rating.value * 2), // 0.5 * 2 = 1점 단위로 변환
+    is_spoiler: isSpoiler.value
   }
 
   try {
     await reviewStore.createReview(props.moviePk, payload)
     content.value = ''
     rating.value = 0
+    isSpoiler.value = false
     alert('리뷰가 등록되었습니다!')
   } catch (err) {
     alert('리뷰 등록에 실패했습니다.')
@@ -69,18 +90,17 @@ const submitReview = async () => {
 <style scoped>
 .star-btn {
   font-size: 2rem;
-  color: #444;
   cursor: pointer;
-  transition: color 0.1s;
+  display: inline-block;
+  width: 1.1em; /* 별 간격 조절 */
+  color: #ffc107; /* 기본적으로 노란색, 로직으로 빈별 구분 */
 }
-.star-btn.filled {
-  color: #ffc107;
+/* 점수가 없는 별은 회색으로 */
+.star-btn:has(text:contains('☆')) {
+  color: #444;
 }
 .score-text {
   font-size: 1.2rem;
   font-weight: bold;
-}
-textarea::placeholder {
-  color: #ccc;
 }
 </style>
