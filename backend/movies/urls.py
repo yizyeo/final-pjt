@@ -16,4 +16,6 @@ urlpatterns = [
     path('search/', views.search),
     path('worldcup/random/', views.random_worldcup),
     path('worldcup/user/', views.user_based_worldcup),
+
+    path('recommend/keyword/', views.recommend_by_keyword),
 ]
