@@ -1,13 +1,17 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
 from django.db.models import Count
 
 from .models import Review, Comment
 from .serializers import ReviewSerializer, CommentSerializer
 from movies.models import Movie
+import openai
+import traceback
 
 # 전체 리뷰 조회
 @api_view(['GET'])
@@ -106,3 +110,117 @@ def comment_delete(request, review_pk, comment_pk):
         
     comment.delete()
     return Response({'message': '댓글이 삭제되었습니다.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+# 블라인드 리뷰용 영화 선택
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_blind_review_recommendations(request):
+    try:
+        user = request.user
+        
+        # 1. 사용자 정보 가져오기
+        try:
+            # 장르 필드명 확인 (name_kr 우선 시도, 실패 시 name)
+            if hasattr(user, 'favorite_genres'):
+                try:
+                    favorite_genres = list(user.favorite_genres.values_list('name_kr', flat=True))
+                except:
+                    favorite_genres = list(user.favorite_genres.values_list('name', flat=True))
+            else:
+                favorite_genres = []
+            
+            liked_movies = list(user.like_movies.values_list('title', flat=True)[:10])
+            
+        except Exception:
+            # 에러 발생 시 빈 리스트로 안전하게 처리
+            favorite_genres = []
+            liked_movies = []
+
+        # 2. OpenAI 클라이언트 설정
+        client = openai.OpenAI(
+            api_key=settings.OPENAI_API_KEY, 
+            base_url="https://gms.ssafy.io/gmsapi/api.openai.com/v1"
+        )
+
+        # 3. AI 요청
+        system_message = "당신은 영화 추천 전문가입니다."
+        user_prompt = f"""
+        사용자 취향:
+        - 선호 장르: {', '.join(favorite_genres) if favorite_genres else '없음'}
+        - 좋아하는 영화: {', '.join(liked_movies) if liked_movies else '없음'}
+        
+        미션:
+        1. 이 사용자가 좋아할만한 영화 20개를 추천해줘.
+        2. 한국어 제목으로만 쉼표(,)로 구분해서 나열해.
+        3. 설명 없이 제목만 출력해.
+        """
+
+        recommended_titles = []
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.5,
+            )
+            ai_data = response.choices[0].message.content.strip()
+            recommended_titles = [t.strip() for t in ai_data.split(',')]
+        except Exception as ai_error:
+            print(f">>> [WARN] AI 호출 실패: {ai_error}")
+            recommended_titles = []
+
+        # 4. DB 매칭
+        final_reviews = []
+        
+        # 4-1. AI 추천작 검색
+        for title in recommended_titles:
+            clean_title = title.replace(" ", "")
+            movie = Movie.objects.filter(Q(title__icontains=title) | Q(title__icontains=clean_title)).first()
+            
+            if movie:
+                review = Review.objects.filter(movie=movie, is_spoiler=False).first()
+                
+                # 중복 체크
+                is_duplicate = False
+                for r in final_reviews:
+                    if r['id'] == review.id:
+                        is_duplicate = True
+                        break
+                
+                if review and not is_duplicate:
+                    final_reviews.append(ReviewSerializer(review).data)
+            
+            if len(final_reviews) >= 10:
+                break
+        
+        # 4-2. 부족분 채우기 (장르 기반)
+        if len(final_reviews) < 10:
+            # 장르 기반 영화 검색
+            try:
+                genre_movies = Movie.objects.filter(genres__name_kr__in=favorite_genres).distinct()
+            except:
+                genre_movies = Movie.objects.filter(genres__name__in=favorite_genres).distinct()
+
+            # 이미 뽑힌 영화 ID 목록
+            existing_ids = [r['movie'] for r in final_reviews]
+
+            needed = 10 - len(final_reviews)
+            
+            candidates = Review.objects.filter(
+                movie__in=genre_movies, 
+                is_spoiler=False
+            ).exclude(movie__in=existing_ids).order_by('?')[:needed]
+            
+            for review in candidates:
+                final_reviews.append(ReviewSerializer(review).data)
+        
+        return Response(final_reviews)
+
+    except Exception as e:
+        error_msg = traceback.format_exc()
+        print("🔥 [서버 에러 상세]:")
+        print(error_msg)
+        return Response({'error_detail': str(e), 'trace': error_msg}, status=500)
