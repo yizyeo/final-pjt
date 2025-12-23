@@ -7,11 +7,12 @@
       <div v-if="!isEditing">
         <div>
           <h2>{{ reviewStore.currentReview.movie_title }}</h2>
-          <p>
-            작성자: {{ reviewStore.currentReview.username }} | 
-            {{ formatDate(reviewStore.currentReview.created_at) }}
-          </p>
-          
+          <div class="author-section">
+            <img :src="userTier.icon" class="tier-icon-xs">
+            <p class="author-name">{{ reviewStore.currentReview.username }}</p>
+            <p class="date">{{ formatDate(reviewStore.currentReview.created_at) }}</p>
+          </div>
+                
           <div>
             <span v-for="n in 5" :key="n">
               {{ getStarChar(n) }}
@@ -89,10 +90,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useReviewStore } from '@/stores/review'
 import { useAccountStore } from '@/stores/accounts'
+import { getTier } from '@/utils/tierUtils'
 import CommentForm from '@/components/review/CommentForm.vue'
 import CommentItem from '@/components/review/CommentItem.vue'
 
@@ -112,6 +114,11 @@ onMounted(async () => {
     editData.value.content = reviewStore.currentReview.content
     editData.value.rating = reviewStore.currentReview.rating
   }
+})
+
+const userTier = computed(() => {
+  if (!reviewStore.currentReview) return getTier(0)
+  return getTier(reviewStore.currentReview.user_review_count || 0)
 })
 
 const getStarChar = (n) => {
@@ -169,3 +176,7 @@ const deleteComment = async (commentId) => {
 
 const formatDate = (date) => new Date(date).toLocaleString()
 </script>
+
+<style scoped>
+.tier-icon-xs { width: 20px; height: 20px; object-fit: contain; }
+</style>
