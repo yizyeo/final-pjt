@@ -1,11 +1,10 @@
 <template>
   <div class="btn-group">
     <div>
-      <a href="#" class="btn">Review</a> <!-- /reviews -->
-      <!-- <button type="button" class="btn">Reviews</button>  -->
+      <RouterLink to="/blind-review" class="btn">Blind Review</RouterLink> <!-- /reviewrecommend -->
     </div>
     <div>
-      <a href="#" class="btn">Recommend</a> <!-- /reviewrecommend -->
+      <RouterLink to="/recommend-keyword" class="btn">Recommend by Keyword</RouterLink> <!-- /reviewrecommend -->
     </div>
     <div>
       <RouterLink to="/worldcup" class="btn">Worldcup</RouterLink> <!-- /worldcup -->
