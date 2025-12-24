@@ -10,7 +10,8 @@ import ReviewListView from '@/views/ReviewListView.vue'
 import ReviewDetailView from '@/views/ReviewDetailView.vue'
 import SearchView from '@/views/SearchView.vue'
 import WorldcupView from '@/views/WorldcupView.vue'
-import AIRecommendView from '@/views/AIRecommendView.vue'
+import RecommendKeywordView from '@/views/RecommendKeywordView.vue'
+import BlindReview from '@/views/BlindReview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,11 +40,13 @@ const router = createRouter({
       name: 'ProfileView',
       component: ProfileView
     },
+    // 영화 상세 페이지
     {
       path: '/movies/:movieId',
       name: 'MovieDetailView',
       component: MovieDetailView
     },
+    // 전체 영화 페이지
     {
       path: '/movies/movielist',
       name: 'MovieListView',
@@ -72,9 +75,14 @@ const router = createRouter({
       component: WorldcupView
     },
     {
-      path: '/ai-recommend',
-      name: 'AIRecommendView',
-      component: AIRecommendView
+      path: '/recommend-keyword',
+      name: 'RecommendKeywordView',
+      component: RecommendKeywordView
+    },
+    {
+      path: '/blind-review',
+      name: 'BlindReview',
+      component: BlindReview
     },
 
   ]

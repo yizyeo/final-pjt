@@ -1,60 +1,104 @@
 <template>
-  <header class="profile-header">
-    <div class="rank-badge">
-      <img :src="userTier.icon" :alt="userTier.label" class="tier-icon">
-      <p class="tier-label">{{ userTier.label }}</p>
-    </div>
+  <div class="profile-header-card">
     
-    <div v-if="!isEditing" class="user-info">
-      <div class="user-title-row">
-        <h1>{{ profile.username }}님의 프로필</h1>
-        <button 
-          v-if="isOwnProfile" 
-          @click="onGenerateAI" 
-          :disabled="isGenerating"
-          class="btn-ai-gen"
-        >
-          {{ isGenerating ? 'AI 분석 중...' : '✨ AI 한 줄 소개 갱신' }}
-        </button>
+    <div v-if="!isEditing" class="view-mode-layout">
+      
+      <div class="left-column">
+        <div class="tier-icon-wrapper">
+          <img :src="userTier.icon" :alt="userTier.label" class="tier-icon">
+        </div>
+        <span class="tier-label">{{ userTier.label }}</span>
       </div>
 
-      <p class="ai-bio">✨ {{ profile.bio || "AI 생성 한 줄 소개가 없습니다." }} ✨</p>
-      
-      <button v-if="isOwnProfile" @click="startEdit" class="btn-edit-trigger">
-        내 정보 수정하기
-      </button>
-    </div>
-
-    <div v-else class="user-info-edit">
-      <h1>정보 수정</h1>
-      <div class="edit-form">
-        <label>이메일: </label>
-        <input v-model.trim="editData.email" type="email">
-
-        <label>나이: </label>
-        <input v-model.number="editData.age" type="number">
+      <div class="right-column">
         
-        <p>성별</p>
-        <div class="radio-group">
-          <label><input type="radio" value="M" v-model="editData.gender">남성</label>
-          <label><input type="radio" value="F" v-model="editData.gender">여성</label>
+        <div class="user-title-row">
+          <h1 class="username">{{ profile.username }}</h1>
+          <button v-if="isOwnProfile" @click="startEdit" class="btn-edit-sm">
+            정보 수정
+          </button>
         </div>
 
-        <p>선호 장르</p>
-        <div class="genre-grid">
-          <label v-for="genre in genres" :key="genre.genre_id" class="genre-item">
-            <input type="checkbox" :value="genre.genre_id" v-model="editData.favorite_genres">
-            {{ genre.name_kr }}
-          </label>
+        <div class="bio-box">
+          <p class="bio-text">
+            <span class="quote">“</span>
+            {{ profile.bio || "아직 AI가 분석한 소개가 없습니다. 버튼을 눌러 생성해보세요!" }}
+            <span class="quote">”</span>
+          </p>
+          
+        </div>
+
+        <div v-if="isOwnProfile" class="action-row">
+          <button 
+            @click="onGenerateAI" 
+            :disabled="isGenerating"
+            class="btn-ai-gen"
+            :class="{ 'loading': isGenerating }"
+          >
+            <span v-if="isGenerating" class="spinner-sm"></span>
+            <span v-else>✨ AI 분석 & 소개 갱신</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div v-else class="edit-mode">
+      <h2 class="edit-title">프로필 정보 수정</h2>
+      
+      <div class="edit-form">
+        <div class="form-group">
+          <label>이메일</label>
+          <input v-model.trim="editData.email" type="email" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label>나이</label>
+          <input v-model.number="editData.age" type="number" class="form-input">
+        </div>
+        
+        <div class="form-group">
+          <label>성별</label>
+          <div class="gender-selector">
+            <label class="gender-btn" :class="{ active: editData.gender === 'M' }">
+              <input type="radio" value="M" v-model="editData.gender" class="hidden-input">
+              남성
+            </label>
+            <label class="gender-btn" :class="{ active: editData.gender === 'F' }">
+              <input type="radio" value="F" v-model="editData.gender" class="hidden-input">
+              여성
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>선호 장르</label>
+          <div class="genre-grid">
+            <label 
+              v-for="genre in genres" 
+              :key="genre.genre_id" 
+              class="genre-chip"
+              :class="{ active: editData.favorite_genres.includes(genre.genre_id) }"
+            >
+              <input 
+                type="checkbox" 
+                :value="genre.genre_id" 
+                v-model="editData.favorite_genres"
+                class="hidden-input"
+              >
+              {{ genre.name_kr }}
+            </label>
+          </div>
         </div>
 
         <div class="edit-actions">
-          <button @click="onUpdate" class="btn-save">저장</button>
           <button @click="isEditing = false" class="btn-cancel">취소</button>
+          <button @click="onUpdate" class="btn-save">저장하기</button>
         </div>
       </div>
     </div>
-  </header>
+
+  </div>
 </template>
 
 <script setup>
@@ -93,8 +137,7 @@ const startEdit = () => {
 }
 
 const onGenerateAI = async () => {
-  if (!confirm('최근 수정된 취향을 반영하여 AI 소개를 갱신하시겠습니까?')) return
-  
+  if (!confirm('내 취향을 분석해 새로운 소개글을 생성하시겠습니까?')) return
   isGenerating.value = true
   try {
     const res = await axios({
@@ -102,11 +145,8 @@ const onGenerateAI = async () => {
       url: `${API_URL}/accounts/generate-bio/`,
       headers: { Authorization: `Token ${accountStore.token}` }
     })
-    
     const newBio = res.data.bio
-
     emit('update-bio', newBio) 
-    alert('새로운 AI 한 줄 소개가 적용되었습니다!')
   } catch (err) {
     console.error('AI 생성 에러:', err)
     alert('생성에 실패했습니다.')
@@ -121,5 +161,218 @@ const onUpdate = () => {
 </script>
 
 <style scoped>
+/* 카드 컨테이너 */
+.profile-header-card {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
 
+/* [VIEW MODE] 가로 배치 레이아웃 */
+.view-mode-layout {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  gap: 3rem; /* 좌우 간격 넉넉하게 */
+}
+
+/* 1. 왼쪽: 티어 아이콘 영역 */
+.left-column {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px; /* 고정 너비 */
+}
+
+.tier-icon-wrapper {
+  width: 120px;
+  height: 120px; /* 아이콘 크기 키움 */
+  border-radius: 50%;
+  background-color: #F8F9FA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  border: 4px solid #F0EBFF;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.tier-icon {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.tier-label {
+  background-color: #EFEFEF;
+  color: #555;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+/* 2. 오른쪽: 정보 영역 */
+.right-column {
+  flex: 1; /* 남은 공간 모두 차지 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  text-align: left;
+}
+
+.user-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.username {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111111;
+  margin: 0;
+}
+
+/* 작은 수정 버튼 */
+.btn-edit-sm {
+  background: none;
+  border: 1px solid #DDDDDD;
+  color: #888;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.btn-edit-sm:hover {
+  background-color: #F5F5F5;
+  color: #333;
+}
+
+/* 소개글 박스 */
+.bio-box {
+  background-color: #F9FAFB;
+  border-left: 4px solid #7A6CFA; /* 왼쪽에 포인트 컬러 라인 */
+  padding: 1.2rem 1.5rem;
+  border-radius: 0 12px 12px 0; /* 왼쪽은 직각, 오른쪽은 둥글게 */
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.bio-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #444;
+  font-weight: 500;
+  white-space: pre-wrap;
+}
+
+.quote {
+  color: #7A6CFA;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0 4px;
+}
+
+/* AI 버튼 */
+.action-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-ai-gen {
+  background: linear-gradient(135deg, #7A6CFA, #9D8CFC);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(122, 108, 250, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ai-gen:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(122, 108, 250, 0.4);
+}
+
+.btn-ai-gen:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* --- [EDIT MODE] 스타일 (기존과 동일) --- */
+.edit-mode {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.edit-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+.form-group { margin-bottom: 1.5rem; }
+label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #333; font-size: 0.95rem; }
+.form-input { width: 100%; padding: 12px; border: 1px solid #DDD; border-radius: 10px; font-size: 1rem; font-family: inherit; }
+.form-input:focus { outline: none; border-color: #7A6CFA; }
+
+.hidden-input { display: none; }
+.gender-selector { display: flex; gap: 10px; }
+.gender-btn { flex: 1; padding: 10px; border: 1px solid #EEE; background-color: #FAFAFA; border-radius: 10px; text-align: center; cursor: pointer; color: #666; font-weight: 600; }
+.gender-btn.active { background-color: #F0EBFF; border-color: #7A6CFA; color: #7A6CFA; }
+
+.genre-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.genre-chip { padding: 8px 14px; background-color: #F5F5F5; border-radius: 20px; font-size: 0.9rem; color: #555; cursor: pointer; border: 1px solid transparent; }
+.genre-chip.active { background-color: #7A6CFA; color: white; box-shadow: 0 4px 10px rgba(122, 108, 250, 0.2); }
+
+.edit-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 2rem; }
+.btn-save { background-color: #7A6CFA; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-cancel { background-color: white; border: 1px solid #DDD; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+
+/* 스피너 */
+.spinner-sm { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 모바일 반응형: 화면 작아지면 다시 세로 배치 */
+@media (max-width: 768px) {
+  .view-mode-layout {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .right-column {
+    align-items: center;
+    width: 100%;
+  }
+
+  .user-title-row {
+    justify-content: center;
+  }
+
+  .bio-box {
+    text-align: left;
+    border-left: none;
+    border-top: 4px solid #7A6CFA; /* 모바일에선 위쪽에 포인트 */
+    border-radius: 12px;
+  }
+  
+  .action-row {
+    justify-content: center;
+  }
+}
 </style>
