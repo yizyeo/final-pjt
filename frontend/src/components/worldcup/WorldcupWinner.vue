@@ -12,11 +12,15 @@
     </div>
 
     <div class="action-buttons">
-        <button @click="goToDetail">자세히 보기</button>
-        <button @click="toggleWish" :class="{ active: isWished }">
-            {{ isWished ? '볼 영화에서 삭제' : '볼 영화 추가' }}
+        <button @click="goToDetail" class="action-btn">자세히 보기</button>
+        <button 
+          @click="toggleWish" 
+          class="action-btn"
+          :class="{ active: isWished }"
+        >
+          {{ isWished ? '🔷 찜 취소' : '🔖 볼거에요' }}
         </button>
-        <button @click="resetGame">한번 더 하기</button>
+        <button @click="resetGame" class="action-btn">한번 더 하기</button>
     </div>
   </div>
 </template>
@@ -80,27 +84,31 @@ const resetGame = () => {
 .action-buttons {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 15px;
     margin-top: 2rem;
 }
 
-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: #333;
-    color: white;
-    border: 1px solid #555;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+/* 버튼 디자인 */
+.action-btn {
+  padding: 8px 16px;
+  border: 1px solid #666;
+  border-radius: 20px;
+  background-color: transparent;
+  color: #ddd;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
 }
 
-button:hover {
-    background-color: #555;
+/* 활성화 상태 (눌렀을 때) */
+.action-btn.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  color: #ffc107; /* 포인트 컬러 */
+  font-weight: bold;
 }
 
-button.active {
-    background-color: #e50914;
-    border-color: #e50914;
+.action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

@@ -14,10 +14,8 @@
           <button 
               :class="{ active: mode === 'user' }" 
               @click="setMode('user')"
-              disabled
-              title="준비 중입니다"
           >
-              사용자 맞춤 (준비중)
+              사용자 맞춤
           </button>
       </div>
     </div>
