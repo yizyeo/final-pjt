@@ -9,7 +9,7 @@
     </RouterLink>
     <div class="movie-info">
       <strong>{{ movie.title }}</strong>
-      <p>평점: {{ movie.vote_average }}</p>
+      <p>평점: {{ movie.vote_average?.toFixed(1) }}</p>
     </div>
   </div>
 </template>

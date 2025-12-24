@@ -20,7 +20,7 @@
     <WorldcupWinner 
       v-else-if="gameState === 'winner'"
       :winner="winner"
-      :isWished="isWished"
+      :isWished="!!movieStore.movieDetail?.is_wished"
       @go-to-detail="goToDetail"
       @toggle-wish="addToWishlist"
       @reset-game="resetGame"
@@ -37,6 +37,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useAccountStore } from '@/stores/accounts';
+import { useMovieStore } from '@/stores/movie';
 
 import WorldcupIntro from '@/components/worldcup/WorldcupIntro.vue';
 import WorldcupMatch from '@/components/worldcup/WorldcupMatch.vue';
@@ -44,6 +45,7 @@ import WorldcupWinner from '@/components/worldcup/WorldcupWinner.vue';
 
 const router = useRouter();
 const accountStore = useAccountStore();
+const movieStore = useMovieStore();
 const API_URL = import.meta.env.VITE_API_URL;
 
 // State
@@ -54,7 +56,6 @@ const nextRoundMovies = ref([]); // Winners of the current round
 const currentMatchIndex = ref(0);
 const winner = ref(null);
 const loading = ref(false);
-const isWished = ref(false);
 
 // Computed
 const currentRoundMatches = computed(() => {
@@ -87,8 +88,16 @@ const handleStartGame = async ({ count, mode }) => {
     loading.value = true;
     try {
         const endpoint = mode === 'user' ? 'user' : 'random';
+        
+        // 헤더 설정 (로그인 상태라면 토큰 포함)
+        const headers = {};
+        if (accountStore.token) {
+            headers.Authorization = `Token ${accountStore.token}`;
+        }
+
         const res = await axios.get(`${API_URL}/movies/worldcup/${endpoint}/`, {
-            params: { count }
+            params: { count },
+            headers: headers
         });
         
         movies.value = res.data;
@@ -99,7 +108,12 @@ const handleStartGame = async ({ count, mode }) => {
         gameState.value = 'playing';
     } catch (err) {
         console.error('Failed to start game:', err);
-        alert('게임을 시작할 수 없습니다.');
+        if (err.response && err.response.status === 401) {
+            alert('로그인이 필요한 서비스입니다.');
+            router.push({ name: 'LogInView' });
+        } else {
+            alert('게임을 시작할 수 없습니다.');
+        }
     } finally {
         loading.value = false;
     }
@@ -129,7 +143,7 @@ const selectWinner = (index) => {
 
 const checkWishStatus = async (movieId) => {
     if (!accountStore.isLogin) return;
-    isWished.value = false; 
+    await movieStore.fetchMovieDetail(movieId);
 };
 
 const addToWishlist = async (movie) => {
@@ -139,15 +153,7 @@ const addToWishlist = async (movie) => {
         return;
     }
     
-    try {
-        const res = await axios.post(`${API_URL}/movies/movie/${movie.tmdb_id}/wish/`, {}, {
-            headers: { Authorization: `Token ${accountStore.token}` }
-        });
-        isWished.value = res.data.is_wished;
-        alert(isWished.value ? '볼 영화에 추가되었습니다.' : '볼 영화에서 삭제되었습니다.');
-    } catch (err) {
-        console.error('Wishlist toggle failed:', err);
-    }
+    await movieStore.toggleWish(movie.tmdb_id);
 };
 
 const goToDetail = (id) => {
@@ -158,6 +164,7 @@ const resetGame = () => {
     gameState.value = 'intro';
     winner.value = null;
     movies.value = [];
+    movieStore.movieDetail = null; // Reset movie detail
 };
 
 </script>

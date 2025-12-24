@@ -13,21 +13,18 @@ class Command(BaseCommand):
     help = '기존 유저를 활용하여 OpenAI(gpt-4o-mini)로 리뷰 데이터를 생성합니다.'
 
     def handle(self, *args, **kwargs):
-        # 1. 유저 확인 (직접 만드신 유저들이 있는지 체크)
         users = User.objects.all()
         if not users.exists():
-            self.stdout.write(self.style.ERROR('DB에 유저가 한 명도 없습니다. 먼저 유저를 생성해주세요!'))
+            self.stdout.write(self.style.ERROR('DB에 유저가 한 명도 없습니다. 먼저 유저를 생성해주세요.'))
             return
         
         self.stdout.write(self.style.SUCCESS(f'현재 등록된 {users.count()}명의 유저를 활용하여 리뷰를 작성합니다.'))
 
-        # 2. 영화 데이터 확인
         movies = Movie.objects.all()
         if not movies.exists():
             self.stdout.write(self.style.ERROR('DB에 영화 데이터가 없습니다.'))
             return
 
-        # 3. GMS 전용 OpenAI 클라이언트 설정
         try:
             client = openai.OpenAI(
                 api_key=settings.OPENAI_API_KEY, 
@@ -37,8 +34,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'OpenAI Client 설정 실패: {e}'))
             return
 
-        # 4. 리뷰 생성 루프 (테스트용 상위 30개)
-        target_movies = movies.order_by('-popularity')[:30]
+        # 리뷰 생성 루프 (테스트용 상위 30개)
+        target_movies = movies.order_by('-popularity')[120:150]
         
         created_count = 0
 
@@ -52,17 +49,30 @@ class Command(BaseCommand):
                 self.stdout.write(f"Generating review for: {movie.title}...")
 
                 # 프롬프트
-                system_message = "당신은 영화를 사랑하는 열정적인 블로거입니다."
+                system_message = "당신은 왓챠피디아 스타일의 한줄 영화 리뷰를 쓰는 평론가입니다. 과장 없이, 감상 포인트를 짚는 위트 있는 문장을 씁니다."
                 user_prompt = f"""
                 영화 제목: {movie.title}
                 
-                미션: 이 영화를 친구에게 강력 추천하는 짧은 리뷰를 1개 작성해줘.
-                조건:
-                1. 절대 영화 제목, 출연 배우, 줄거리, 결말 등 스포일러를 포함하지 말 것.
-                2. 영화의 분위기, 배우의 연기, 연출 스타일 위주로 묘사할 것.
-                3. 공백 포함 80자 이내로 짧고 임팩트 있게 작성할 것.
-                4. 한국어 구어체(해요체)로 자연스럽게 쓸 것.
-                5. "이 영화는..." 같은 지루한 시작 금지. 따옴표 없이 문장만 출력해.
+                아래 예시와 같은 톤의 한줄 리뷰를 작성하세요.
+
+                [리뷰 스타일 예시]
+                - 벌써부터 사랑에 빠진 듯한 느낌
+                - 부국제 평이 왜 좋았지?
+                - 숨막힐 듯한 미장센과, 처절한 연기에 경의를 표하며
+                - 여행은 좀 고독해도 좋다
+                - 시작부터 끝까지 속도감 있게 몰아붙인다
+                - 한걸음 한걸음 내려가는 자에 대한 연민과 위로
+
+                [작성 규칙]
+                1. 반드시 한 문장, 공백 포함 25~55자 이내
+                2. 영화 제목, 배우 이름, 줄거리, 결말, 장르 직접 언급 금지
+                3. 추천/비추천 표현 사용 금지 (재밌다, 꼭 봐라 등)
+                4. 생각·해석보다 ‘보는 동안의 상태나 반응’ 위주로 작성
+                5. 감탄사·이모지·따옴표 사용 금지
+                6. 결과는 문장만 출력
+                7. 반드시 긍정일 필요는 없으며, 의문·거리감·냉소적 시선도 허용
+                8. 같은 문장 패턴 반복 금지 (예: “~하지만”, “~인데” 남용 금지)
+                9. 어려운 추상어 사용 금지 (사유, 본질, 아이러니, 메타, 서사, 상징 등)
                 """
 
                 response = client.chat.completions.create(
@@ -76,21 +86,21 @@ class Command(BaseCommand):
                 )
 
                 content = response.choices[0].message.content.strip()
-                content = content.replace('"', '').replace("'", "") # 따옴표 제거
+                content = content.replace('"', '').replace("'", "")
 
                 # DB 저장 (작성자는 랜덤 선택)
                 Review.objects.create(
                     user=random.choice(users),
                     movie=movie,
                     content=content,
-                    rating=random.randint(8, 10),
+                    rating=random.randint(5, 9),
                     is_spoiler=False
                 )
                 
                 created_count += 1
                 self.stdout.write(self.style.SUCCESS(f"Success: {content}"))
                 
-                time.sleep(0.5) # 속도 조절
+                time.sleep(0.5)
 
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error generating review for {movie.title}: {e}"))

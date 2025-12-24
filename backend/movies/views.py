@@ -45,7 +45,53 @@ def home_list(request):
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     serializer = MovieDetailSerializer(movie, context={'request': request})
-    return Response(serializer.data)
+    data = serializer.data
+
+    # TMDB Credits API 호출 로직 추가
+    try:
+        api_key = settings.TMDB_API_KEY
+        url = f"https://api.themoviedb.org/3/movie/{movie.tmdb_id}/credits"
+        params = {
+            'api_key': api_key,
+            'language': 'ko-KR'
+        }
+        
+        response = requests.get(url, params=params)
+        
+        if response.status_code == 200:
+            credits_data = response.json()
+            
+            # 1. 감독 찾기 (job이 'Director'인 사람)
+            directors = [
+                person['name'] 
+                for person in credits_data.get('crew', []) 
+                if person.get('job') == 'Director'
+            ]
+            
+            # 2. 출연진 찾기 (known_for_department가 'Acting'인 사람)
+            # popularity 내림차순 정렬 후 상위 3명
+            actors = [
+                person 
+                for person in credits_data.get('cast', []) 
+                if person.get('known_for_department') == 'Acting'
+            ]
+            actors.sort(key=lambda x: x.get('popularity', 0), reverse=True)
+            top_actors = [actor['name'] for actor in actors[:3]]
+            
+            # 데이터에 추가
+            data['credits'] = {
+                'directors': directors,
+                'actors': top_actors
+            }
+        else:
+            print(f"TMDB API Error: {response.status_code}")
+            data['credits'] = {'directors': [], 'actors': []}
+
+    except Exception as e:
+        print(f"Credit Fetch Error: {e}")
+        data['credits'] = {'directors': [], 'actors': []}
+
+    return Response(data)
 
 
 @api_view(['POST'])
@@ -173,26 +219,116 @@ def random_worldcup(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_based_worldcup(request):
-    # 사용자 선호도 기반 추천 로직 구현 예정 (현재는 틀만 존재)
-    # 1. 사용자가 좋아요한 영화, 본 영화, 찜한 영화 가져오기
-    # 2. 선호 장르 분석
-    # 3. 해당 장르의 영화 중 안 본 영화 추천 등
-    
     count = int(request.GET.get('count', 16))
+    user = request.user
+
+    # 1. 사용자 선호 정보 수집
+    favorite_genres = ", ".join([g.name_kr for g in user.favorite_genres.all()])
+    liked_movies = ", ".join([m.title for m in user.like_movies.all()[:5]])
+    wished_movies = ", ".join([m.title for m in user.wish_movies.all()[:5]])
+    watched_movies = ", ".join([m.title for m in user.watched_movies.all()[:5]])
     
-    # 임시: 랜덤과 동일하게 동작
-    today = date.today().isoformat()
-    movies = Movie.objects.filter(release_date__lte=today, poster_path__isnull=False).exclude(poster_path='')
+    # 데이터가 아예 없으면 랜덤으로 처리
+    if not (favorite_genres or liked_movies or wished_movies or watched_movies):
+        return random_worldcup(request)
+
+    # 2. OpenAI API 호출 준비
+    client = openai.OpenAI(
+        api_key=settings.OPENAI_API_KEY, 
+        base_url="https://gms.ssafy.io/gmsapi/api.openai.com/v1"
+    )
+
+    system_message = "당신은 사용자의 영화 취향을 완벽하게 파악하는 영화 큐레이터입니다."
+    # DB 매칭 실패를 고려해 요청 개수의 3배수 추천 요청
+    request_count = count * 3
     
-    if movies.count() < count:
-        selected_movies = movies
-    else:
-        movie_ids = list(movies.values_list('tmdb_id', flat=True))
-        selected_ids = random.sample(movie_ids, count)
-        selected_movies = movies.filter(tmdb_id__in=selected_ids)
+    user_prompt = f"""
+    이 사용자의 취향에 맞춰서 영화 이상형 월드컵에 쓸 영화 후보 {request_count}개를 추천해줘.
+    
+    [사용자 취향 데이터]
+    - 선호 장르: {favorite_genres}
+    - 좋아요 한 영화: {liked_movies}
+    - 찜한 영화: {wished_movies}
+    - 봤어요 표시한 영화: {watched_movies}
+    
+    [요청 사항]
+    1. 사용자의 취향과 유사한 결을 가진 영화들을 우선 추천하되, 다양한 장르를 적절히 섞어줘.
+    2. 너무 뻔한 영화보다는 작품성이 있거나 숨겨진 명작도 포함해줘.
+    3. 결과는 반드시 영화의 '한국어 제목'만 쉼표(,)로 구분해서 한 줄로 나열해줘.
+    4. 번호, 설명, 따옴표 등 잡다한 텍스트는 절대 넣지 마.
+    """
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=500
+        )
         
-    serializer = WorldcupSerializer(selected_movies, many=True)
-    return Response(serializer.data)
+        ai_response = response.choices[0].message.content.strip()
+        recommended_titles = [t.strip() for t in ai_response.split(',')]
+        
+        # 3. DB에서 영화 찾기
+        selected_movies = []
+        seen_ids = set()
+        
+        # 오늘 날짜 기준 (개봉 예정작 제외)
+        today = date.today().isoformat()
+
+        for title in recommended_titles:
+            if len(selected_movies) >= count:
+                break
+                
+            # 정확한 매칭 시도
+            movie = Movie.objects.filter(
+                title=title, 
+                poster_path__isnull=False,
+                release_date__lte=today
+            ).exclude(poster_path='').first()
+            
+            # 유사 매칭 시도 (특수문자/공백 제거)
+            if not movie:
+                clean_title = re.sub(r'[^가-힣a-zA-Z0-9]', '', title)
+                if clean_title:
+                    movie = Movie.objects.filter(
+                        title__icontains=clean_title,
+                        poster_path__isnull=False,
+                        release_date__lte=today
+                    ).exclude(poster_path='').first()
+            
+            if movie and movie.tmdb_id not in seen_ids:
+                selected_movies.append(movie)
+                seen_ids.add(movie.tmdb_id)
+        
+        # 4. 개수가 부족하면 인기 영화로 채우기
+        if len(selected_movies) < count:
+            needed = count - len(selected_movies)
+            popular_movies = Movie.objects.filter(
+                release_date__lte=today,
+                poster_path__isnull=False
+            ).exclude(poster_path='').order_by('-popularity')[:needed+20] # 넉넉히 가져옴
+            
+            for movie in popular_movies:
+                if len(selected_movies) >= count:
+                    break
+                if movie.tmdb_id not in seen_ids:
+                    selected_movies.append(movie)
+                    seen_ids.add(movie.tmdb_id)
+        
+        # 랜덤하게 섞어서 반환
+        random.shuffle(selected_movies)
+        
+        serializer = WorldcupSerializer(selected_movies, many=True)
+        return Response(serializer.data)
+
+    except Exception as e:
+        print(f"AI Worldcup Error: {e}")
+        # 에러 발생 시 랜덤 월드컵으로 대체
+        return random_worldcup(request)
 
 
 @api_view(['GET'])
@@ -255,27 +391,32 @@ def recommend_by_keyword(request):
     if not user_input:
         return Response({'message': '추천받고 싶은 상황이나 기분을 입력해주세요.'}, status=400)
 
-    # 1. GMS 전용 클라이언트 설정 (제공해주신 코드 방식 유지)
     client = openai.OpenAI(
         api_key=settings.OPENAI_API_KEY, 
         base_url="https://gms.ssafy.io/gmsapi/api.openai.com/v1"
     )
 
-    # 2. 프롬프트 설계
-    system_message = "당신은 사용자의 상황과 기분에 딱 맞는 영화를 선정해주는 전문 영화 소믈리에입니다."
+    system_message = "당신은 사용자의 기분과 상황에 맞춰 대중적으로 잘 알려진 영화를 골라주는 영화 추천 큐레이터입니다."
     user_prompt = f"""
-    사용자 요청: "{user_input}"
-    
-    미션:
-    1. 이 요청의 분위기나 키워드에 어울리는 유명한 대중 영화 20개를 선정하세요.
-    2. 결과는 반드시 영화의 '한국어 제목'만 쉼표(,)로 구분해서 한 줄로 나열하세요.
-    3. 다른 설명, 번호, 따옴표는 절대 포함하지 마세요.
-    
-    예시: 쇼생크 탈출, 인셉션, 어바웃 타임, 범죄도시
-    """
+        사용자 요청: "{user_input}"
+        
+        아래 조건을 모두 만족하는 영화를 추천하세요.
+
+        [추천 기준]
+        - 사용자의 요청에서 드러난 감정, 분위기, 상황을 우선 반영
+        - 국내에서 인지도 높은 대중 영화 위주
+        - 너무 마이너하거나 예술영화 성향의 작품은 제외
+        - 특정 시리즈가 있다면 대표작 위주로 선정
+
+        [출력 규칙]
+        1. 정확히 20개의 영화 제목만 출력
+        2. 반드시 한국어 제목만 사용
+        3. 쉼표(,)로만 구분하여 한 줄로 출력
+        4. 번호, 설명, 줄바꿈, 따옴표, 이모지, 추가 문구 절대 금지
+        5. 결과에는 영화 제목 외 어떤 텍스트도 포함하지 말 것
+        """
 
     try:
-        # 3. GMS API 호출
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -323,6 +464,7 @@ def recommend_by_keyword(request):
     except Exception as e:
         print(f"GMS OpenAI Error: {e}")
         return Response({'error': '영화 추천 중 오류가 발생했습니다.'}, status=500)
+
 
 @api_view(['GET'])
 def hot_movies(request):

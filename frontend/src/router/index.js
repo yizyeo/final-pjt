@@ -11,7 +11,7 @@ import ReviewDetailView from '@/views/ReviewDetailView.vue'
 import SearchView from '@/views/SearchView.vue'
 import WorldcupView from '@/views/WorldcupView.vue'
 import RecommendKeywordView from '@/views/RecommendKeywordView.vue'
-import BlindReview from '@/views/BlindReview.vue'
+import BlindReviewView from '@/views/BlindReviewView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,8 +81,8 @@ const router = createRouter({
     },
     {
       path: '/blind-review',
-      name: 'BlindReview',
-      component: BlindReview
+      name: 'BlindReviewView',
+      component: BlindReviewView
     },
 
   ]

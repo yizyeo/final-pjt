@@ -1,0 +1,2102 @@
+[
+  {
+    "model": "reviews.review",
+    "pk": 1,
+    "fields": {
+      "user": 5,
+      "movie": 83533,
+      "content": "눈부신 비주얼 속에 숨겨진 갈등의 본질이 예리하게 드러난다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:00.467Z",
+      "updated_at": "2025-12-24T00:45:00.467Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 2,
+    "fields": {
+      "user": 3,
+      "movie": 982843,
+      "content": "거대한 재앙 속에서도 인간의 본질을 묻는다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:02.077Z",
+      "updated_at": "2025-12-24T00:45:02.077Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 3,
+    "fields": {
+      "user": 5,
+      "movie": 425274,
+      "content": "마술의 화려함 뒤에 숨겨진 진실의 무게가 묵직하게 다가온다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:03.515Z",
+      "updated_at": "2025-12-24T00:45:03.515Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 4,
+    "fields": {
+      "user": 3,
+      "movie": 1223601,
+      "content": "복수를 향한 집착이 인물의 감정을 송두리째 휘어잡는다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:04.799Z",
+      "updated_at": "2025-12-24T00:45:04.799Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "movie": 1084242,
+      "content": "다양성의 힘이 빛나는 세상을 다시 만나다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:06.105Z",
+      "updated_at": "2025-12-24T00:45:06.105Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 6,
+    "fields": {
+      "user": 4,
+      "movie": 1013446,
+      "content": "거울 속 진실이 때로는 더 차가울 수 있다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:07.778Z",
+      "updated_at": "2025-12-24T00:45:07.778Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 7,
+    "fields": {
+      "user": 3,
+      "movie": 1336189,
+      "content": "미래의 불확실함 속에 펼쳐지는 긴장감이 압도적이다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:09.239Z",
+      "updated_at": "2025-12-24T00:45:09.239Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 8,
+    "fields": {
+      "user": 3,
+      "movie": 798645,
+      "content": "치열한 생존 게임 속 인간성의 본질을 탐구한다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:10.688Z",
+      "updated_at": "2025-12-24T00:45:10.688Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "movie": 1195518,
+      "content": "예상치 못한 반전이 모든 것을 뒤흔든다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:11.936Z",
+      "updated_at": "2025-12-24T00:45:11.936Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 10,
+    "fields": {
+      "user": 4,
+      "movie": 812583,
+      "content": "복잡한 인간관계를 속 시원하게 풀어내는 기분 좋은 재미가 있다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:13.781Z",
+      "updated_at": "2025-12-24T00:45:13.781Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 11,
+    "fields": {
+      "user": 5,
+      "movie": 755898,
+      "content": "인류의 연약함을 고발하는 압도적 스케일의 서사.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:15.569Z",
+      "updated_at": "2025-12-24T00:45:15.569Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 12,
+    "fields": {
+      "user": 4,
+      "movie": 1589891,
+      "content": "시간의 흐름 속에서 존재의 의미를 묻는다",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:17.048Z",
+      "updated_at": "2025-12-24T00:45:17.048Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 13,
+    "fields": {
+      "user": 6,
+      "movie": 1228246,
+      "content": "어둠 속에서 피어나는 기괴한 유머가 잊히지 않는다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:18.889Z",
+      "updated_at": "2025-12-24T00:45:18.889Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 14,
+    "fields": {
+      "user": 4,
+      "movie": 1419406,
+      "content": "고통 속에서도 피어나는 희망의 순간이 흡입력 있다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:20.283Z",
+      "updated_at": "2025-12-24T00:45:20.283Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 15,
+    "fields": {
+      "user": 5,
+      "movie": 533533,
+      "content": "시공간을 넘나드는 비주얼의 향연 속에 휘청인다",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:21.638Z",
+      "updated_at": "2025-12-24T00:45:21.638Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 16,
+    "fields": {
+      "user": 1,
+      "movie": 76600,
+      "content": "시각적 경이로움 속에 감춰진 정체성의 갈등이 깊다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:23.126Z",
+      "updated_at": "2025-12-24T00:45:23.126Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 17,
+    "fields": {
+      "user": 5,
+      "movie": 19995,
+      "content": "눈을 뗄 수 없는 시각적 향연 속에 깊은 사유가 숨어있다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:24.709Z",
+      "updated_at": "2025-12-24T00:45:24.709Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 18,
+    "fields": {
+      "user": 1,
+      "movie": 1242898,
+      "content": "인간과 괴물의 경계가 모호해지는 긴장감이 돋보인다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:26.076Z",
+      "updated_at": "2025-12-24T00:45:26.076Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 19,
+    "fields": {
+      "user": 1,
+      "movie": 1218925,
+      "content": "극한의 상황 속에서도 인간의 본성이 드러난다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:27.353Z",
+      "updated_at": "2025-12-24T00:45:27.353Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 20,
+    "fields": {
+      "user": 4,
+      "movie": 1162858,
+      "content": "미지의 존재와 맞닥뜨리는 순간의 긴장감이 끊임없이 감도는 작품.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:29.134Z",
+      "updated_at": "2025-12-24T00:45:29.134Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 21,
+    "fields": {
+      "user": 5,
+      "movie": 1180831,
+      "content": "어둠 속에서 피어나는 희망의 불꽃이 묘하게 감정선에 닿는다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:30.949Z",
+      "updated_at": "2025-12-24T00:45:30.949Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 22,
+    "fields": {
+      "user": 6,
+      "movie": 1311031,
+      "content": "압도적인 시각적 쾌감 속에 복잡한 감정이 얽힌다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:32.421Z",
+      "updated_at": "2025-12-24T00:45:32.421Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 23,
+    "fields": {
+      "user": 1,
+      "movie": 1149167,
+      "content": "예상치 못한 반전과 긴장감이 끝까지 마음을 사로잡는다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:33.831Z",
+      "updated_at": "2025-12-24T00:45:33.831Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 24,
+    "fields": {
+      "user": 1,
+      "movie": 1468057,
+      "content": "어둠 속에서 피어나는 형제애의 아이러니가 묘하게 매력적이다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:35.232Z",
+      "updated_at": "2025-12-24T00:45:35.232Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 25,
+    "fields": {
+      "user": 3,
+      "movie": 7451,
+      "content": "액션의 스릴은 넘치지만, 감정선은 허전함을 남긴다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:36.873Z",
+      "updated_at": "2025-12-24T00:45:36.873Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 26,
+    "fields": {
+      "user": 5,
+      "movie": 152760,
+      "content": "전쟁의 잔혹함과 예술의 가치가 충돌하는 순간을 포착한다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:38.429Z",
+      "updated_at": "2025-12-24T00:45:38.429Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 27,
+    "fields": {
+      "user": 6,
+      "movie": 1062722,
+      "content": "인간의 본성과 창조의 두려움을 깊이 탐구한다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:39.593Z",
+      "updated_at": "2025-12-24T00:45:39.593Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 28,
+    "fields": {
+      "user": 6,
+      "movie": 1368166,
+      "content": "주인공의 고독한 내면을 파고드는 섬세한 시선이 인상적이다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:41.349Z",
+      "updated_at": "2025-12-24T00:45:41.349Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 29,
+    "fields": {
+      "user": 5,
+      "movie": 980477,
+      "content": "상처받은 영혼들이 서로를 지탱하는 따뜻한 순간들.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:43.358Z",
+      "updated_at": "2025-12-24T00:45:43.358Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 30,
+    "fields": {
+      "user": 5,
+      "movie": 1054867,
+      "content": "이질적인 전투의 연속 속, 인간의 본성을 탐구하는 시선이 돋보인다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:45:44.894Z",
+      "updated_at": "2025-12-24T00:45:44.894Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 31,
+    "fields": {
+      "user": 2,
+      "movie": 1246049,
+      "content": "뚜렷한 색감 속에 감춰진 슬픈 사랑의 향기.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:57:56.405Z",
+      "updated_at": "2025-12-24T00:57:56.405Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 32,
+    "fields": {
+      "user": 6,
+      "movie": 1422096,
+      "content": "서로 다른 세상이 교차하는 순간이 몽환적이다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:57:57.592Z",
+      "updated_at": "2025-12-24T00:57:57.592Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 33,
+    "fields": {
+      "user": 5,
+      "movie": 269149,
+      "content": "다양한 사회상을 동물로 풀어낸 기발한 시선이 인상적이다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:57:58.936Z",
+      "updated_at": "2025-12-24T00:57:58.936Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 34,
+    "fields": {
+      "user": 6,
+      "movie": 1119090,
+      "content": "어둠 속에서 피어나는 한 줄기 빛과 고독의 미학.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:00.124Z",
+      "updated_at": "2025-12-24T00:58:00.124Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 35,
+    "fields": {
+      "user": 5,
+      "movie": 803796,
+      "content": "어두운 유머와 화려한 비주얼이 충돌하는 세계.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:01.610Z",
+      "updated_at": "2025-12-24T00:58:01.610Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 36,
+    "fields": {
+      "user": 1,
+      "movie": 1539104,
+      "content": "한순간의 선택이 모든 것을 바꿔놓는 긴장감이 흐른다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:03.590Z",
+      "updated_at": "2025-12-24T00:58:03.590Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 37,
+    "fields": {
+      "user": 1,
+      "movie": 1379963,
+      "content": "상대방의 마음을 읽는 미묘한 긴장감이 매력적이다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:05.333Z",
+      "updated_at": "2025-12-24T00:58:05.333Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 38,
+    "fields": {
+      "user": 2,
+      "movie": 346364,
+      "content": "어둠 속에서 피어나는 불안과 공포의 미세한 떨림",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:07.295Z",
+      "updated_at": "2025-12-24T00:58:07.295Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 39,
+    "fields": {
+      "user": 4,
+      "movie": 575265,
+      "content": "끝없는 추격전 속에 숨겨진 인간의 고뇌를 느낀다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:08.502Z",
+      "updated_at": "2025-12-24T00:58:08.502Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 40,
+    "fields": {
+      "user": 5,
+      "movie": 1033148,
+      "content": "사랑은 서로의 마음을 이해하는 것일까?",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:10.060Z",
+      "updated_at": "2025-12-24T00:58:10.060Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 41,
+    "fields": {
+      "user": 2,
+      "movie": 967941,
+      "content": "복잡한 감정이 얽힌 순간들을 조심스레 풀어낸다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:11.531Z",
+      "updated_at": "2025-12-24T00:58:11.531Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 42,
+    "fields": {
+      "user": 3,
+      "movie": 1286185,
+      "content": "세상과 소통하는 방식이 이토록 다를 수 있다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:12.933Z",
+      "updated_at": "2025-12-24T00:58:12.933Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 43,
+    "fields": {
+      "user": 6,
+      "movie": 474350,
+      "content": "어둠 속에서 감춰진 공포의 진실이 서서히 드러난다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:14.480Z",
+      "updated_at": "2025-12-24T00:58:14.480Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 44,
+    "fields": {
+      "user": 3,
+      "movie": 23527,
+      "content": "진실을 마주하는 순간의 긴장감이 압도적이다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:15.795Z",
+      "updated_at": "2025-12-24T00:58:15.795Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 45,
+    "fields": {
+      "user": 2,
+      "movie": 601,
+      "content": "어린 시절의 순수함이 그리워지는 순간들.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:17.220Z",
+      "updated_at": "2025-12-24T00:58:17.220Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 46,
+    "fields": {
+      "user": 4,
+      "movie": 701387,
+      "content": "상처받은 영혼들이 교차하는 순간의 아름다움.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:18.563Z",
+      "updated_at": "2025-12-24T00:58:18.563Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 47,
+    "fields": {
+      "user": 3,
+      "movie": 991494,
+      "content": "유쾌한 상상력이 가득한 바다 속 모험이 흥미롭다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:20.174Z",
+      "updated_at": "2025-12-24T00:58:20.174Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 48,
+    "fields": {
+      "user": 2,
+      "movie": 8871,
+      "content": "온통 차가운 색조 속에 따스한 감정이 숨겨져 있다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:21.843Z",
+      "updated_at": "2025-12-24T00:58:21.843Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 49,
+    "fields": {
+      "user": 6,
+      "movie": 1363123,
+      "content": "일상의 소소한 유머가 따뜻한 위안을 전한다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:23.273Z",
+      "updated_at": "2025-12-24T00:58:23.273Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 50,
+    "fields": {
+      "user": 3,
+      "movie": 1400032,
+      "content": "서로의 마음을 추는 춤 속에 숨겨진 외로움이 느껴진다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:24.801Z",
+      "updated_at": "2025-12-24T00:58:24.801Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 51,
+    "fields": {
+      "user": 5,
+      "movie": 1288072,
+      "content": "불안과 고독이 교차하는 여정의 끝에 남겨진 여운",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:51.164Z",
+      "updated_at": "2025-12-24T00:58:51.164Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 52,
+    "fields": {
+      "user": 1,
+      "movie": 617126,
+      "content": "새로운 시각으로 재구성된 영웅의 고뇌가 깊게 파고든다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:52.583Z",
+      "updated_at": "2025-12-24T00:58:52.583Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 53,
+    "fields": {
+      "user": 3,
+      "movie": 1061474,
+      "content": "상징과 현실이 뒤엉켜 불확실함을 자아낸다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:54.088Z",
+      "updated_at": "2025-12-24T00:58:54.088Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 54,
+    "fields": {
+      "user": 5,
+      "movie": 24428,
+      "content": "강렬한 액션 속에 인간의 연민을 담아낸다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:55.625Z",
+      "updated_at": "2025-12-24T00:58:55.625Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 55,
+    "fields": {
+      "user": 5,
+      "movie": 772,
+      "content": "유머와 스릴이 절묘하게 얽힌 도시의 한복판에서의 고독함.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:57.278Z",
+      "updated_at": "2025-12-24T00:58:57.278Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 56,
+    "fields": {
+      "user": 3,
+      "movie": 1197137,
+      "content": "어둠 속에서 감춰진 두려움이 서서히 드러난다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:58:58.664Z",
+      "updated_at": "2025-12-24T00:58:58.664Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 57,
+    "fields": {
+      "user": 5,
+      "movie": 1116465,
+      "content": "액션의 경계를 허물며 쏟아지는 유머가 매력적이다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:00.153Z",
+      "updated_at": "2025-12-24T00:59:00.153Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 58,
+    "fields": {
+      "user": 1,
+      "movie": 755679,
+      "content": "끝없이 이어지는 추격전 속에서 가족의 의미를 되새기게 된다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:01.898Z",
+      "updated_at": "2025-12-24T00:59:01.898Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 59,
+    "fields": {
+      "user": 5,
+      "movie": 157336,
+      "content": "끝없는 우주 속에서 인간의 고독과 희망을 탐구한다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:03.367Z",
+      "updated_at": "2025-12-24T00:59:03.367Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 60,
+    "fields": {
+      "user": 5,
+      "movie": 1309012,
+      "content": "불안한 시선이 계속해서 불길한 예감을 자아낸다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:04.719Z",
+      "updated_at": "2025-12-24T00:59:04.719Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 61,
+    "fields": {
+      "user": 1,
+      "movie": 1327862,
+      "content": "잊지 못할 순간들이 쌓여가는 비극의 미학.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:06.581Z",
+      "updated_at": "2025-12-24T00:59:06.581Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 62,
+    "fields": {
+      "user": 1,
+      "movie": 1234821,
+      "content": "자연의 위엄과 인간의 욕망이 충돌하는 순간들.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:09.156Z",
+      "updated_at": "2025-12-24T00:59:09.156Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 63,
+    "fields": {
+      "user": 2,
+      "movie": 949709,
+      "content": "어둠 속에서 피어나는 희망의 불꽃이 감동적이다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:10.564Z",
+      "updated_at": "2025-12-24T00:59:10.564Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 64,
+    "fields": {
+      "user": 5,
+      "movie": 1415974,
+      "content": "고독과 불안을 함께 느끼게 하는 긴장감이 지속된다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:11.742Z",
+      "updated_at": "2025-12-24T00:59:11.742Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 65,
+    "fields": {
+      "user": 6,
+      "movie": 1134463,
+      "content": "상실과 희망이 교차하는 순간들이 잊히지 않는다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:13.133Z",
+      "updated_at": "2025-12-24T00:59:13.133Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 66,
+    "fields": {
+      "user": 2,
+      "movie": 507089,
+      "content": "일상의 비극이 유머로 변주되는 순간들, 기묘한 매력이 지배한다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:14.735Z",
+      "updated_at": "2025-12-24T00:59:14.735Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 67,
+    "fields": {
+      "user": 6,
+      "movie": 1022787,
+      "content": "감정의 파도가 밀려오는 듯한 비현실적인 여정.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:16.080Z",
+      "updated_at": "2025-12-24T00:59:16.080Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 68,
+    "fields": {
+      "user": 1,
+      "movie": 911430,
+      "content": "속도와 긴장감이 교차하는 순간들이 연속적으로 펼쳐진다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:17.508Z",
+      "updated_at": "2025-12-24T00:59:17.508Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 69,
+    "fields": {
+      "user": 2,
+      "movie": 1010581,
+      "content": "갈등 속에 스며드는 미묘한 감정의 흐름이 인상적이다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:19.227Z",
+      "updated_at": "2025-12-24T00:59:19.227Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 70,
+    "fields": {
+      "user": 4,
+      "movie": 840326,
+      "content": "끝없는 질문을 던지는 흐릿한 시선이 아프다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:20.921Z",
+      "updated_at": "2025-12-24T00:59:20.921Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 71,
+    "fields": {
+      "user": 3,
+      "movie": 1038392,
+      "content": "어두운 분위기 속에 숨겨진 진실이 소름을 유발한다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:48.504Z",
+      "updated_at": "2025-12-24T00:59:48.504Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 72,
+    "fields": {
+      "user": 1,
+      "movie": 238,
+      "content": "가족의 사랑과 배신이 얽히는 긴장감이 넘실거린다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:49.811Z",
+      "updated_at": "2025-12-24T00:59:49.811Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 73,
+    "fields": {
+      "user": 3,
+      "movie": 1166133,
+      "content": "어둠 속에 피어나는 불꽃, 아픔이 아름답다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:51.307Z",
+      "updated_at": "2025-12-24T00:59:51.307Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 74,
+    "fields": {
+      "user": 6,
+      "movie": 27205,
+      "content": "꿈과 현실의 경계에서 헤매는 기분이 묘하다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:53.360Z",
+      "updated_at": "2025-12-24T00:59:53.360Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 75,
+    "fields": {
+      "user": 6,
+      "movie": 278,
+      "content": "철창 너머로 보이는 희망의 빛이 찡하게 다가온다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:55.372Z",
+      "updated_at": "2025-12-24T00:59:55.372Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 76,
+    "fields": {
+      "user": 3,
+      "movie": 1087192,
+      "content": "하늘을 나는 순간, 모든 두려움이 사라진다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:56.788Z",
+      "updated_at": "2025-12-24T00:59:56.788Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 77,
+    "fields": {
+      "user": 4,
+      "movie": 845781,
+      "content": "불확실한 선택의 연속이 주는 긴장감이 매력적이다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:58.716Z",
+      "updated_at": "2025-12-24T00:59:58.716Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 78,
+    "fields": {
+      "user": 5,
+      "movie": 552524,
+      "content": "사람과 외계인, 가족의 의미를 새로 정의하다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T00:59:59.961Z",
+      "updated_at": "2025-12-24T00:59:59.961Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 79,
+    "fields": {
+      "user": 4,
+      "movie": 1196573,
+      "content": "묵직한 긴장감 속에서 비틀거리는 인물들의 심리가 불편하게 찌른다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:00:01.363Z",
+      "updated_at": "2025-12-24T01:00:01.363Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 80,
+    "fields": {
+      "user": 6,
+      "movie": 1456349,
+      "content": "우연이 만들어낸 비극의 아이러니를 조용히 응시하다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:00:02.828Z",
+      "updated_at": "2025-12-24T01:00:02.828Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 81,
+    "fields": {
+      "user": 1,
+      "movie": 974663,
+      "content": "애완견과의 우정이 이렇게 감동적일 줄이야.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:00:58.730Z",
+      "updated_at": "2025-12-24T01:00:58.730Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 82,
+    "fields": {
+      "user": 5,
+      "movie": 360920,
+      "content": "어둠 속에서 따뜻한 웃음을 찾는 기분.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:00.138Z",
+      "updated_at": "2025-12-24T01:01:00.138Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 83,
+    "fields": {
+      "user": 6,
+      "movie": 1007734,
+      "content": "몰입감 넘치는 액션에 숨이 턱 막히는 순간들.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:01.785Z",
+      "updated_at": "2025-12-24T01:01:01.785Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 84,
+    "fields": {
+      "user": 3,
+      "movie": 1233413,
+      "content": "끝없이 이어지는 긴장감에 숨이 턱 막힌다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:03.656Z",
+      "updated_at": "2025-12-24T01:01:03.656Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 85,
+    "fields": {
+      "user": 4,
+      "movie": 1420733,
+      "content": "어둠 속에서 빛나는 한 줄의 희망이 불안하다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:05.393Z",
+      "updated_at": "2025-12-24T01:01:05.393Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 86,
+    "fields": {
+      "user": 6,
+      "movie": 993708,
+      "content": "뒷맛이 씁쓸한데도 계속 생각나는 이야기.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:06.984Z",
+      "updated_at": "2025-12-24T01:01:06.984Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 87,
+    "fields": {
+      "user": 2,
+      "movie": 508138,
+      "content": "불안과 긴장 속에서 고요함을 찾는 묘한 경험",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:08.571Z",
+      "updated_at": "2025-12-24T01:01:08.571Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 88,
+    "fields": {
+      "user": 4,
+      "movie": 49013,
+      "content": "속도감 넘치는 레이싱 속에 숨겨진 우정의 매력.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:10.199Z",
+      "updated_at": "2025-12-24T01:01:10.199Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 89,
+    "fields": {
+      "user": 6,
+      "movie": 546554,
+      "content": "마치 퍼즐을 맞추는 듯한 긴장감이 흘렀다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:11.867Z",
+      "updated_at": "2025-12-24T01:01:11.867Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 90,
+    "fields": {
+      "user": 1,
+      "movie": 597,
+      "content": "사랑과 비극이 얽힌 순간들, 가슴이 쿵쾌해진다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:13.592Z",
+      "updated_at": "2025-12-24T01:01:13.592Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 91,
+    "fields": {
+      "user": 5,
+      "movie": 1241742,
+      "content": "세 가지 이야기가 엮여 만들어낸 복잡한 매력에 빠져든다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:15.185Z",
+      "updated_at": "2025-12-24T01:01:15.185Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 92,
+    "fields": {
+      "user": 3,
+      "movie": 1248226,
+      "content": "가볍게 웃다가도 가슴이 아플 때가 있다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:16.546Z",
+      "updated_at": "2025-12-24T01:01:16.546Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 93,
+    "fields": {
+      "user": 6,
+      "movie": 671,
+      "content": "마법과 우정이 가득한 세계에 한 번 빠져보는 중.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:18.081Z",
+      "updated_at": "2025-12-24T01:01:18.081Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 94,
+    "fields": {
+      "user": 5,
+      "movie": 385687,
+      "content": "속도감에 정신이 없지만, 여전히 심장은 뛰고 있다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:19.503Z",
+      "updated_at": "2025-12-24T01:01:19.503Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 95,
+    "fields": {
+      "user": 6,
+      "movie": 106,
+      "content": "정글 속에서 숨 막히는 긴장감이 지배한다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:20.978Z",
+      "updated_at": "2025-12-24T01:01:20.978Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 96,
+    "fields": {
+      "user": 5,
+      "movie": 562,
+      "content": "진짜 크리스마스는 이렇게 시작되는 법인가?",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:22.281Z",
+      "updated_at": "2025-12-24T01:01:22.281Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 97,
+    "fields": {
+      "user": 6,
+      "movie": 155,
+      "content": "어둠 속에서 빛나는 광기의 미소를 잊을 수 없다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:23.786Z",
+      "updated_at": "2025-12-24T01:01:23.786Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 98,
+    "fields": {
+      "user": 6,
+      "movie": 1275779,
+      "content": "예상치 못한 전개에 눈을 뗄 수가 없다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:25.120Z",
+      "updated_at": "2025-12-24T01:01:25.120Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 99,
+    "fields": {
+      "user": 2,
+      "movie": 122917,
+      "content": "전투는 다소 과하지만, 그 속에 숨겨진 우정은 감동적이다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:27.006Z",
+      "updated_at": "2025-12-24T01:01:27.006Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 100,
+    "fields": {
+      "user": 2,
+      "movie": 1368337,
+      "content": "끝없는 고독 속에서 자신을 찾는 여정이 인상적이다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:01:28.310Z",
+      "updated_at": "2025-12-24T01:01:28.310Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 101,
+    "fields": {
+      "user": 5,
+      "movie": 1127628,
+      "content": "공포와 위트가 엉켜진 기묘한 여행이 시작된다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:31.878Z",
+      "updated_at": "2025-12-24T01:02:31.878Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 102,
+    "fields": {
+      "user": 3,
+      "movie": 569094,
+      "content": "눈이 즐거운 색감과 빠른 전개에 정신이 혼미해진다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:33.360Z",
+      "updated_at": "2025-12-24T01:02:33.360Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 103,
+    "fields": {
+      "user": 2,
+      "movie": 1197306,
+      "content": "지루한 일상 속에 스며드는 작은 변화의 힘.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:34.818Z",
+      "updated_at": "2025-12-24T01:02:34.818Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 104,
+    "fields": {
+      "user": 3,
+      "movie": 291805,
+      "content": "수수께끼 같은 마술의 향연 속에서 정신이 혼미해진다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:36.395Z",
+      "updated_at": "2025-12-24T01:02:36.395Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 105,
+    "fields": {
+      "user": 1,
+      "movie": 402431,
+      "content": "마법이 사라진 세상에서 다시 찾은 찰나의 환상.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:38.301Z",
+      "updated_at": "2025-12-24T01:02:38.301Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 106,
+    "fields": {
+      "user": 3,
+      "movie": 1561955,
+      "content": "어디서부터 잘못된 걸까, 반추하게 만드는 여운.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:39.514Z",
+      "updated_at": "2025-12-24T01:02:39.514Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 107,
+    "fields": {
+      "user": 2,
+      "movie": 604079,
+      "content": "한 걸음 한 걸음이 무겁게 느껴지는 여정.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:40.981Z",
+      "updated_at": "2025-12-24T01:02:40.981Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 108,
+    "fields": {
+      "user": 1,
+      "movie": 1208561,
+      "content": "어디서 본 듯한 장면들이 오히려 새롭게 다가온다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:42.866Z",
+      "updated_at": "2025-12-24T01:02:42.866Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 109,
+    "fields": {
+      "user": 2,
+      "movie": 533535,
+      "content": "유머와 액션이 만나는 지점에서 웃음을 잃지 않게 한다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:44.202Z",
+      "updated_at": "2025-12-24T01:02:44.202Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 110,
+    "fields": {
+      "user": 6,
+      "movie": 541671,
+      "content": "예상치 못한 긴장감이 계속해서 발을 동동 굴리게 한다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:45.775Z",
+      "updated_at": "2025-12-24T01:02:45.775Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 111,
+    "fields": {
+      "user": 6,
+      "movie": 1234731,
+      "content": "거대한 생물이 그려내는 강렬한 서스펜스 속에 숨이 턱 막힌다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:47.271Z",
+      "updated_at": "2025-12-24T01:02:47.271Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 112,
+    "fields": {
+      "user": 1,
+      "movie": 634649,
+      "content": "온갖 추억이 나를 휘감고, 눈물이 마르질 않는다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:48.686Z",
+      "updated_at": "2025-12-24T01:02:48.686Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 113,
+    "fields": {
+      "user": 6,
+      "movie": 1241982,
+      "content": "모험이 다시 시작된다는 설렘이 가득하다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:50.320Z",
+      "updated_at": "2025-12-24T01:02:50.320Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 114,
+    "fields": {
+      "user": 5,
+      "movie": 482600,
+      "content": "가슴 속 뭉클함이 사라지지 않는 영화.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:51.592Z",
+      "updated_at": "2025-12-24T01:02:51.592Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 115,
+    "fields": {
+      "user": 5,
+      "movie": 1156594,
+      "content": "말이 필요 없는 감정의 롤러코스터를 탑니다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:53.189Z",
+      "updated_at": "2025-12-24T01:02:53.189Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 116,
+    "fields": {
+      "user": 1,
+      "movie": 694,
+      "content": "끝없이 펼쳐지는 공포의 미로에서 길을 잃다.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:54.810Z",
+      "updated_at": "2025-12-24T01:02:54.810Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 117,
+    "fields": {
+      "user": 5,
+      "movie": 661374,
+      "content": "예상치 못한 반전이 속절없이 다가온다.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:56.047Z",
+      "updated_at": "2025-12-24T01:02:56.047Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 118,
+    "fields": {
+      "user": 3,
+      "movie": 1010756,
+      "content": "소름 돋는 긴장감에 숨이 막히는 경험.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:57.303Z",
+      "updated_at": "2025-12-24T01:02:57.303Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 119,
+    "fields": {
+      "user": 2,
+      "movie": 950387,
+      "content": "블록 쌓기보다 더 복잡한 감정의 조합이랄까.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:02:58.703Z",
+      "updated_at": "2025-12-24T01:02:58.703Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 120,
+    "fields": {
+      "user": 1,
+      "movie": 129,
+      "content": "유년의 기억이 한없이 그리워지는 순간들.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:03:00.066Z",
+      "updated_at": "2025-12-24T01:03:00.066Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 121,
+    "fields": {
+      "user": 1,
+      "movie": 1175942,
+      "content": "유머와 액션이 기묘하게 얽힌 한 판의 전쟁 같은 느낌.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:39.134Z",
+      "updated_at": "2025-12-24T01:08:39.134Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 122,
+    "fields": {
+      "user": 5,
+      "movie": 786892,
+      "content": "폭풍 같은 액션 속에 숨 쉴 틈이 없다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:40.327Z",
+      "updated_at": "2025-12-24T01:08:40.327Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 123,
+    "fields": {
+      "user": 5,
+      "movie": 1022789,
+      "content": "또 다른 감정의 파노라마를 펼쳐보는 기분.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:41.711Z",
+      "updated_at": "2025-12-24T01:08:41.711Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 124,
+    "fields": {
+      "user": 1,
+      "movie": 550,
+      "content": "폭력과 카타르시스의 경계에서 방황하는 느낌",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:43.046Z",
+      "updated_at": "2025-12-24T01:08:43.046Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 125,
+    "fields": {
+      "user": 3,
+      "movie": 346698,
+      "content": "인형이 아니라 진짜 사람처럼 느껴지는 순간들.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:44.601Z",
+      "updated_at": "2025-12-24T01:08:44.601Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 126,
+    "fields": {
+      "user": 2,
+      "movie": 603,
+      "content": "눈을 뗄 수 없는 비현실의 세계에 빠져든다",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:45.992Z",
+      "updated_at": "2025-12-24T01:08:45.992Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 127,
+    "fields": {
+      "user": 4,
+      "movie": 1078605,
+      "content": "한 순간의 긴장감이 끝없이 이어지는 느낌.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:47.427Z",
+      "updated_at": "2025-12-24T01:08:47.427Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 128,
+    "fields": {
+      "user": 6,
+      "movie": 1035259,
+      "content": "총알이 날아다니는 사이, 긴장감이 뼈속까지 스며든다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:48.977Z",
+      "updated_at": "2025-12-24T01:08:48.977Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 129,
+    "fields": {
+      "user": 6,
+      "movie": 1255775,
+      "content": "어둡고도 매력적인 분위기에 빠져든다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:50.337Z",
+      "updated_at": "2025-12-24T01:08:50.337Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 130,
+    "fields": {
+      "user": 3,
+      "movie": 17015,
+      "content": "상대의 마음을 얻기 위한 치열한 경쟁이 시작된다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:51.512Z",
+      "updated_at": "2025-12-24T01:08:51.512Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 131,
+    "fields": {
+      "user": 6,
+      "movie": 106646,
+      "content": "사치와 향락 속 파국을 바라보는 내 눈이 아프다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:52.852Z",
+      "updated_at": "2025-12-24T01:08:52.852Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 132,
+    "fields": {
+      "user": 3,
+      "movie": 872585,
+      "content": "역사의 무게를 느끼며 압도당하는 시간.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:54.257Z",
+      "updated_at": "2025-12-24T01:08:54.257Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 133,
+    "fields": {
+      "user": 1,
+      "movie": 615453,
+      "content": "눈을 뗄 수 없는 비극의 연속에 휘말린다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:55.642Z",
+      "updated_at": "2025-12-24T01:08:55.642Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 134,
+    "fields": {
+      "user": 5,
+      "movie": 693134,
+      "content": "끝없이 펼쳐지는 사막의 아름다움에 숨이 막힌다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:57.147Z",
+      "updated_at": "2025-12-24T01:08:57.147Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 135,
+    "fields": {
+      "user": 2,
+      "movie": 218,
+      "content": "시간이 멈춘 듯한 긴장감 속에 눈을 뗄 수 없었다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:58.453Z",
+      "updated_at": "2025-12-24T01:08:58.453Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 136,
+    "fields": {
+      "user": 3,
+      "movie": 639988,
+      "content": "눈치 없는 선택들이 만들어내는 웃픈 상황들.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:08:59.557Z",
+      "updated_at": "2025-12-24T01:08:59.557Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 137,
+    "fields": {
+      "user": 4,
+      "movie": 1128650,
+      "content": "끝없이 넘치는 긴장감에 손에 땀을 쥐게 된다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:01.253Z",
+      "updated_at": "2025-12-24T01:09:01.253Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 138,
+    "fields": {
+      "user": 1,
+      "movie": 1367575,
+      "content": "끝날 듯 안 끝나는 긴장감이 압도적이다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:02.720Z",
+      "updated_at": "2025-12-24T01:09:02.720Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 139,
+    "fields": {
+      "user": 4,
+      "movie": 1726,
+      "content": "기계와 인간의 경계가 모호해지는 순간들.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:04.124Z",
+      "updated_at": "2025-12-24T01:09:04.124Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 140,
+    "fields": {
+      "user": 1,
+      "movie": 1241470,
+      "content": "강렬한 시선이 느껴지는 순간, 숨이 턱 막힌다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:05.617Z",
+      "updated_at": "2025-12-24T01:09:05.617Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 141,
+    "fields": {
+      "user": 2,
+      "movie": 858024,
+      "content": "공허한 무대 위, 감정의 향연이 펼쳐진다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:06.935Z",
+      "updated_at": "2025-12-24T01:09:06.935Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 142,
+    "fields": {
+      "user": 1,
+      "movie": 120,
+      "content": "모험의 시작은 언제나 불안한 법이다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:08.219Z",
+      "updated_at": "2025-12-24T01:09:08.219Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 143,
+    "fields": {
+      "user": 1,
+      "movie": 1064307,
+      "content": "상상 이상의 전개에 웃음이 터진다.",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:09.440Z",
+      "updated_at": "2025-12-24T01:09:09.440Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 144,
+    "fields": {
+      "user": 6,
+      "movie": 109451,
+      "content": "미각과 감정의 오묘한 조화가 가득한 시간.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:10.640Z",
+      "updated_at": "2025-12-24T01:09:10.640Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 145,
+    "fields": {
+      "user": 1,
+      "movie": 76341,
+      "content": "끝없이 펼쳐진 사막에서 숨이 턱턱 막힌다.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:12.512Z",
+      "updated_at": "2025-12-24T01:09:12.512Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 146,
+    "fields": {
+      "user": 1,
+      "movie": 98,
+      "content": "전투의 향연 속에서 인간의 본성을 마주하게 된다.",
+      "rating": 6,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:13.692Z",
+      "updated_at": "2025-12-24T01:09:13.692Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 147,
+    "fields": {
+      "user": 2,
+      "movie": 1441563,
+      "content": "설렘과 긴장이 뒤섞인 크리스마스의 묘미.",
+      "rating": 7,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:15.055Z",
+      "updated_at": "2025-12-24T01:09:15.055Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 148,
+    "fields": {
+      "user": 6,
+      "movie": 299536,
+      "content": "피할 수 없는 운명이 이렇게 시원하게 터질 줄이야.",
+      "rating": 8,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:16.698Z",
+      "updated_at": "2025-12-24T01:09:16.698Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 149,
+    "fields": {
+      "user": 3,
+      "movie": 674,
+      "content": "불의 잔이 불러온 우여곡절, 친구들은 어디에?",
+      "rating": 9,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:17.976Z",
+      "updated_at": "2025-12-24T01:09:17.976Z",
+      "like_users": []
+    }
+  },
+  {
+    "model": "reviews.review",
+    "pk": 150,
+    "fields": {
+      "user": 2,
+      "movie": 680,
+      "content": "서로 다른 이야기들이 엮여가는 묘한 매력.",
+      "rating": 5,
+      "is_spoiler": false,
+      "created_at": "2025-12-24T01:09:19.240Z",
+      "updated_at": "2025-12-24T01:09:19.240Z",
+      "like_users": []
+    }
+  }
+]
