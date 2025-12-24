@@ -255,27 +255,32 @@ def recommend_by_keyword(request):
     if not user_input:
         return Response({'message': '추천받고 싶은 상황이나 기분을 입력해주세요.'}, status=400)
 
-    # 1. GMS 전용 클라이언트 설정 (제공해주신 코드 방식 유지)
     client = openai.OpenAI(
         api_key=settings.OPENAI_API_KEY, 
         base_url="https://gms.ssafy.io/gmsapi/api.openai.com/v1"
     )
 
-    # 2. 프롬프트 설계
-    system_message = "당신은 사용자의 상황과 기분에 딱 맞는 영화를 선정해주는 전문 영화 소믈리에입니다."
+    system_message = "당신은 사용자의 기분과 상황에 맞춰 대중적으로 잘 알려진 영화를 골라주는 영화 추천 큐레이터입니다."
     user_prompt = f"""
-    사용자 요청: "{user_input}"
-    
-    미션:
-    1. 이 요청의 분위기나 키워드에 어울리는 유명한 대중 영화 20개를 선정하세요.
-    2. 결과는 반드시 영화의 '한국어 제목'만 쉼표(,)로 구분해서 한 줄로 나열하세요.
-    3. 다른 설명, 번호, 따옴표는 절대 포함하지 마세요.
-    
-    예시: 쇼생크 탈출, 인셉션, 어바웃 타임, 범죄도시
-    """
+        사용자 요청: "{user_input}"
+        
+        아래 조건을 모두 만족하는 영화를 추천하세요.
+
+        [추천 기준]
+        - 사용자의 요청에서 드러난 감정, 분위기, 상황을 우선 반영
+        - 국내에서 인지도 높은 대중 영화 위주
+        - 너무 마이너하거나 예술영화 성향의 작품은 제외
+        - 특정 시리즈가 있다면 대표작 위주로 선정
+
+        [출력 규칙]
+        1. 정확히 20개의 영화 제목만 출력
+        2. 반드시 한국어 제목만 사용
+        3. 쉼표(,)로만 구분하여 한 줄로 출력
+        4. 번호, 설명, 줄바꿈, 따옴표, 이모지, 추가 문구 절대 금지
+        5. 결과에는 영화 제목 외 어떤 텍스트도 포함하지 말 것
+        """
 
     try:
-        # 3. GMS API 호출
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -323,6 +328,7 @@ def recommend_by_keyword(request):
     except Exception as e:
         print(f"GMS OpenAI Error: {e}")
         return Response({'error': '영화 추천 중 오류가 발생했습니다.'}, status=500)
+
 
 @api_view(['GET'])
 def hot_movies(request):
