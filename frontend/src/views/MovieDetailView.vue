@@ -1,6 +1,10 @@
 <template>
   <div class="page-container">
     
+    <button @click="router.back()" class="back-btn-floating" title="뒤로가기">
+      <span class="icon">←</span>
+    </button>
+
     <div v-if="!movieStore.movieDetail" class="loading-state">
       <div class="spinner"></div>
     </div>
@@ -175,6 +179,7 @@
                   :key="review.id" 
                   :review="review"
                   @like="reviewStore.likeReview"
+                  @go-profile="goProfile"
                 />
                 <p v-if="!reviewStore.movieReviews.length" class="no-reviews">
                   첫 리뷰를 남겨주세요!
@@ -199,7 +204,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 import { useReviewStore } from '@/stores/review'
 import { useMovieStore } from '@/stores/movie'
@@ -209,6 +214,7 @@ import ReviewItem from '@/components/review/ReviewItem.vue'
 import YoutubeTrailer from '@/components/movies/YoutubeTrailer.vue'
 
 const route = useRoute()
+const router = useRouter()
 const accountStore = useAccountStore()
 const reviewStore = useReviewStore()
 const movieStore = useMovieStore()
@@ -230,6 +236,10 @@ const closeTrailer = () => {
   showTrailerModal.value = false
 }
 
+const goProfile = (username) => {
+  router.push({ name: 'ProfileView', params: { username: username } })
+}
+
 onMounted(() => {
   movieStore.fetchMovieDetail(movieId)
   reviewStore.fetchMovieReviews(movieId)
@@ -242,7 +252,29 @@ onMounted(() => {
   width: 100%;
   background-color: #FFFFFF;
   min-height: 100vh;
+  position: relative; /* 버튼 배치를 위해 */
   padding-bottom: 5rem;
+}
+
+.back-btn-floating {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 100; /* 히어로 배너 위에 올라오도록 */
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 2.5rem;
+  font-weight: 100;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.back-btn-floating:hover {
+  color: rgba(255, 255, 255, 1); /* 호버 시 밝게 */
+  transform: translateX(-5px);
 }
 
 .content-wrapper {
@@ -459,14 +491,19 @@ onMounted(() => {
 
 /* Mobile */
 @media (max-width: 768px) {
+  /* [수정] 모바일에서 뒤로가기 버튼 위치 조정 */
+  .back-btn-floating {
+    top: 1rem;
+    left: 1rem;
+    font-size: 2rem;
+  }
+
   .hero-banner { height: 550px; }
   .movie-title { font-size: 2rem; }
   .content-wrapper { padding: 0 1rem; }
 
-  /* [수정] 모바일에서 헤더 텍스트 위치 조정 */
-  /* 하단 패딩을 늘려서 텍스트를 물리적으로 위로 올림 */
   .hero-content {
-    padding-bottom: 5rem; /* 기존 2.5rem 에서 증가 */
+    padding-bottom: 5rem;
   }
 
   .top-section {

@@ -1,7 +1,7 @@
 <template>
   <div class="comment-item">
     
-    <div class="avatar-column">
+    <div class="avatar-column" @click="goProfile(comment.username)">
       <div class="tier-badge" :title="tier.label">
         <img :src="tier.icon" :alt="tier.label" class="tier-img">
       </div>
@@ -10,7 +10,12 @@
     <div class="content-column">
       <div class="comment-header">
         <div class="info-group">
-          <strong class="username">{{ comment.username }}</strong>
+          <strong 
+            class="username" 
+            @click="goProfile(comment.username)"
+          >
+            {{ comment.username }}
+          </strong>
           <span class="date">{{ formatDate(comment.created_at) }}</span>
         </div>
 
@@ -32,32 +37,45 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { getTier } from '@/utils/tierUtils'
 
 const props = defineProps(['comment', 'currentUsername'])
 defineEmits(['delete-comment'])
 
+const router = useRouter()
+
 const tier = computed(() => getTier(props.comment.user_review_count || 0))
 
 const formatDate = (date) => {
   const d = new Date(date)
-  // 깔끔하게 날짜만 표시하거나, 시간까지 표시 (원하는 대로 선택)
   return d.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+}
+
+// [추가] 프로필 페이지 이동 함수
+const goProfile = (username) => {
+  router.push({ name: 'ProfileView', params: { username: username } })
 }
 </script>
 
 <style scoped>
 .comment-item {
   display: flex;
-  gap: 12px; /* 좌우 간격 */
+  gap: 12px;
   padding: 1.2rem 0;
-  border-bottom: 1px solid #F5F5F5; /* 아주 연한 구분선 */
+  border-bottom: 1px solid #F5F5F5;
   transition: background-color 0.2s;
 }
 
 /* 1. 좌측 아바타 영역 */
 .avatar-column {
   flex-shrink: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.avatar-column:hover {
+  opacity: 0.8;
 }
 
 .tier-badge {
@@ -80,7 +98,7 @@ const formatDate = (date) => {
 
 /* 2. 우측 컨텐츠 영역 */
 .content-column {
-  flex: 1; /* 남은 공간 다 차지 */
+  flex: 1; 
   display: flex;
   flex-direction: column;
 }
@@ -102,6 +120,15 @@ const formatDate = (date) => {
   font-size: 0.9rem;
   font-weight: 700;
   color: #333333;
+  /* [추가] 클릭 가능 표시 */
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+/* [추가] 호버 효과 */
+.username:hover {
+  color: #7A6CFA;
+  text-decoration: underline;
 }
 
 .date {
@@ -109,7 +136,6 @@ const formatDate = (date) => {
   color: #999999;
 }
 
-/* 삭제 버튼 (작고 심플하게) */
 .delete-btn {
   background: none;
   border: none;
@@ -121,16 +147,15 @@ const formatDate = (date) => {
 }
 
 .delete-btn:hover {
-  color: #FF4444; /* 호버 시 빨간색 */
+  color: #FF4444; 
   text-decoration: underline;
 }
 
-/* 댓글 본문 */
 .comment-text {
   font-size: 0.95rem;
   color: #444444;
   line-height: 1.5;
-  white-space: pre-wrap; /* 줄바꿈 문자(\n) 반영 */
-  word-break: break-all; /* 긴 단어 줄바꿈 */
+  white-space: pre-wrap; 
+  word-break: break-all; 
 }
 </style>

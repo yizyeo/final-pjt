@@ -2,7 +2,10 @@
   <div class="review-item">
     
     <div class="review-header">
-      <div class="user-profile">
+      <div 
+        class="user-profile" 
+        @click.stop="$emit('go-profile', review.username)"
+      >
         <div class="tier-badge" :title="userTier.label">
           <img :src="userTier.icon" :alt="userTier.label" class="tier-img">
         </div>
@@ -53,16 +56,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-// [필수] 티어 유틸리티 임포트 (ReviewCard와 동일하게)
 import { getTier } from '@/utils/tierUtils'
 
 const props = defineProps(['review'])
-const emit = defineEmits(['like'])
+const emit = defineEmits(['like', 'go-profile'])
 const router = useRouter()
 
 const showSpoiler = ref(false)
 
-// [핵심 로직] 리뷰 작성자의 리뷰 수(user_review_count)를 기반으로 티어 계산
 const userTier = computed(() => getTier(props.review.user_review_count || 0))
 
 const formatDate = (dateString) => {
@@ -83,10 +84,7 @@ const goDetail = () => {
   padding: 1.5rem 0;
   border-bottom: 1px solid #F0F0F0;
   background-color: #FFF;
-  transition: background-color 0.2s;
-}
-.review-item:hover {
-  background-color: #FAFAFA;
+  /* [수정] 호버 효과 제거를 위해 transition 및 hover 스타일 삭제 */
 }
 
 /* 1. 헤더 */
@@ -100,12 +98,17 @@ const goDetail = () => {
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 8px; /* ReviewCard와 간격 통일 */
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-/* [수정] 티어 뱃지 스타일 (ReviewCard에서 가져옴) */
+.user-profile:hover {
+  opacity: 0.7;
+}
+
 .tier-badge {
-  width: 32px;  /* 크기는 ReviewItem에 맞게 살짝 조정 */
+  width: 32px;
   height: 32px;
   border-radius: 50%;
   overflow: hidden;
@@ -150,7 +153,7 @@ const goDetail = () => {
 /* 2. 본문 */
 .review-body {
   margin-bottom: 1rem;
-  padding-left: 40px; /* 프로필 이미지 너비 + gap 만큼 들여쓰기해서 깔끔하게 */
+  padding-left: 40px; 
 }
 
 .content-text {
@@ -194,7 +197,7 @@ const goDetail = () => {
 .review-footer {
   display: flex;
   gap: 12px;
-  padding-left: 40px; /* 본문과 동일한 들여쓰기 */
+  padding-left: 40px;
 }
 
 .footer-btn {

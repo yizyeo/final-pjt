@@ -11,12 +11,16 @@
 
     <div class="grid-layout">
       
-      <RouterLink to="/blind-review" class="action-card">
+      <a 
+        href="#" 
+        class="action-card"
+        @click.prevent="handleProtectedMove('/blind-review')"
+      >
         <div class="card-top">
           <div class="icon-wrapper">📝</div>
           <h3 class="card-title">Blind Pick</h3>
           <p class="card-desc">
-            영화의 편견을 지우세요.<br />
+            영화에 대한 편견을 지우세요.<br />
             오직 리뷰 텍스트로만 선택하는 영화.
           </p>
         </div>
@@ -24,9 +28,13 @@
           <span class="service-label">Review Pick</span>
           <span class="icon-arrow">→</span>
         </div>
-      </RouterLink>
+      </a>
 
-      <RouterLink to="/recommend-keyword" class="action-card">
+      <a 
+        href="#" 
+        class="action-card"
+        @click.prevent="handleProtectedMove('/recommend-keyword')"
+      >
         <div class="card-top">
           <div class="icon-wrapper">✨</div>
           <h3 class="card-title">Keyword Pick</h3>
@@ -39,15 +47,15 @@
           <span class="service-label">AI Recommend</span>
           <span class="icon-arrow">→</span>
         </div>
-      </RouterLink>
+      </a>
 
       <RouterLink to="/worldcup" class="action-card">
         <div class="card-top">
           <div class="icon-wrapper">🏆</div>
           <h3 class="card-title">Movie Worldcup</h3>
           <p class="card-desc">
-            최고의 영화를 가려보세요.<br />
-            나만의 인생 영화 토너먼트.
+            가장 끌리는 영화를 골라보세요.<br />
+            오직 나를 위한 영화 토너먼트.
           </p>
         </div>
         <div class="card-bottom">
@@ -61,7 +69,24 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
+import { useAccountStore } from '@/stores/accounts'
+
+const router = useRouter()
+const accountStore = useAccountStore()
+
+// 로그인 체크 및 이동 핸들러
+const handleProtectedMove = (path) => {
+  if (!accountStore.isLogin) {
+    const isConfirmed = confirm('로그인이 필요한 서비스입니다.')
+    if (isConfirmed) {
+      router.push({ name: 'LogInView' })
+    }
+    return
+  }
+  // 로그인 상태라면 정상 이동
+  router.push(path)
+}
 </script>
 
 <style scoped>
@@ -73,7 +98,7 @@ import { RouterLink } from 'vue-router'
 /* --- 섹션 헤더 --- */
 .section-intro {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
 }
 
 .intro-title {
@@ -96,7 +121,6 @@ import { RouterLink } from 'vue-router'
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  /* 카드 높이 통일 (가장 긴 내용 기준) */
   align-items: stretch;
 }
 
@@ -111,16 +135,15 @@ import { RouterLink } from 'vue-router'
   border-radius: 16px;
   padding: 2rem;
   
-  /* [수정 1] 고정 높이 제거 & 최소 높이 설정 */
-  /* height: 280px; -> 삭제 */
-  min-height: 240px; /* 내용이 적어도 이 정도 높이는 유지 */
-  height: 100%; /* 그리드 셀 높이에 꽉 차게 */
+  min-height: 240px;
+  height: 100%;
   
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   position: relative;
   overflow: hidden;
+  cursor: pointer; /* a 태그는 기본적으로 pointer지만 명시 */
 }
 
 .action-card:hover {
@@ -169,7 +192,6 @@ import { RouterLink } from 'vue-router'
   font-weight: 500;
   letter-spacing: -0.02em;
   margin-top: 0.5rem;
-  /* [수정 2] 하단 여백을 줄여서 푸터가 너무 아래로 쳐지지 않게 조정 */
   margin-bottom: 1.5rem; 
 }
 
@@ -179,7 +201,7 @@ import { RouterLink } from 'vue-router'
   justify-content: space-between;
   align-items: center;
   
-  margin-top: auto; /* 내용이 적어도 바닥에 붙게 유지 */
+  margin-top: auto;
   padding-top: 1.5rem;
   border-top: 1px solid #F5F5F5;
   transition: border-color 0.3s;
@@ -208,36 +230,21 @@ import { RouterLink } from 'vue-router'
   transform: translateX(5px);
 }
 
-/* [수정 3] 반응형 브레이크포인트 추가 및 수정 */
-
-/* 1024px 이하 (태블릿 가로/작은 노트북): 2열 배치 */
+/* 반응형 */
 @media (max-width: 1024px) {
   .grid-layout {
-    grid-template-columns: repeat(2, 1fr); /* 3열 -> 2열로 변경 */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* 768px 이하 (모바일): 1열 배치 */
 @media (max-width: 768px) {
-  .intro-title {
-    font-size: 1.5rem;
-  }
-  
-  .intro-desc {
-    font-size: 1rem;
-  }
-
   .grid-layout {
-    grid-template-columns: 1fr; /* 1열 배치 */
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
   .action-card {
     min-height: 200px;
-  }
-
-  .mobile-break {
-    display: none;
   }
 }
 </style>

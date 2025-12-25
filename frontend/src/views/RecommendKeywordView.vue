@@ -1,9 +1,10 @@
 <template>
   <div class="page-container">
     
-    <div class="header-section">
-      <h1 class="page-title">AI 큐레이터 🤖</h1>
-      <p class="page-desc">
+    <div class="section-intro">
+      <div class="icon-wrapper">🤖</div>
+      <h2 class="intro-title">AI 큐레이터</h2>
+      <p class="intro-desc">
         기분, 상황, 분위기 무엇이든 적어주세요.<br class="mobile-break" />
         AI가 당신을 위한 딱 맞는 영화를 찾아드립니다.
       </p>
@@ -20,7 +21,7 @@
           class="search-input" 
           placeholder="어떤 영화를 찾고 계신가요?"
           :disabled="isLoading"
-        >
+        />
         <button 
           @click="getRecommendation" 
           class="search-btn" 
@@ -50,7 +51,7 @@
       
       <div v-if="isLoading" class="loading-state">
         <div class="loading-spinner"></div>
-        <p>AI가 영화를 분석하고 있습니다...</p>
+        <p>AI가 딱 맞는 영화를 찾고 있습니다...</p>
       </div>
 
       <div v-else-if="movies.length > 0" class="movie-grid-wrapper">
@@ -79,7 +80,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/accounts'
-// [중요] 일관된 디자인을 위해 이전에 만든 MovieListItem 사용 권장
 import MovieListItem from '@/components/movies/MovieListItem.vue'
 
 const accountStore = useAccountStore()
@@ -91,7 +91,6 @@ const isFocused = ref(false)
 
 const API_URL = import.meta.env.VITE_API_URL
 
-// 추천 키워드 목록
 const keywords = ['선풍기 앞에 누워서 보기 좋은', '마라탕과 어울리는', '눈 오는 날 보기 좋은']
 
 const selectKeyword = (keyword) => {
@@ -122,6 +121,7 @@ const getRecommendation = async () => {
   } finally {
     isLoading.value = false
   }
+
 }
 </script>
 
@@ -131,28 +131,44 @@ const getRecommendation = async () => {
   width: 100%;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: 2rem 1.5rem;
   min-height: 80vh;
 }
 
-/* 1. 헤더 섹션 */
-.header-section {
+/* --- 1. 헤더 섹션 (디자인 통일) --- */
+.section-intro {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 3rem; /* 다른 섹션과 동일하게 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.page-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #111;
+.icon-wrapper {
+  font-size: 3rem;
   margin-bottom: 1rem;
-  letter-spacing: -0.02em;
+  /* 둥둥 떠다니는 애니메이션 적용 */
+  animation: floatIcon 3s ease-in-out infinite;
 }
 
-.page-desc {
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.intro-title {
+  font-size: 2rem; /* 2.2rem -> 2rem 통일 */
+  font-weight: 800;
+  color: #111111;
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.03em;
+}
+
+.intro-desc {
   font-size: 1.1rem;
-  color: #666;
+  color: #666666;
   line-height: 1.6;
+  font-weight: 500;
 }
 
 /* 2. 입력 섹션 */
@@ -166,7 +182,7 @@ const getRecommendation = async () => {
   align-items: center;
   background-color: #FFF;
   border: 2px solid #E0E0E0;
-  border-radius: 50px; /* 둥근 알약 모양 */
+  border-radius: 50px;
   padding: 6px 6px 6px 24px;
   transition: all 0.3s;
   box-shadow: 0 4px 12px rgba(0,0,0,0.03);
@@ -267,7 +283,7 @@ const getRecommendation = async () => {
   margin-bottom: 1.5rem;
 }
 
-/* 그리드 (MovieListView와 동일한 규격) */
+/* 그리드 */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -310,7 +326,6 @@ const getRecommendation = async () => {
   font-size: 1.1rem;
 }
 
-/* 애니메이션 */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -318,8 +333,8 @@ const getRecommendation = async () => {
 
 /* 반응형 */
 @media (max-width: 768px) {
-  .page-title { font-size: 1.8rem; }
-  .page-desc { font-size: 1rem; }
+  /* [수정] 모바일 폰트 사이즈 통일 (별도 축소 X) */
+  /* .intro-title { font-size: 1.8rem; } -> 제거 */
   
   .search-box-wrapper {
     padding: 4px 4px 4px 16px;
@@ -331,7 +346,7 @@ const getRecommendation = async () => {
   }
   
   .keyword-chips {
-    justify-content: flex-start; /* 모바일에서 좌측 정렬 */
+    justify-content: flex-start;
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 5px;
@@ -341,7 +356,5 @@ const getRecommendation = async () => {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem 12px;
   }
-  
-  .mobile-break { display: none; }
 }
 </style>

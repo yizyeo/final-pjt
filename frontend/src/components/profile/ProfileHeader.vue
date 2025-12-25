@@ -105,6 +105,8 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import { useAccountStore } from '@/stores/accounts'
+// [수정 1] 공통 유틸리티 함수 import
+import { getTier } from '@/utils/tierUtils'
 
 const props = defineProps(['profile', 'genres', 'isOwnProfile'])
 const emit = defineEmits(['update-profile', 'update-bio'])
@@ -116,13 +118,10 @@ const isEditing = ref(false)
 const isGenerating = ref(false)
 const editData = ref({ email: '', age: null, gender: '', favorite_genres: [] })
 
+// [수정 2] getTier 함수를 사용하여 티어 계산 로직 간소화
 const userTier = computed(() => {
   const count = props.profile?.review_count || 0
-  if (count >= 10) return { label: '시네마 마스터', icon: '/icons/rank_5.png' }
-  if (count >= 5) return { label: '영화 전문가', icon: '/icons/rank_4.png' }
-  if (count >= 3) return { label: '영화 애호가', icon: '/icons/rank_3.png' }
-  if (count >= 1) return { label: '뉴비 평론가', icon: '/icons/rank_2.png' }
-  return { label: '관객', icon: '/icons/rank_1.png' }
+  return getTier(count)
 })
 
 const startEdit = () => {
@@ -161,7 +160,7 @@ const onUpdate = () => {
 </script>
 
 <style scoped>
-/* 카드 컨테이너 */
+/* 기존 스타일 그대로 유지 */
 .profile-header-card {
   background-color: #FFFFFF;
   border-radius: 20px;
@@ -169,25 +168,23 @@ const onUpdate = () => {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* [VIEW MODE] 가로 배치 레이아웃 */
 .view-mode-layout {
   display: flex;
-  align-items: center; /* 세로 중앙 정렬 */
-  gap: 3rem; /* 좌우 간격 넉넉하게 */
+  align-items: center;
+  gap: 3rem;
 }
 
-/* 1. 왼쪽: 티어 아이콘 영역 */
 .left-column {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 140px; /* 고정 너비 */
+  width: 140px;
 }
 
 .tier-icon-wrapper {
   width: 120px;
-  height: 120px; /* 아이콘 크기 키움 */
+  height: 120px;
   border-radius: 50%;
   background-color: #F8F9FA;
   display: flex;
@@ -213,12 +210,11 @@ const onUpdate = () => {
   border-radius: 20px;
 }
 
-/* 2. 오른쪽: 정보 영역 */
 .right-column {
-  flex: 1; /* 남은 공간 모두 차지 */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 왼쪽 정렬 */
+  align-items: flex-start;
   text-align: left;
 }
 
@@ -237,7 +233,6 @@ const onUpdate = () => {
   margin: 0;
 }
 
-/* 작은 수정 버튼 */
 .btn-edit-sm {
   background: none;
   border: 1px solid #DDDDDD;
@@ -254,12 +249,11 @@ const onUpdate = () => {
   color: #333;
 }
 
-/* 소개글 박스 */
 .bio-box {
   background-color: #F9FAFB;
-  border-left: 4px solid #7A6CFA; /* 왼쪽에 포인트 컬러 라인 */
+  border-left: 4px solid #7A6CFA;
   padding: 1.2rem 1.5rem;
-  border-radius: 0 12px 12px 0; /* 왼쪽은 직각, 오른쪽은 둥글게 */
+  border-radius: 0 12px 12px 0;
   width: 100%;
   margin-bottom: 1.5rem;
 }
@@ -279,7 +273,6 @@ const onUpdate = () => {
   margin: 0 4px;
 }
 
-/* AI 버튼 */
 .action-row {
   display: flex;
   justify-content: flex-start;
@@ -311,7 +304,7 @@ const onUpdate = () => {
   cursor: not-allowed;
 }
 
-/* --- [EDIT MODE] 스타일 (기존과 동일) --- */
+/* Edit Mode */
 .edit-mode {
   width: 100%;
   max-width: 500px;
@@ -343,11 +336,9 @@ label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #333; fo
 .btn-save { background-color: #7A6CFA; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
 .btn-cancel { background-color: white; border: 1px solid #DDD; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
 
-/* 스피너 */
 .spinner-sm { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* 모바일 반응형: 화면 작아지면 다시 세로 배치 */
 @media (max-width: 768px) {
   .view-mode-layout {
     flex-direction: column;
@@ -367,7 +358,7 @@ label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #333; fo
   .bio-box {
     text-align: left;
     border-left: none;
-    border-top: 4px solid #7A6CFA; /* 모바일에선 위쪽에 포인트 */
+    border-top: 4px solid #7A6CFA;
     border-radius: 12px;
   }
   

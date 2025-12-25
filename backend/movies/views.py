@@ -404,7 +404,6 @@ def recommend_by_keyword(request):
 
         [추천 기준]
         - 사용자의 요청에서 드러난 감정, 분위기, 상황을 우선 반영
-        - 국내에서 인지도 높은 대중 영화 위주
         - 너무 마이너하거나 예술영화 성향의 작품은 제외
         - 특정 시리즈가 있다면 대표작 위주로 선정
 
@@ -448,7 +447,7 @@ def recommend_by_keyword(request):
                     serializer = MovieListSerializer(movie)
                     valid_movies.append(serializer.data)
 
-            if len(valid_movies) >= 10:
+            if len(valid_movies) >= 8:
                 break
 
         # 4. 결과가 부족할 경우 Fallback (인기 영화 5개 채우기)

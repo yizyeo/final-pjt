@@ -1,9 +1,10 @@
 <template>
   <div class="review-list-page">
     
-    <div class="page-header">
-      <h2 class="page-title">커뮤니티 리뷰 피드 💬</h2>
-      <p class="page-desc">
+    <div class="section-intro">
+      <div class="icon-wrapper">💬</div>
+      <h2 class="intro-title">리뷰 피드</h2>
+      <p class="intro-desc">
         다양한 영화에 대한 솔직한 감상평을 확인하고<br class="mobile-break" />
         자유롭게 이야기를 나눠보세요.
       </p>
@@ -35,6 +36,7 @@
           :review="review"
           @go-movie="goMovieDetail"
           @go-detail="goDetail"
+          @go-profile="goProfile" 
           @like="reviewStore.likeReview"
         />
       </div>
@@ -74,6 +76,10 @@ const goDetail = (reviewPk) => {
   router.push({ name: 'ReviewDetailView', params: { reviewId: reviewPk } })
 }
 
+const goProfile = (username) => {
+  router.push({ name: 'ProfileView', params: { username: username } })
+}
+
 onMounted(() => {
   reviewStore.fetchTotalReviews(currentSort.value)
 })
@@ -82,31 +88,45 @@ onMounted(() => {
 <style scoped>
 .review-list-page {
   width: 100%;
-  /* [수정] 1열 피드형 디자인이므로 너무 넓으면 가독성이 떨어질 수 있어 최대 폭을 조금 줄임 (선택사항) */
   max-width: 900px; 
   margin: 0 auto;
   padding: 3rem 1.5rem;
 }
 
-/* 헤더 */
-.page-header {
+/* [수정] 헤더 스타일 통일 (BlindReviewView와 동일) */
+.section-intro {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem; /* 여백 넉넉하게 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.5s ease;
 }
 
-.page-title {
-  font-size: 2rem;
+.icon-wrapper {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  /* 둥둥 떠다니는 애니메이션 적용 */
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.intro-title {
+  font-size: 2.2rem; /* 폰트 사이즈 키움 */
   font-weight: 800;
   color: #111111;
   margin-bottom: 0.8rem;
   letter-spacing: -0.03em;
 }
 
-.page-desc {
+.intro-desc {
   font-size: 1.1rem;
   color: #666666;
   line-height: 1.6;
-  font-weight: 500;
 }
 
 /* 컨트롤 바 */
@@ -133,10 +153,10 @@ onMounted(() => {
   min-width: 120px;
 }
 
-/* [핵심 수정] 리뷰 그리드: 무조건 1열(1fr) */
+/* 리뷰 그리드: 1열 */
 .review-grid {
   display: grid;
-  grid-template-columns: 1fr; /* PC에서도 1개씩 */
+  grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
@@ -149,19 +169,18 @@ onMounted(() => {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   
-  /* 높이 유연하게 */
   height: auto; 
   min-height: 180px;
 }
 
 .review-card-wrapper:hover {
-  transform: translateY(-3px); /* 1열일 때는 살짝만 움직이는 게 더 고급스러움 */
+  transform: translateY(-3px);
   box-shadow: 0 12px 24px rgba(122, 108, 250, 0.15);
   border-color: #7A6CFA;
   background-color: #FBFAFF;
 }
 
-/* 스켈레톤 로딩 (1열) */
+/* 스켈레톤 로딩 */
 .skeleton-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -197,14 +216,8 @@ onMounted(() => {
 
 /* 반응형 */
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 1.5rem;
-  }
+  /* [참고] 다른 뷰들과 통일성을 위해 폰트 사이즈를 강제로 줄이지 않음 (원하면 수정 가능) */
   
-  .page-desc {
-    font-size: 1rem;
-  }
-
   .control-bar {
     flex-direction: column;
     align-items: flex-start;
@@ -215,10 +228,6 @@ onMounted(() => {
     width: 100%;
     display: flex;
     justify-content: flex-end;
-  }
-  
-  .mobile-break {
-    display: none;
   }
 }
 </style>

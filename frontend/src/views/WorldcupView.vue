@@ -146,7 +146,7 @@ const checkWishStatus = async (movieId) => {
 
 const addToWishlist = async (movie) => {
     if (!accountStore.isLogin) {
-        alert('로그인이 필요합니다.');
+        alert('로그인이 필요한 서비스입니다.');
         router.push({ name: 'LogInView' });
         return;
     }

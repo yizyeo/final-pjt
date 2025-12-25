@@ -57,7 +57,7 @@ class HomeListSerializer(serializers.ModelSerializer):
 class SearchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ('tmdb_id', 'poster_path', 'title', 'release_date', 'genres', )
+        fields = ('tmdb_id', 'poster_path', 'title', 'release_date', 'genres', 'vote_average', )
 
 
 class MovieListSerializer(serializers.ModelSerializer):
