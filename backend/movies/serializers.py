@@ -14,6 +14,8 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     is_wished = serializers.SerializerMethodField()
     is_watched = serializers.SerializerMethodField()
 
+    genres = GenreSerializer(many=True, read_only=True)
+
     class Meta:
         model = Movie
         fields = '__all__'

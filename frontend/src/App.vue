@@ -43,4 +43,8 @@ a {
 ul {
   list-style: none;
 }
+
+input, textarea, select, button {
+  font-family: inherit;
+}
 </style>

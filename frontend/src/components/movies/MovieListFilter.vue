@@ -1,46 +1,79 @@
 <template>
-  <div class="filter-container">
-    <div class="filter-item">
-      <label>장르: </label>
-      <select v-model="selectedGenre" @change="emitFilter">
-        <option :value="null">전체</option>
-        <option v-for="genre in genres" :key="genre.genre_id" :value="genre.genre_id">
-          {{ genre.name_kr }}
-        </option>
-      </select>
-    </div>
+  <div class="movie-filter-wrapper">
     
-    <div class="filter-item">
-      <label>개봉 연도: </label>
-      <div class="year-selector">
+    <div class="filter-group">
+      <span class="label">장르</span>
+      <div class="custom-dropdown-wrapper">
+        <div 
+          class="dropdown-trigger" 
+          :class="{ active: showGenreDropdown }"
+          @click="toggleGenreDropdown"
+        >
+          <span class="selected-text">{{ selectedGenreLabel }}</span>
+          <span class="arrow-icon" :class="{ rotated: showGenreDropdown }">▼</span>
+        </div>
+
+        <ul v-if="showGenreDropdown" class="dropdown-list">
+          <li 
+            @click.stop="selectGenre(null)" 
+            class="dropdown-item all"
+          >
+            모든 장르
+          </li>
+          <li 
+            v-for="genre in genres" 
+            :key="genre.genre_id" 
+            @click.stop="selectGenre(genre.genre_id)"
+            class="dropdown-item"
+            :class="{ active: selectedGenre === genre.genre_id }"
+          >
+            {{ genre.name_kr }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="label">개봉년도</span>
+      <div class="custom-dropdown-wrapper">
         <input 
           type="text"
           v-model="inputYear" 
-          @focus="openDropdown"
-          @click="openDropdown"
-          @input="handleInput"
-          @blur="closeDropdown"
+          @focus="openYearDropdown"
+          @click="openYearDropdown"
+          @input="handleYearInput"
           @keydown.enter="applyYearFilter"
-          placeholder="연도 검색/선택"
+          placeholder="모든 연도"
+          class="custom-input"
           autocomplete="off"
         >
-        <ul v-show="showDropdown" class="year-dropdown">
+        
+        <ul v-if="showYearDropdown" class="dropdown-list">
+          <li @mousedown.prevent="selectYear(null)" class="dropdown-item all">
+            모든 연도 보기
+          </li>
           <li 
-            v-for="year in years" 
+            v-for="year in filteredYears" 
             :key="year" 
             @mousedown.prevent="selectYear(year)"
-            class="year-option"
+            class="dropdown-item"
+            :class="{ active: selectedYear === year }"
           >
             {{ year }}
           </li>
-          <li v-if="filteredYears.length === 0" class="no-result">
+          <li v-if="filteredYears.length === 0" class="dropdown-item empty">
             결과 없음
           </li>
         </ul>
       </div>
     </div>
 
-    <button @click="resetFilter" class="reset-btn">필터 초기화</button>
+    <button @click="resetFilter" class="reset-btn">
+      필터 초기화
+    </button>
+
+    <div v-if="showGenreDropdown || showYearDropdown" class="overlay" @click="closeAllDropdowns"></div>
+
   </div>
 </template>
 
@@ -55,74 +88,75 @@ const genres = ref([])
 const years = ref([])
 const selectedGenre = ref(null)
 const selectedYear = ref(null)
-
-// Custom Dropdown State
 const inputYear = ref('')
-const showDropdown = ref(false)
+const showGenreDropdown = ref(false)
+const showYearDropdown = ref(false)
 
 const fetchGenres = async () => {
   try {
     const res = await axios.get(`${API_URL}/movies/genres/`)
     genres.value = res.data
   } catch (err) {
-    console.error('장르 목록을 불러오는데 실패했습니다.', err)
+    console.error('장르 로드 실패:', err)
   }
 }
 
 const generateYears = () => {
   const currentYear = new Date().getFullYear()
-  for (let i = currentYear + 0; i >= 1900; i--) {
+  for (let i = currentYear; i >= 1900; i--) {
     years.value.push(i)
   }
 }
+
+const selectedGenreLabel = computed(() => {
+  if (!selectedGenre.value) return '모든 장르'
+  const found = genres.value.find(g => g.genre_id === selectedGenre.value)
+  return found ? found.name_kr : '모든 장르'
+})
 
 const filteredYears = computed(() => {
   if (!inputYear.value) return years.value
   return years.value.filter(year => String(year).includes(inputYear.value))
 })
 
-const openDropdown = () => {
-  showDropdown.value = true
+const toggleGenreDropdown = () => {
+  showGenreDropdown.value = !showGenreDropdown.value
+  showYearDropdown.value = false
 }
 
-const handleInput = () => {
-  showDropdown.value = true
+const selectGenre = (genreId) => {
+  selectedGenre.value = genreId
+  showGenreDropdown.value = false
+  emitFilter()
 }
 
-const closeDropdown = () => {
-  // blur 시 바로 닫히면 클릭 이벤트를 못 받을 수 있으므로 mousedown.prevent를 사용하거나 delay를 줌
-  // 여기서는 li에 @mousedown.prevent를 사용하여 blur가 발생하지 않게 처리함
-  showDropdown.value = false
+const openYearDropdown = () => { 
+  showYearDropdown.value = true 
+  showGenreDropdown.value = false
 }
+const handleYearInput = () => { showYearDropdown.value = true }
 
 const selectYear = (year) => {
-  inputYear.value = String(year)
   selectedYear.value = year
-  showDropdown.value = false
+  inputYear.value = year ? String(year) : ''
+  showYearDropdown.value = false
   emitFilter()
 }
 
 const applyYearFilter = () => {
-  // 입력된 값이 유효한 연도인지 확인하거나, 그냥 입력된 값으로 검색
-  // 여기서는 목록에 있는 연도인 경우에만 필터 적용, 비어있으면 초기화
   if (inputYear.value === '') {
-    selectedYear.value = null
-    emitFilter()
-    showDropdown.value = false
+    selectYear(null)
     return
   }
-
   const year = parseInt(inputYear.value)
   if (years.value.includes(year)) {
-    selectedYear.value = year
-    emitFilter()
-  } else {
-    // 유효하지 않은 연도 입력 시 처리 (선택사항: 그냥 무시하거나 전체로 돌리거나)
-    // "화면 유지" 요구사항에 따라 유효하지 않으면 아무것도 안 하거나, 
-    // 입력값을 유지하되 필터는 적용 안 할 수 있음. 
-    // 여기서는 유효한 연도가 아니면 필터 적용 안함.
+    selectYear(year)
   }
-  showDropdown.value = false
+}
+
+const closeAllDropdowns = () => {
+  showGenreDropdown.value = false
+  showYearDropdown.value = false
 }
 
 const emitFilter = () => {
@@ -136,6 +170,7 @@ const resetFilter = () => {
   selectedGenre.value = null
   selectedYear.value = null
   inputYear.value = ''
+  closeAllDropdowns()
   emitFilter()
 }
 
@@ -146,73 +181,198 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.filter-container {
+/* 전체 컨테이너: 배경색 제거 */
+.movie-filter-wrapper {
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
   align-items: center;
+  gap: 16px;
+  /* background-color, border, padding 제거 */
   flex-wrap: wrap;
 }
 
-.filter-item {
+.filter-group {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.year-selector {
+.label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #444;
+}
+
+/* 드롭다운 래퍼 */
+.custom-dropdown-wrapper {
   position: relative;
+  width: 140px;
 }
 
-select, input {
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* 장르 트리거 */
+.dropdown-trigger {
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  height: 40px; /* 높이 고정 */
 }
 
-.year-dropdown {
+.dropdown-trigger:hover, .dropdown-trigger.active {
+  border-color: #7A6CFA;
+  box-shadow: 0 0 0 2px rgba(122, 108, 250, 0.1);
+}
+
+.selected-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+/* 연도 Input */
+.custom-input {
+  width: 100%;
+  height: 40px; /* 높이 고정 */
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.custom-input:focus {
+  border-color: #7A6CFA;
+  box-shadow: 0 0 0 2px rgba(122, 108, 250, 0.1);
+  outline: none;
+}
+
+/* 화살표 아이콘 */
+.arrow-icon {
+  font-size: 0.7rem;
+  color: #AAA;
+  transition: transform 0.2s;
+}
+.arrow-icon.rotated {
+  transform: rotate(180deg);
+  color: #7A6CFA;
+}
+
+/* 드롭다운 리스트 */
+.dropdown-list {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 6px);
   left: 0;
   width: 100%;
-  max-height: 200px;
+  max-height: 260px;
   overflow-y: auto;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 0;
-  margin: 0;
+  background-color: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 12px;
+  padding: 6px;
   list-style: none;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 100;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-.year-option {
-  padding: 8px 10px;
+.dropdown-list::-webkit-scrollbar { width: 6px; }
+.dropdown-list::-webkit-scrollbar-track { background: transparent; }
+.dropdown-list::-webkit-scrollbar-thumb { background-color: #DDD; border-radius: 3px; }
+.dropdown-list::-webkit-scrollbar-thumb:hover { background-color: #CCC; }
+
+.dropdown-item {
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: #444;
   cursor: pointer;
-  color: #333;
+  border-radius: 8px;
+  transition: all 0.1s ease;
+  margin-bottom: 2px;
 }
 
-.year-option:hover {
-  background-color: #f0f0f0;
-  color: #000;
+.dropdown-item:hover {
+  background-color: #F3F0FF;
+  color: #7A6CFA;
+  font-weight: 500;
 }
 
-.no-result {
-  padding: 8px 10px;
-  color: #888;
+.dropdown-item.active {
+  background-color: #7A6CFA;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.dropdown-item.all {
+  color: #7A6CFA;
+  font-weight: 600;
+  border-bottom: 1px solid #F5F5F5;
+  margin-bottom: 4px;
+}
+.dropdown-item.all:hover { background-color: #F3F0FF; }
+
+.dropdown-item.empty {
+  color: #AAA;
   cursor: default;
+  text-align: center;
+  padding: 20px 0;
 }
 
+/* [수정] 초기화 버튼 (버튼 스타일 적용) */
 .reset-btn {
-  padding: 5px 10px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  height: 40px;
+  background-color: #FFFFFF; /* 흰색 배경 */
+  border: 1px solid #E0E0E0; /* 테두리 */
+  color: #7A6CFA; /* 보라색 텍스트 */
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
+  padding: 0 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  margin-left: auto; /* 우측 끝으로 */
 }
 
 .reset-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #F3F0FF;
+  border-color: #7A6CFA;
+}
+
+/* 오버레이 */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 99;
+  cursor: default;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .movie-filter-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .filter-group {
+    justify-content: space-between;
+  }
+  
+  .custom-dropdown-wrapper {
+    width: 65%; 
+  }
+  
+  .reset-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 4px;
+  }
 }
 </style>

@@ -1,36 +1,60 @@
 <template>
   <div class="review-item">
-    <div class="user-info">
-      <strong>{{ review.username }}</strong>
-      <div class="star-rating">
-        <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= review.rating / 2 }">★</span>
-      </div>
-      <span>{{ formatDate(review.created_at) }}</span>
-    </div>
-
-    <div class="content-wrapper">
-      <div v-if="review.is_spoiler && !showSpoiler">
-        <p>스포일러가 포함된 리뷰입니다.</p>
-        <button @click="showSpoiler = true">내용 보기</button>
-      </div>
-
-      <div v-else @click="goDetail" class="clickable">
-        <p class="review-text">{{ review.content }}</p>
-        <span>댓글 {{ review.comments_count || 0 }}개 더보기...</span>
-      </div>
-    </div>
     
-    <div>
-      <button @click="$emit('like', review.id)">
-        {{ review.is_liked ? '❤️' : '🤍' }} {{ review.like_count }}
+    <div class="review-header">
+      <div class="user-profile">
+        <div class="tier-badge" :title="userTier.label">
+          <img :src="userTier.icon" :alt="userTier.label" class="tier-img">
+        </div>
+        
+        <div class="user-meta">
+          <span class="username">{{ review.username }}</span>
+          <div class="star-rating">
+            <span class="star-icon">★</span>
+            <span class="rating-score">{{ review.rating }}</span>
+          </div>
+        </div>
+      </div>
+      <span class="created-at">{{ formatDate(review.created_at) }}</span>
+    </div>
+
+    <div class="review-body">
+      <div v-if="review.is_spoiler && !showSpoiler" class="spoiler-overlay">
+        <p class="spoiler-warning">⚠️ 스포일러가 포함된 리뷰입니다.</p>
+        <button @click.stop="showSpoiler = true" class="spoiler-btn">
+          내용 보기
+        </button>
+      </div>
+
+      <div v-else @click="goDetail" class="content-text clickable">
+        <p>{{ review.content }}</p>
+      </div>
+    </div>
+
+    <div class="review-footer">
+      <button 
+        @click.stop="$emit('like', review.id)" 
+        class="footer-btn like-btn"
+        :class="{ active: review.is_liked }"
+      >
+        <span class="icon">{{ review.is_liked ? '❤️' : '🤍' }}</span>
+        <span class="count">{{ review.like_count }}</span>
+      </button>
+
+      <button @click.stop="goDetail" class="footer-btn comment-btn">
+        <span class="icon">💬</span>
+        <span class="count">{{ review.comments_count || 0 }}</span>
       </button>
     </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+// [필수] 티어 유틸리티 임포트 (ReviewCard와 동일하게)
+import { getTier } from '@/utils/tierUtils'
 
 const props = defineProps(['review'])
 const emit = defineEmits(['like'])
@@ -38,7 +62,13 @@ const router = useRouter()
 
 const showSpoiler = ref(false)
 
-const formatDate = (date) => new Date(date).toLocaleDateString()
+// [핵심 로직] 리뷰 작성자의 리뷰 수(user_review_count)를 기반으로 티어 계산
+const userTier = computed(() => getTier(props.review.user_review_count || 0))
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString)
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+}
 
 const goDetail = () => {
   router.push({ 
@@ -49,13 +79,150 @@ const goDetail = () => {
 </script>
 
 <style scoped>
-.clickable { cursor: pointer; }
-.review-text {
+.review-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #F0F0F0;
+  background-color: #FFF;
+  transition: background-color 0.2s;
+}
+.review-item:hover {
+  background-color: #FAFAFA;
+}
+
+/* 1. 헤더 */
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* ReviewCard와 간격 통일 */
+}
+
+/* [수정] 티어 뱃지 스타일 (ReviewCard에서 가져옴) */
+.tier-badge {
+  width: 32px;  /* 크기는 ReviewItem에 맞게 살짝 조정 */
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #F0F0F0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.tier-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.85rem;
+}
+.star-icon { color: #FFC107; font-size: 0.9rem; }
+.rating-score { font-weight: 600; color: #555; }
+
+.created-at {
+  font-size: 0.85rem;
+  color: #AAA;
+}
+
+/* 2. 본문 */
+.review-body {
+  margin-bottom: 1rem;
+  padding-left: 40px; /* 프로필 이미지 너비 + gap 만큼 들여쓰기해서 깔끔하게 */
+}
+
+.content-text {
+  cursor: pointer;
+  line-height: 1.6;
+  color: #444;
+  font-size: 0.95rem;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-line;
 }
-.star { color: #444; }
-.star.filled { color: #ffc107; }
+
+/* 스포일러 오버레이 */
+.spoiler-overlay {
+  background-color: #F9F9F9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px dashed #DDD;
+}
+.spoiler-warning {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+.spoiler-btn {
+  background: none;
+  border: 1px solid #CCC;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #666;
+  cursor: pointer;
+}
+.spoiler-btn:hover { background-color: #FFF; }
+
+/* 3. 푸터 */
+.review-footer {
+  display: flex;
+  gap: 12px;
+  padding-left: 40px; /* 본문과 동일한 들여쓰기 */
+}
+
+.footer-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #888;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.footer-btn:hover {
+  background-color: #F0F0F0;
+}
+
+.footer-btn .count {
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+/* 좋아요 활성화 */
+.like-btn.active .count {
+  color: #E11D48;
+  font-weight: 600;
+}
 </style>

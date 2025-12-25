@@ -1,12 +1,10 @@
 <template>
   <div class="worldcup-container">
-    <!-- Intro: Mode and Count Selection -->
     <WorldcupIntro 
       v-if="gameState === 'intro'" 
       @start-game="handleStartGame" 
     />
 
-    <!-- Game: Match -->
     <WorldcupMatch 
       v-else-if="gameState === 'playing'"
       :match="currentMatch"
@@ -16,7 +14,6 @@
       @select-winner="selectWinner"
     />
 
-    <!-- Winner -->
     <WorldcupWinner 
       v-else-if="gameState === 'winner'"
       :winner="winner"
@@ -27,7 +24,8 @@
     />
 
     <div v-if="loading" class="loading-overlay">
-        Loading...
+      <div class="spinner"></div>
+      <p>Loading...</p>
     </div>
   </div>
 </template>
@@ -171,13 +169,17 @@ const resetGame = () => {
 
 <style scoped>
 .worldcup-container {
-    color: white;
+    color: #0F172A; /* 다크 모드 해제: 짙은 남색 텍스트 */
+    background-color: #FFFFFF; /* 배경 흰색 */
     text-align: center;
-    padding: 2rem;
-    min-height: 80vh;
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 80px); /* 네비바 높이 고려 */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .loading-overlay {
@@ -186,11 +188,29 @@ const resetGame = () => {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(255, 255, 255, 0.9); /* 흰색 반투명 배경 */
     display: flex;
+    flex-direction: column;
+    gap: 1rem;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #7A6CFA;
     z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #EEEEEE;
+    border-top: 4px solid #7A6CFA;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 </style>
