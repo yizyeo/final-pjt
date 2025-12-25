@@ -14,7 +14,7 @@
       <RouterLink to="/blind-review" class="action-card">
         <div class="card-top">
           <div class="icon-wrapper">📝</div>
-          <h3 class="card-title">Blind Review</h3>
+          <h3 class="card-title">Blind Pick</h3>
           <p class="card-desc">
             영화의 편견을 지우세요.<br />
             오직 리뷰 텍스트로만 선택하는 영화.
