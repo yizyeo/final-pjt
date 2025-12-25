@@ -2,9 +2,9 @@
   <div class="hot-reviews-container">
     
     <div class="section-intro">
-      <h2 class="intro-title">화제의 리뷰 💬</h2>
+      <h2 class="intro-title">화제의 리뷰</h2>
       <p class="intro-desc">
-        다른 관객들은 어떻게 봤을까요?<br class="mobile-break" /> 
+        다른 관객들은 어떻게 봤을까요?<br> 
         생생한 감상평을 확인해보세요.
       </p>
       <a href="#" @click.prevent="goMore" class="more-link">
@@ -22,6 +22,7 @@
           :review="review" 
           @go-movie="goMovie"
           @go-detail="goDetail"
+          @go-profile="goProfile"
         />
       </div>
     </div>
@@ -60,17 +61,18 @@ const goMore = () => {
   router.push({ name: 'ReviewListView' })
 }
 
-// [추가] 영화 상세 페이지로 이동
 const goMovie = (movie) => {
-  // review.movie가 객체일 수도 있고 ID일 수도 있으므로 안전하게 처리
-  // (백엔드 데이터 구조에 따라 movie.tmdb_id 혹은 movie.id 확인 필요)
   const movieId = (typeof movie === 'object') ? (movie.tmdb_id || movie.id) : movie
   router.push({ name: 'MovieDetailView', params: { movieId: movieId } })
 }
 
-// [추가] 리뷰 상세 페이지로 이동
 const goDetail = (reviewId) => {
   router.push({ name: 'ReviewDetailView', params: { reviewId: reviewId } })
+}
+
+// [추가] 유저 프로필 페이지로 이동
+const goProfile = (username) => {
+  router.push({ name: 'ProfileView', params: { username: username } })
 }
 </script>
 
@@ -192,20 +194,8 @@ const goDetail = (reviewId) => {
 
 /* 반응형 */
 @media (max-width: 768px) {
-  .intro-title {
-    font-size: 1.5rem;
-  }
-  
-  .intro-desc {
-    font-size: 1rem;
-  }
-
   .review-grid, .skeleton-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .mobile-break {
-    display: none;
   }
 }
 </style>

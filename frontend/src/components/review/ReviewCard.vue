@@ -2,7 +2,10 @@
   <div class="review-card-inner">
     
     <div class="card-header">
-      <div class="user-info">
+      <div 
+        class="user-info" 
+        @click.stop="$emit('go-profile', review.username)"
+      >
         <div class="tier-badge" :title="userTier.label">
           <img :src="userTier.icon" :alt="userTier.label" class="tier-img">
         </div>
@@ -10,7 +13,7 @@
       </div>
       
       <div class="rating-display">
-        <span class="star-icon">★</span>
+        <span class="star-icon">⭐</span>
         <span class="score">{{ review.rating }}</span>
       </div>
     </div>
@@ -53,23 +56,21 @@ import { ref, computed } from 'vue'
 import { getTier } from '@/utils/tierUtils'
 
 const props = defineProps(['review'])
-defineEmits(['go-movie', 'go-detail', 'like'])
+// [수정] go-profile 이벤트 추가
+defineEmits(['go-movie', 'go-detail', 'like', 'go-profile'])
 
 const showSpoiler = ref(false)
 
-// 티어 정보 가져오기
 const userTier = computed(() => getTier(props.review.user_review_count || 0))
 
-// 포스터 URL 처리
 const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : '/no-image.png'
 </script>
 
 <style scoped>
-/* 카드 내부 전체 레이아웃 */
 .review-card-inner {
   display: flex;
   flex-direction: column;
-  height: 100%; /* 부모 그리드 높이에 꽉 차게 */
+  height: 100%;
   justify-content: space-between;
 }
 
@@ -87,6 +88,14 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
   display: flex;
   align-items: center;
   gap: 8px;
+  /* [추가] 클릭 가능하다는 표시 */
+  cursor: pointer; 
+  transition: opacity 0.2s;
+}
+
+/* [추가] 호버 효과 */
+.user-info:hover {
+  opacity: 0.7;
 }
 
 .tier-badge {
@@ -116,7 +125,7 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #FFD700; /* 별점 색상 */
+  color: #FFD700;
 }
 
 .star-icon {
@@ -129,19 +138,19 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
   font-size: 0.9rem;
 }
 
-/* 2. Body Styles (가로 배치 핵심) */
+/* 2. Body Styles */
 .card-body {
   display: flex;
   gap: 1rem;
-  flex: 1; /* 남은 공간 차지 */
+  flex: 1;
   margin-bottom: 0.8rem;
   cursor: pointer;
 }
 
 .poster-area {
   flex-shrink: 0;
-  width: 60px; /* 포스터 너비 */
-  height: 90px; /* 포스터 높이 (3:2 비율 유지) */
+  width: 60px;
+  height: 90px;
   border-radius: 6px;
   overflow: hidden;
   background-color: #eee;
@@ -150,7 +159,7 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
 }
 
 .poster-area:hover {
-  transform: scale(1.05); /* 포스터 호버 효과 */
+  transform: scale(1.05);
 }
 
 .poster-img {
@@ -182,8 +191,6 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
   font-size: 0.9rem;
   color: #666666;
   line-height: 1.5;
-  
-  /* 멀티라인 말줄임표 (3줄까지만 표시) */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -195,7 +202,7 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
 .spoiler-mask {
   background-color: #F9F9F9;
   border-radius: 8px;
-  padding: 0.5rem; /* 패딩을 조금 줄임 */
+  padding: 0.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -203,7 +210,7 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
   justify-content: center;
   gap: 0.5rem;
   flex: 1; 
-  width: 100%; /* 가로 너비는 꽉 차게 */
+  width: 100%;
 }
 
 .spoiler-mask p {
@@ -226,7 +233,6 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
   display: flex;
   align-items: center;
   padding-top: 0.5rem;
-  /* border-top: 1px solid #F5F5F5; (선택사항: 너무 선이 많으면 지저분해 보일 수 있음) */
 }
 
 .action-group {
@@ -248,7 +254,7 @@ const getImageUrl = (path) => path ? `https://image.tmdb.org/t/p/w200${path}` : 
 }
 
 .action-btn:hover {
-  color: #FF4444; /* 좋아요 호버 색상 */
+  color: #FF4444;
 }
 
 .action-btn.liked {

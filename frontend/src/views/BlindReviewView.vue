@@ -71,7 +71,6 @@
               </div>
 
               <div class="review-highlight">
-                <span class="icon">✍️</span>
                 <p>"{{ selectedReview.content }}"</p>
               </div>
 
@@ -120,7 +119,6 @@ const isWished = ref(false)
 
 const API_URL = import.meta.env.VITE_API_URL
 
-// 데이터 가져오기
 const fetchRecommendations = async () => {
   loading.value = true
   try {
@@ -137,7 +135,6 @@ const fetchRecommendations = async () => {
   }
 }
 
-// [핵심 수정] 리뷰 선택 시 상세 정보 Fetch 추가
 const selectReview = async (review) => {
   if (isRevealed.value) return 
 
@@ -145,12 +142,8 @@ const selectReview = async (review) => {
   selectedReview.value = review
   document.body.style.overflow = 'hidden'
 
-  // 선택된 영화의 상세 정보(장르, 연도 등)를 스토어로 불러옵니다.
   try {
-    // review.movie는 영화 ID입니다.
     await movieStore.fetchMovieDetail(review.movie)
-    
-    // 상세 정보를 불러온 후, 찜 상태도 동기화
     if (movieStore.movieDetail) {
         isWished.value = movieStore.movieDetail.is_wished
     }
@@ -159,20 +152,17 @@ const selectReview = async (review) => {
   }
 }
 
-// 찜하기 핸들러
 const handleToggleWish = async () => {
     if (!selectedReview.value) return
     await movieStore.toggleWish(selectedReview.value.movie)
     isWished.value = !isWished.value
 }
 
-// 상세 페이지 이동
 const goToDetail = (movieId) => {
   document.body.style.overflow = ''
   router.push({ name: 'MovieDetailView', params: { movieId } })
 }
 
-// 홈으로 이동
 const goHome = () => {
   document.body.style.overflow = ''
   router.push({ name: 'HomeView' })
@@ -193,13 +183,11 @@ const truncateText = (text, length) => {
 
 const getYear = (date) => {
     if (!date) return ''
-    return date.split('-')[0]
+    return date.split('-')[0] + '년'
 }
 
 const getGenreNames = (genres) => {
     if (!genres || genres.length === 0) return '장르 정보 없음'
-    
-    // 상세 조회 API의 장르 데이터는 보통 객체 배열입니다.
     if (typeof genres[0] === 'object') {
         return genres.map(g => g.name_kr || g.name).join(' · ')
     }
@@ -221,7 +209,6 @@ onMounted(() => {
   transition: filter 0.5s ease;
 }
 
-/* 선택 완료 시 배경 흐림 처리 */
 .blind-container.is-revealed .section-intro,
 .blind-container.is-revealed .review-grid {
   filter: blur(5px) grayscale(50%);
@@ -250,7 +237,7 @@ onMounted(() => {
 }
 
 .intro-title {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #111111;
   margin-bottom: 0.8rem;
@@ -397,6 +384,7 @@ onMounted(() => {
   padding: 1rem;
   text-align: center;
   border-bottom: 1px solid #eee;
+  flex-shrink: 0; /* 헤더는 줄어들지 않음 */
 }
 
 .match-badge {
@@ -408,6 +396,7 @@ onMounted(() => {
 
 .content-wrapper {
   display: flex;
+  overflow: hidden; /* 내부 스크롤을 위해 */
 }
 
 .poster-section {
@@ -415,6 +404,7 @@ onMounted(() => {
   background: #000;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0; /* 포스터 영역 고정 */
 }
 
 .poster-img {
@@ -439,7 +429,7 @@ onMounted(() => {
 }
 
 .movie-title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 800;
   color: #111;
   margin-bottom: 0.5rem;
@@ -575,11 +565,53 @@ onMounted(() => {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+
 @media (max-width: 768px) {
-  .content-wrapper { flex-direction: column; }
-  .poster-section { width: 100%; height: 300px; }
-  .info-section { width: 100%; padding: 2rem 1.5rem; }
-  .movie-title { font-size: 1.8rem; }
-  .review-grid { grid-template-columns: 1fr; }
+  .reveal-card {
+    width: 90%; /* 좌우 여백 확보 */
+    max-height: 85vh; /* 화면 높이의 85%까지만 차지 (주소창/하단바 고려) */
+    display: flex;
+    flex-direction: column; /* 세로 배치 명시 */
+  }
+
+  /* 헤더는 상단에 고정 (스크롤 안 됨) */
+  .card-header {
+    flex-shrink: 0; 
+  }
+
+  /* 내용 영역 (포스터 + 정보)만 스크롤 가능하게 설정 */
+  .content-wrapper { 
+    flex-direction: column; 
+    overflow-y: auto; /* 여기가 핵심: 내용 넘치면 스크롤 */
+    -webkit-overflow-scrolling: touch; /* 모바일에서 부드러운 스크롤 */
+  }
+  
+  /* 포스터 높이 축소 */
+  .poster-section { 
+    width: 100%; 
+    height: 200px; 
+    flex-shrink: 0; /* 높이 줄어들지 않음 */
+  }
+  
+  /* 정보 영역 패딩 조정 */
+  .info-section { 
+    width: 100%; 
+    padding: 1.5rem 1.2rem;
+    padding-bottom: 2rem; /* 하단 버튼이 바닥에 딱 붙지 않게 여백 추가 */
+  }
+
+  .movie-title { 
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .review-highlight {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+  }
+
+  .review-grid { 
+    grid-template-columns: 1fr; 
+  }
 }
 </style>

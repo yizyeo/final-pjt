@@ -3,7 +3,7 @@
     <div class="section-intro">
       <h2 class="intro-title">지금 가장 핫한 영화</h2>
       <p class="intro-desc">
-        실시간으로 사랑받는 인기작을 확인하고<br class="mobile-break" /> 
+        실시간으로 사랑받는 인기작을 확인하고<br> 
         트렌드를 놓치지 마세요.
       </p>
       <RouterLink :to="{ name: 'MovieListView' }" class="more-link">
@@ -131,8 +131,6 @@ onMounted(() => {
   color: #666666;
   line-height: 1.6;
   font-weight: 500;
-  
-  /* [수정] 설명글과 아래 링크 사이의 간격을 1.2rem -> 2.5rem으로 대폭 확대 */
   margin-bottom: 2.5rem; 
 }
 

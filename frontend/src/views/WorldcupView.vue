@@ -106,9 +106,12 @@ const handleStartGame = async ({ count, mode }) => {
         gameState.value = 'playing';
     } catch (err) {
         console.error('Failed to start game:', err);
+        
         if (err.response && err.response.status === 401) {
-            alert('로그인이 필요한 서비스입니다.');
-            router.push({ name: 'LogInView' });
+            const isConfirmed = confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?');
+            if (isConfirmed) {
+                router.push({ name: 'LogInView' });
+        }
         } else {
             alert('게임을 시작할 수 없습니다.');
         }
@@ -146,7 +149,7 @@ const checkWishStatus = async (movieId) => {
 
 const addToWishlist = async (movie) => {
     if (!accountStore.isLogin) {
-        alert('로그인이 필요합니다.');
+        alert('로그인이 필요한 서비스입니다.');
         router.push({ name: 'LogInView' });
         return;
     }

@@ -29,7 +29,7 @@
             {{ movie.release_date.split('-')[0] }} · 
           </span>
           <span class="rating">
-            <span class="star">★</span> 
+            <span class="star">⭐</span> 
             {{ movie.vote_average ? (movie.vote_average / 2).toFixed(1) : '0.0' }}
           </span>
         </div>

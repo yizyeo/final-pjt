@@ -2,8 +2,18 @@
   <nav class="navbar">
     <div class="navbar-content">
       <a href="#" @click.prevent="goToHome" class="navbar-brand">
-        <span class="logo-text">mootti</span>
+        <div class="logo-wrapper">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 24 24" 
+            class="ghost-logo-svg"
+          >
+            <path fill="currentColor" d="M12 2C7.58 2 4 5.58 4 10V22L6 20L8 22L10 20L12 22L14 20L16 22L18 20L20 22V10C20 5.58 16.42 2 12 2M9 9C9.55 9 10 9.45 10 10C10 10.55 9.55 11 9 11C8.45 11 8 10.55 8 10C8 9.45 8.45 9 9 9M15 9C15.55 9 16 9.45 16 10C16 10.55 15.55 11 15 11C14.45 11 14 10.55 14 10C14 9.45 14.45 9 15 9Z" />
+          </svg>
+          <span class="logo-text">mootti</span>
+        </div>
       </a>
+
 
       <div class="desktop-menu">
         <div class="nav-links">
@@ -14,7 +24,20 @@
         <div class="navbar-right">
           <div class="search-container">
             <div class="search-bar" :class="{ 'focused': showHistory }">
-              <span class="search-icon">🔍</span>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="search-icon-svg" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              
               <input 
                 type="text" 
                 placeholder="영화를 검색해보세요!" 
@@ -36,7 +59,7 @@
           </div>
 
           <div v-if="accountStore.isLogin" class="user-info">
-            <div class="dropdown">
+            <div class="dropdown" ref="dropdownRef">
               <button @click="toggleDropdown" class="profile-btn">
                 <span class="username">{{ accountStore.username }}님</span>
                 <span class="chevron">▼</span>
@@ -65,10 +88,22 @@
       <div v-if="isMobileMenuOpen" class="mobile-menu-container glass-panel">
         
         <div class="mobile-search">
-          <span class="search-icon">🔍</span>
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="search-icon-svg" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
           <input 
             type="text" 
-            placeholder="영화를" 
+            placeholder="영화를 검색해보세요!" 
             v-model="searchQuery"
             @keyup.enter="handleMobileSearch"
           />
@@ -98,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue'; // [수정] onUnmounted 추가
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useAccountStore } from '@/stores/accounts'
 
@@ -106,21 +141,26 @@ const router = useRouter()
 const route = useRoute()
 const accountStore = useAccountStore()
 
+const dropdownRef = ref(null)
 const dropdownOpen = ref(false)
-const isMobileMenuOpen = ref(false) // 모바일 메뉴 상태
+const isMobileMenuOpen = ref(false)
 
-// Search logic
 const searchQuery = ref('')
 const recentSearches = ref([])
 const showHistory = ref(false)
 
-// 라우트 변경 시 메뉴 닫기 (모바일 UX)
 watch(() => route.name, (newName) => {
   if (newName !== 'SearchView') {
     searchQuery.value = ''
   }
-  isMobileMenuOpen.value = false // 페이지 이동 시 모바일 메뉴 닫기
+  isMobileMenuOpen.value = false
 })
+
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    dropdownOpen.value = false
+  }
+}
 
 const loadHistory = () => {
   const history = localStorage.getItem('searchHistory')
@@ -204,6 +244,11 @@ const goToReviewList = () => {
 
 onMounted(() => {
   loadHistory()
+  window.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -221,36 +266,52 @@ onMounted(() => {
   align-items: center;
   z-index: 1000;
   
-  /* Glass Effect */
   background-color: rgba(255, 255, 255, 0.95); 
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid #EEEEEE; /* Neutral Gray Border */
+  border-bottom: 1px solid #EEEEEE;
 }
 
 .navbar-content {
   width: 100%;
-  /* [수정] 1280px -> 1080px로 축소하여 중앙 집중 */
   max-width: 1080px; 
-  padding: 0 1.5rem; /* 좌우 여백도 살짝 조정 */
+  padding: 0 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
-  margin: 0 auto; /* 중앙 정렬 필수 */
+  margin: 0 auto;
 }
 
 /* Brand */
 .navbar-brand {
   text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  z-index: 1002; /* 햄버거 메뉴보다 위에 */
+  z-index: 1002;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 아이콘과 글자 사이 간격 */
+}
+
+.ghost-logo-svg {
+  width: 28px;
+  height: 28px;
+  color: #7A6CFA; /* 포인트 보라색 적용 */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .logo-text {
   color: #111111;
+  font-size: 1.6rem; /* 글자 크기 살짝 키움 */
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+/* 로고 호버 효과: 유령이 콩 하고 위로 뜀 */
+.navbar-brand:hover .ghost-logo-svg {
+  transform: translateY(-4px) rotate(-5deg);
 }
 
 /* Desktop Menu Container */
@@ -273,6 +334,7 @@ onMounted(() => {
   font-weight: 600;
   font-size: 1rem;
   transition: all 0.2s ease;
+  text-decoration: none; /* 밑줄 제거 */
 }
 
 .nav-links a:hover, .nav-links a.active {
@@ -309,11 +371,18 @@ onMounted(() => {
   width: 280px;
 }
 
-.search-icon {
-  font-size: 0.9rem;
-  margin-right: 0.5rem;
-  opacity: 0.6;
+/* [수정] SVG 아이콘 스타일 */
+.search-icon-svg {
+  width: 18px;
+  height: 18px;
   color: #888888;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.search-bar.focused .search-icon-svg {
+  color: #7A6CFA;
 }
 
 .search-bar input {
@@ -340,6 +409,7 @@ onMounted(() => {
   color: #666666;
   font-weight: 600;
   font-size: 0.95rem;
+  text-decoration: none;
 }
 
 .login-link:hover {
@@ -355,6 +425,7 @@ onMounted(() => {
   font-size: 0.95rem;
   transition: all 0.2s;
   box-shadow: 0 4px 15px rgba(122, 108, 250, 0.4);
+  text-decoration: none;
 }
 
 .signup-btn:hover {
@@ -489,7 +560,6 @@ onMounted(() => {
    2. Mobile Styles (Responsiveness)
    ========================================= */
 
-/* 햄버거 버튼 (기본 숨김) */
 .hamburger-btn {
   display: none;
   flex-direction: column;
@@ -510,7 +580,6 @@ onMounted(() => {
   transition: all 0.3s ease;
 }
 
-/* 햄버거 버튼 활성화 애니메이션 */
 .hamburger-btn.active .bar:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
@@ -521,25 +590,24 @@ onMounted(() => {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-/* 768px 이하 (태블릿/모바일) */
 @media (max-width: 768px) {
   .desktop-menu {
-    display: none; /* 데스크탑 메뉴 숨김 */
+    display: none;
   }
 
   .hamburger-btn {
-    display: flex; /* 햄버거 버튼 표시 */
+    display: flex;
   }
 
   .navbar-content {
-    padding: 0 1.5rem; /* 패딩 축소 */
+    padding: 0 1.5rem;
   }
 }
 
 /* --- Mobile Menu Container --- */
 .mobile-menu-container {
   position: absolute;
-  top: 70px; /* 네비게이션 바 높이만큼 띄움 */
+  top: 70px;
   left: 0;
   width: 100%;
   padding: 1.5rem;
@@ -581,6 +649,7 @@ onMounted(() => {
   font-weight: 600;
   color: #333333;
   padding: 0.5rem 0;
+  text-decoration: none;
 }
 
 .mobile-links a.active {
@@ -630,6 +699,7 @@ onMounted(() => {
   font-weight: 600;
   border-radius: 12px;
   background-color: #F5F5F5;
+  text-decoration: none;
 }
 
 .mobile-signup-btn {
@@ -640,6 +710,7 @@ onMounted(() => {
   font-weight: 700;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(122, 108, 250, 0.3);
+  text-decoration: none;
 }
 
 /* Slide Animation */

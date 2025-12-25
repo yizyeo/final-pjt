@@ -174,7 +174,7 @@ onMounted(async () => {
   }
 })
 
-// [STEP 1 -> 2] 이동 전 유효성 검사
+
 const goNext = () => {
   if (!username.value || !email.value || !password1.value || !password2.value) {
     alert('모든 필수 정보를 입력해주세요.')
@@ -197,14 +197,18 @@ const goNext = () => {
     return
   }
 
-  // 통과 시 다음 단계로
   step.value = 2
 }
 
 const signUp = () => {
   // [STEP 2] 유효성 검사
-  if (!age.value || !gender.value) {
-    alert('나이와 성별을 선택해주세요.')
+  if (!age.value) {
+    alert('나이를 입력해주세요.')
+    return
+  }
+
+  if (!gender.value) {
+    alert('성별을 선택해주세요.')
     return
   }
 

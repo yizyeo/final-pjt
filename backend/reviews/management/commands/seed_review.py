@@ -34,8 +34,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'OpenAI Client 설정 실패: {e}'))
             return
 
-        # 리뷰 생성 루프 (테스트용 상위 30개)
-        target_movies = movies.order_by('-popularity')[120:150]
+        # 리뷰 생성 루프
+        target_movies = movies.order_by('-popularity')[:150]
         
         created_count = 0
 

@@ -27,7 +27,10 @@
           </h1>
           
           <div class="meta-row">
-            <div class="author-profile">
+            <div 
+              class="author-profile" 
+              @click="goProfile(reviewStore.currentReview.username)"
+            >
               <div class="tier-badge" :title="userTier.label">
                 <img :src="userTier.icon" :alt="userTier.label" class="tier-img">
               </div>
@@ -38,7 +41,7 @@
             </div>
             
             <div class="rating-badge">
-              <span class="star">★</span>
+              <span class="star">⭐</span>
               <span class="score">{{ reviewStore.currentReview.rating }}</span>
             </div>
           </div>
@@ -199,6 +202,10 @@ const goMovie = (movie) => {
   router.push({ name: 'MovieDetailView', params: { movieId: movieId } })
 }
 
+const goProfile = (username) => {
+  router.push({ name: 'ProfileView', params: { username: username } })
+}
+
 const toggleEdit = () => {
   isEditing.value = !isEditing.value
   if (isEditing.value && reviewStore.currentReview) {
@@ -207,17 +214,16 @@ const toggleEdit = () => {
   }
 }
 
-// [추가] 별의 상태(꽉참/반개/비어있음)를 결정하는 함수
 const getStarState = (index) => {
   const targetScore = hoverRating.value || editData.value.rating
   const starScore = index * 2
 
   if (targetScore >= starScore) {
-    return 'full' // 내 점수가 이 별의 만점보다 크거나 같으면 꽉 채움
+    return 'full'
   } else if (targetScore >= starScore - 1) {
-    return 'half' // 내 점수가 이 별의 만점-1 (반개)보다 크거나 같으면 반만 채움
+    return 'half'
   } else {
-    return 'empty' // 아니면 비움
+    return 'empty'
   }
 }
 
@@ -398,6 +404,14 @@ const formatDate = (date) => {
   display: flex;
   align-items: center;
   gap: 10px;
+  /* [추가] 클릭 가능 스타일 */
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+/* [추가] 호버 효과 */
+.author-profile:hover {
+  opacity: 0.7;
 }
 
 .tier-badge {
@@ -519,7 +533,7 @@ const formatDate = (date) => {
   background-color: #F0F0F0;
 }
 
-/* [수정] 수정 폼 스타일 개선 */
+/* 수정 폼 스타일 개선 */
 .edit-form-card {
   background-color: #FFFFFF;
   border: 1px solid #EEEEEE;
@@ -559,7 +573,7 @@ const formatDate = (date) => {
   border-radius: 8px;
   border: 1px solid #DDDDDD;
   background-color: #FFFFFF;
-  appearance: none; /* 기본 화살표 제거 */
+  appearance: none;
   font-family: inherit;
   font-size: 0.95rem;
   cursor: pointer;
@@ -649,13 +663,13 @@ const formatDate = (date) => {
 
 .stars {
   display: flex;
-  gap: 2px; /* 별 사이 간격 좁게 */
+  gap: 2px;
 }
 
 /* 개별 별 래퍼 (상대 위치 기준점) */
 .star-wrapper {
   position: relative;
-  width: 32px; /* 별 크기에 맞춰 조정 */
+  width: 32px;
   height: 32px;
   cursor: pointer;
 }
@@ -664,7 +678,7 @@ const formatDate = (date) => {
 .star-visual {
   font-size: 2rem;
   line-height: 1;
-  color: #E0E0E0; /* 기본 회색 (empty) */
+  color: #E0E0E0;
   transition: all 0.1s;
 }
 
@@ -673,20 +687,20 @@ const formatDate = (date) => {
   color: #FFB800;
 }
 
-/* 반 개 별 (CSS Gradient 활용) */
+/* 반 개 별 */
 .star-visual.half {
   background: linear-gradient(to right, #FFB800 50%, #E0E0E0 50%);
   -webkit-background-clip: text;
-  color: transparent; /* 글자색을 투명하게 하고 배경을 보여줌 */
+  color: transparent;
 }
 
-/* 클릭 영역 (투명) */
+/* 클릭 영역 */
 .click-area {
   position: absolute;
   top: 0;
   height: 100%;
-  width: 50%; /* 절반 너비 */
-  z-index: 10; /* 시각적 별보다 위에 위치 */
+  width: 50%;
+  z-index: 10;
 }
 
 .click-area.left {
@@ -697,7 +711,6 @@ const formatDate = (date) => {
   right: 0;
 }
 
-/* 클릭 시 살짝 눌리는 애니메이션 */
 .star-wrapper:active {
   transform: scale(0.9);
 }

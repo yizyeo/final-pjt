@@ -3,10 +3,10 @@
     
     <div class="section-intro">
       <div class="icon-wrapper">🏆</div>
-      <h2 class="intro-title">나만의 인생 영화 월드컵</h2>
+      <h2 class="intro-title">나만의 영화 월드컵</h2>
       <p class="intro-desc">
-        두근거리는 승부의 세계!<br class="mobile-break" />
-        최고의 영화를 선택하고 우승작을 가려보세요.
+        두근거리는 선택의 순간!<br class="mobile-break" />
+        더 마음에 드는 영화를 골라보세요.
       </p>
     </div>
 
@@ -267,10 +267,6 @@ const startGame = () => {
 @media (max-width: 640px) {
   .mode-grid {
     grid-template-columns: 1fr; /* 모바일에서 세로 배치 */
-  }
-
-  .intro-title {
-    font-size: 1.6rem;
   }
 }
 </style>

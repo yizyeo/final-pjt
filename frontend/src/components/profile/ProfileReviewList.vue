@@ -17,7 +17,7 @@
           <div class="review-top">
             <h4 class="movie-title">{{ review.movie_title }}</h4>
             <div class="rating-badge">
-              <span class="star">★</span>
+              <span class="star">⭐</span>
               <span class="score">{{ review.rating }}</span>
             </div>
           </div>
