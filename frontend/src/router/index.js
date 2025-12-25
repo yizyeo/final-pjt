@@ -15,6 +15,15 @@ import BlindReviewView from '@/views/BlindReviewView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  },
+
   routes: [
     // 메인 페이지 (기본 페이지)
     {
@@ -64,21 +73,25 @@ const router = createRouter({
       name: 'ReviewDetailView',
       component: ReviewDetailView
     },
+    // 검색 페이지
     {
       path: '/search',
       name: 'SearchView',
       component: SearchView
     },
+    // 월드컵 추천
     {
       path: '/worldcup',
       name: 'WorldcupView',
       component: WorldcupView
     },
+    // ai 키워드 추천
     {
       path: '/recommend-keyword',
       name: 'RecommendKeywordView',
       component: RecommendKeywordView
     },
+    // 블라인드 리뷰 추천
     {
       path: '/blind-review',
       name: 'BlindReviewView',

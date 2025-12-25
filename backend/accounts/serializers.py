@@ -9,69 +9,42 @@ User = get_user_model()
 
 # 회원가입
 class CustomRegisterSerializer(RegisterSerializer):
-    email = serializers.EmailField(
-        required=True,
-        error_messages={
-            'required': '이메일은 필수 입력 항목입니다.',
-            'invalid': '유효한 이메일 형식이 아닙니다.',
-        }
-    )
-    age = serializers.IntegerField(
-        required=True,
-        min_value=1,
-        max_value=120,
-        error_messages={
-            'required': '나이를 입력해주세요.',
-            'min_value': '나이는 1세 이상이어야 합니다.',
-            'invalid': '숫자만 입력 가능합니다.'
-        }
-    )
-    gender = serializers.ChoiceField(
-        choices=[('M', '남성'), ('F', '여성')],
-        required=True,
-        error_messages={
-            'required': '성별을 선택해주세요.',
-            'invalid_choice': '남성 또는 여성 중에서 선택해주세요.'
-        }
-    )
+    email = serializers.EmailField(required=True)
+    
+    age = serializers.IntegerField(min_value=1, max_value=120)
+    gender = serializers.ChoiceField(choices=[('M', '남성'), ('F', '여성')])
     favorite_genres = serializers.ListField(
         child=serializers.IntegerField(),
-        required=True,
-        allow_empty=False,
-        error_messages={
-            'required': '최소 하나 이상의 선호 장르를 선택해야 합니다.',
-            'empty': '선호 장르를 선택해주세요.'
-        }
+        allow_empty=False
     )
 
-    # 1. 아이디 중복 체크 커스텀
     def validate_username(self, username):
         if User.objects.filter(username=username).exists():
             raise serializers.ValidationError("이미 존재하는 아이디입니다.")
         return username
 
-    # 2. 이메일 중복 체크 커스텀
     def validate_email(self, email):
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError("이미 가입된 이메일입니다.")
         return email
 
-    def save(self, request):
-        # 부모 클래스의 save 로직을 활용하면서 필요한 필드 추가
-        user = super().save(request)
-        
-        # 추가 필드 저장 (super().save()가 반환한 user 객체 업데이트)
+    def get_cleaned_data(self):
+        data = super().get_cleaned_data()
+        data['age'] = self.validated_data.get('age')
+        data['gender'] = self.validated_data.get('gender')
+        data['favorite_genres'] = self.validated_data.get('favorite_genres')
+        return data
+
+    def custom_signup(self, request, user):
         user.age = self.validated_data.get('age')
         user.gender = self.validated_data.get('gender')
-        user.save()
-
-        # 장르 M:N 관계 저장
+        
         genre_ids = self.validated_data.get('favorite_genres')
         if genre_ids:
             genres = Genre.objects.filter(genre_id__in=genre_ids)
             user.favorite_genres.set(genres)
-
-        return user
+        
+        user.save()
     
 
 # 영화 간략 정보

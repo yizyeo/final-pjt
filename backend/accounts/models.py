@@ -9,11 +9,8 @@ class User(AbstractUser):
         ('F', '여성'),
     )
   
-  age = models.PositiveIntegerField()
-  gender = models.CharField(
-        max_length=1,
-        choices=GENDER_CHOICES
-    )
+  age = models.PositiveIntegerField(null=True, blank=True)
+  gender = models.CharField(max_length=1, null=True, blank=True, choices=GENDER_CHOICES)
   favorite_genres = models.ManyToManyField(
     'movies.Genre',
     related_name='users'
