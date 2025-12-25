@@ -84,6 +84,7 @@
               class="form-input"
               placeholder="나이를 입력하세요"
             >
+            
           </div>
 
           <div class="form-group">

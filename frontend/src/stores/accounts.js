@@ -26,7 +26,6 @@ export const useAccountStore = defineStore('account', () => {
       .catch(err => {
         if (err.response && err.response.status === 400) {
           const errorData = err.response.data
-          // 백엔드에서 보낸 한국어 메시지를 그대로 합쳐서 보여줌
           const messages = Object.values(errorData).flat().join('\n')
           alert(messages)
         }
