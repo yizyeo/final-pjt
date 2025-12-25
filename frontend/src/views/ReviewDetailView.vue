@@ -41,7 +41,7 @@
             </div>
             
             <div class="rating-badge">
-              <span class="star">★</span>
+              <span class="star">⭐</span>
               <span class="score">{{ reviewStore.currentReview.rating }}</span>
             </div>
           </div>

@@ -57,18 +57,14 @@ const API_URL = import.meta.env.VITE_API_URL
 const backdrops = ref([])
 const modules = [Autoplay, Pagination, Navigation]
 
-// [수정] 네비게이션 버튼 Ref 생성
 const prevBtn = ref(null)
 const nextBtn = ref(null)
 
-// [수정] Swiper 초기화 시 버튼 강제 연결
 const onSwiper = (swiper) => {
   nextTick(() => {
-    // params에 dom 요소 할당
     swiper.params.navigation.prevEl = prevBtn.value
     swiper.params.navigation.nextEl = nextBtn.value
     
-    // 네비게이션 기능 재초기화
     swiper.navigation.destroy()
     swiper.navigation.init()
     swiper.navigation.update()

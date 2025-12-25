@@ -54,7 +54,7 @@
             
             <div class="rating-info">
               <div class="score-box">
-                <span class="star">★</span>
+                <span class="star">⭐</span>
                 <span class="score">{{ (movieStore.movieDetail.vote_average / 2).toFixed(1) }}</span>
               </div>
             </div>

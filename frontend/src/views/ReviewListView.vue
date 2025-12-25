@@ -28,7 +28,7 @@
 
     <div v-else-if="reviewStore.totalReviews.length > 0" class="review-grid">
       <div 
-        v-for="review in reviewStore.totalReviews" 
+        v-for="review in displayedReviews" 
         :key="review.id"
         class="review-card-wrapper"
       >
@@ -42,6 +42,12 @@
       </div>
     </div>
 
+    <div v-if="hasMore" class="load-more-container">
+      <button @click="loadMore" class="load-more-btn">
+        더보기 <span class="arrow">∨</span>
+      </button>
+    </div>
+
     <div v-else class="empty-state">
       <div class="empty-icon">📝</div>
       <p>아직 작성된 리뷰가 없습니다.<br>첫 번째 리뷰의 주인공이 되어보세요!</p>
@@ -51,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useReviewStore } from '@/stores/review'
 
@@ -62,8 +68,24 @@ const reviewStore = useReviewStore()
 const router = useRouter()
 const currentSort = ref('popular')
 
+const limit = ref(20) // 처음에 보여줄 개수
+const step = 20
+
+const displayedReviews = computed(() => {
+  return reviewStore.totalReviews.slice(0, limit.value)
+})
+
+const hasMore = computed(() => {
+  return limit.value < reviewStore.totalReviews.length
+})
+
+const loadMore = () => {
+  limit.value += step
+}
+
 const changeSort = (sort) => {
   currentSort.value = sort
+  limit.value = step
   reviewStore.fetchTotalReviews(sort)
 }
 
@@ -199,6 +221,38 @@ onMounted(() => {
   50% { opacity: 0.5; }
   100% { opacity: 1; }
 }
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.load-more-btn {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 0;
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  color: #555;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.load-more-btn:hover {
+  background-color: #F8F9FA;
+  border-color: #CCC;
+  color: #333;
+}
+
+.arrow { font-size: 0.8rem; font-weight: bold; }
 
 /* 데이터 없음 */
 .empty-state {

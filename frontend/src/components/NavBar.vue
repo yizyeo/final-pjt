@@ -244,11 +244,9 @@ const goToReviewList = () => {
 
 onMounted(() => {
   loadHistory()
-  // [수정] 마운트 시 클릭 이벤트 리스너 등록
   window.addEventListener('click', handleClickOutside)
 })
 
-// [수정] 언마운트 시 이벤트 리스너 제거
 onUnmounted(() => {
   window.removeEventListener('click', handleClickOutside)
 })

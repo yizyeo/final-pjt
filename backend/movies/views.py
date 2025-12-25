@@ -29,7 +29,15 @@ def genre_list(request):
 
 @api_view(['GET'])
 def carousel_backdrop(request):
-    movies = Movie.objects.all() # 이렇게 하면 되는지 확인
+    popularity_threshold = 25.0
+    
+    movies = Movie.objects.exclude(backdrop_paths=[]) \
+                .filter(
+                    release_date__lt='2025-01-01', 
+                    popularity__gte=popularity_threshold
+                ) \
+                .order_by('?')[:10]  # 랜덤하게 섞은 후 상위 10개만 추출
+    
     serializer = HomeBackdropSerializer(movies, many=True)
     return Response(serializer.data)
 

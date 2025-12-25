@@ -9,7 +9,7 @@
           @error="handleImageError"
         >
         <div class="rating-badge">
-          ★ {{ movie.vote_average?.toFixed(1) }}
+          ⭐ {{ movie.vote_average?.toFixed(1) }}
         </div>
       </div>
       

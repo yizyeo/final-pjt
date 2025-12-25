@@ -13,7 +13,7 @@
         <div class="user-meta">
           <span class="username">{{ review.username }}</span>
           <div class="star-rating">
-            <span class="star-icon">★</span>
+            <span class="star-icon">⭐</span>
             <span class="rating-score">{{ review.rating }}</span>
           </div>
         </div>

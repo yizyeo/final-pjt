@@ -17,7 +17,7 @@
         @click.prevent="handleProtectedMove('/blind-review')"
       >
         <div class="card-top">
-          <div class="icon-wrapper">📝</div>
+          <div class="icon-wrapper">🔮</div>
           <h3 class="card-title">Blind Pick</h3>
           <p class="card-desc">
             영화에 대한 편견을 지우세요.<br />
@@ -78,7 +78,7 @@ const accountStore = useAccountStore()
 // 로그인 체크 및 이동 핸들러
 const handleProtectedMove = (path) => {
   if (!accountStore.isLogin) {
-    const isConfirmed = confirm('로그인이 필요한 서비스입니다.')
+    const isConfirmed = confirm('로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?')
     if (isConfirmed) {
       router.push({ name: 'LogInView' })
     }

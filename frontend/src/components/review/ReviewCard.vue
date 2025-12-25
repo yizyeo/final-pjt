@@ -13,7 +13,7 @@
       </div>
       
       <div class="rating-display">
-        <span class="star-icon">★</span>
+        <span class="star-icon">⭐</span>
         <span class="score">{{ review.rating }}</span>
       </div>
     </div>
